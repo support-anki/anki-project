@@ -1,10 +1,9 @@
 {
-  "title": "理科（図なし）一覧",
+  "title": "理科教材 一覧",
   "modules": [
     {
-      "title": "下 第8回（例） 気象・気温",
-      "desc": "30問｜タップで答え／復習機能",
-      "path": "noimg.html?data=../../assets/data/sci/noimg/ex1.json&title=小4理科 第8回（例）"
+      "title": "第7回 もののとけ方（2）",
+      "path": "../geo/noimg.html?data=../../assets/data/sci/noimg/ge7-tokekata2.json&title=小4理科 第7回 もののとけ方（2）"
     }
   ]
 }
