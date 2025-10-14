@@ -1,0 +1,64 @@
+{
+  "title": "小4理科 第7回 もののとけ方（2）",
+  "items": [
+    { "id": "1", "q": "ろかをしたとき、ろ紙を通って出てきた液を（　）という。", "answers": ["ろ液"] },
+    { "id": "2", "q": "ろうとをぴったりつけるために、ろうとを（　）でぬらす。", "answers": ["水"] },
+
+    { "id": "3",  "q": "20℃で100cm³の水にホウ酸は（　）gまでとける。", "answers": ["5"],  "img": "/anki-project/assets/img/sci/hosan-graph.png" },
+    { "id": "4",  "q": "60℃で15gとかしたホウ酸水を20℃に冷やすと（　）gのホウ酸が出てくる。", "answers": ["10"], "img": "/anki-project/assets/img/sci/hosan-graph.png" },
+    { "id": "5",  "q": "ホウ酸水の温度が（　）℃に下がるまで、ホウ酸の粒は出てこない。", "answers": ["40"], "img": "/anki-project/assets/img/sci/hosan-graph.png" },
+    { "id": "6",  "q": "80℃から20℃まで冷やすと（　）gの粒が出てくる。", "answers": ["4"],  "img": "/anki-project/assets/img/sci/hosan-graph.png" },
+    { "id": "7",  "q": "80℃から0℃まで冷やすと（　）gの粒が出てくる。", "answers": ["6"],  "img": "/anki-project/assets/img/sci/hosan-graph.png" },
+    { "id": "8",  "q": "80℃・200cm³の水には（　）gのホウ酸がとける。", "answers": ["48"], "img": "/anki-project/assets/img/sci/hosan-graph.png" },
+    { "id": "9",  "q": "20℃・200cm³の水には（　）gのホウ酸がとける。", "answers": ["10"], "img": "/anki-project/assets/img/sci/hosan-graph.png" },
+    { "id": "10", "q": "（Q8の条件）出てくるホウ酸の粒は（　）gである。", "answers": ["38"], "img": "/anki-project/assets/img/sci/hosan-graph.png" },
+    { "id": "11", "q": "80℃から0℃まで冷やしたときの出てくるホウ酸の粒の合計は（　）gである。", "answers": ["72"], "img": "/anki-project/assets/img/sci/hosan-graph.png" },
+    { "id": "12", "q": "80℃から20℃に冷やしたときに出るホウ酸の粒は（　）gである。", "answers": ["33"], "img": "/anki-project/assets/img/sci/hosan-graph.png" },
+    { "id": "13", "q": "80℃から20℃まで冷やしたときの20℃でとけているホウ酸は（　）gである。", "answers": ["39"], "img": "/anki-project/assets/img/sci/hosan-graph.png" },
+
+    {
+      "id": "14",
+      "q": "ホウ酸の結晶は次のうちどれ？（A～D）",
+      "choices": [
+        { "key": "A", "hint": "無色透明・八面体（とがった形）" },
+        { "key": "B", "hint": "白色・薄い板状（はくのよう）" },
+        { "key": "C", "hint": "鮮やかな青色・柱状／針状" },
+        { "key": "D", "hint": "無色透明・立方体（サイコロ形）" }
+      ],
+      "answers": ["B"]
+    },
+    {
+      "id": "15",
+      "q": "食塩の結晶は次のうちどれ？（A～D）",
+      "choices": [
+        { "key": "A", "hint": "無色透明・八面体" },
+        { "key": "B", "hint": "白色・薄い板状" },
+        { "key": "C", "hint": "青色・柱状／針状" },
+        { "key": "D", "hint": "無色透明・立方体（サイコロ形）" }
+      ],
+      "answers": ["D"]
+    },
+    {
+      "id": "16",
+      "q": "ミョウバンの結晶は次のうちどれ？（A～D）",
+      "choices": [
+        { "key": "A", "hint": "無色透明・八面体（とがった形）" },
+        { "key": "B", "hint": "白色・薄い板状" },
+        { "key": "C", "hint": "青色・柱状／針状" },
+        { "key": "D", "hint": "無色透明・立方体" }
+      ],
+      "answers": ["A"]
+    },
+    {
+      "id": "17",
+      "q": "硫酸銅の結晶は次のうちどれ？（A～D）",
+      "choices": [
+        { "key": "A", "hint": "無色透明・八面体" },
+        { "key": "B", "hint": "白色・薄い板状" },
+        { "key": "C", "hint": "鮮やかな青色・柱状／針状" },
+        { "key": "D", "hint": "無色透明・立方体" }
+      ],
+      "answers": ["C"]
+    }
+  ]
+}
