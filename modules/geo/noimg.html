@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>図なしテンプレ</title>
+<link rel="stylesheet" href="../../assets/css/style.css">
+<style>
+.badge{display:inline-block;padding:.15em .5em;border-radius:9999px;font-size:.75em;margin-left:.5em;border:1px solid #dfe3ea;color:#556}
+.badge.wrong{background:#ffe8ea;color:#b30021;border-color:#ffd1d6}
+.badge.ok{background:#e9fbf0;color:#147d3a;border-color:#c8f1d9}
+.markbtn{border:1px solid #d1d5db;background:#fff;border-radius:6px;padding:3px 8px;cursor:pointer;font-size:.85em}
+.markbtn+.markbtn{margin-left:6px}
+.toolbar .stats{margin-left:auto;color:#667}
+main#cards{max-width:1000px;margin:0 auto;padding:0 12px 24px}
+.card{background:#fff;border-radius:12px;padding:14px 16px;margin:12px 0;box-shadow:0 2px 6px rgba(0,0,0,.08)}
+.ans{display:grid;grid-template-columns:48px 1fr auto;gap:10px;align-items:start}
+.num{font-weight:700}
+.q .word{display:none;margin-left:8px;color:#06C755;font-weight:700}
+.q .word.revealed{display:inline}
+.ans.active{background:#fafcff;border-radius:10px}
+.btn{background:#3b4675;color:#fff;border:none;border-radius:6px;padding:2px 10px;cursor:pointer;margin-left:6px}
+.toolbar{display:flex;gap:8px;flex-wrap:wrap;justify-content:flex-start;margin:8px auto 16px;max-width:1000px;padding:0 12px}
+</style>
+</head>
+<body>
+<header class="site"><h1 id="title">図なし問題</h1></header>
+
+<div class="toolbar">
+  <a class="btn" href="index.html">← 地理一覧</a>
+  <button class="btn" id="shuffle">ランダム並び替え</button>
+  <button class="btn" id="showAll">すべて表示</button>
+  <button class="btn" id="hideAll">すべて非表示</button>
+  <button class="btn" id="filterWrong">復習だけ表示</button>
+  <button class="btn" id="reset">リセット</button>
+  <span class="stats" id="stats"></span>
+</div>
+
+<main id="cards"></main>
+
+<script>
+(async()=>{
+  const params = new URLSearchParams(location.search);
+  const dataParam = params.get('data');   // 例: ../../assets/data/geo/noimg/ge7-kyushu.json
+  const titleParam = params.get('title') || '図なし問題';
+  document.title = titleParam;
+  document.getElementById('title').textContent = titleParam;
+
+  const cardsEl = document.getElementById('cards');
+
+  if (!dataParam) {
+    cardsEl.innerHTML = '<div class="card">❗データURL（?data=...）が指定されていません。</div>';
+    return;
+  }
+
+  // ★ 相対パスはこれで十分に解決できます
+  const dataUrl = new URL(dataParam, location.href);
+
+  let payload;
+  try {
+    const res = await fetch(dataUrl, { cache: 'no-store' });
+    if (!res.ok) throw new Error(`HTTP ${res.status}`);
+    payload = await res.json();
+  } catch (e) {
+    cardsEl.innerHTML = `<div class="card">❗データの取得に失敗：<code>${dataUrl}</code><br><small>${String(e)}</small></div>`;
+    return;
+  }
+
+  const items = Array.isArray(payload.items) ? payload.items : [];
+
+  // ★ items が0件なら、その旨を出して原因に当たりをつけられるようにする
+  if (items.length === 0) {
+    cardsEl.innerHTML = `<div class="card">❗読み込み成功ですが問題が0件です。<br>
+      データURL：<code>${dataUrl}</code><br>
+      JSONの <code>items</code> 配列を確認してください。</div>`;
+    return;
+  }
+
+  // ローカル保存キー（復習/開示状態の保存）
+  const storeKey = `qa-state:${dataUrl.href}`;
+  const markKey  = `qa-mark:${dataUrl.href}`;
+  let state={}, mark={};
+  try{ state = JSON.parse(localStorage.getItem(storeKey)||'{}'); }catch{}
+  try{ mark  = JSON.parse(localStorage.getItem(markKey)||'{}'); }catch{}
+
+  const statsEl=document.getElementById('stats');
+  let filterWrong=false;
+
+  function save(){ localStorage.setItem(storeKey, JSON.stringify(state)); }
+  function saveMark(){ localStorage.setItem(markKey, JSON.stringify(mark)); }
+  function calcStats(){
+    let ok=0,wrong=0,none=0;
+    items.forEach((it,i)=>{ const id=it.id||`Q${i+1}`; const m=mark[id]; if(m==='ok') ok++; else if(m==='wrong') wrong++; else none++;});
+    statsEl.textContent=`○${ok} ×${wrong} 未${none}`;
+  }
+
+  function render(){
+    cardsEl.innerHTML='';
+    items.forEach((it,i)=>{
+      const id=it.id||`Q${i+1}`;
+      if(filterWrong && mark[id]!=='wrong') return;
+
+      const row=document.createElement('div'); row.className='ans';
+      const left=document.createElement('div'); left.className='num'; left.textContent=i+1;
+      const badge=document.createElement('span'); badge.className='badge'; badge.textContent='未';
+      if(mark[id]==='ok'){ badge.classList.add('ok'); badge.textContent='○'; }
+      if(mark[id]==='wrong'){ badge.classList.add('wrong'); badge.textContent='×'; }
+      left.appendChild(badge);
+
+      const q=document.createElement('div'); q.className='q'; q.textContent=it.q;
+      (it.answers||[]).forEach((ans,j)=>{
+        const aid=`${id}_${j+1}`;
+        const btn=document.createElement('button'); btn.className='btn'; btn.textContent=`${j+1}？`;
+        const span=document.createElement('span'); span.className='word'; span.textContent=ans;
+        if(state[aid]){ span.classList.add('revealed'); row.classList.add('active'); }
+        btn.onclick=()=>{ const on=!span.classList.contains('revealed'); span.classList.toggle('revealed',on); row.classList.toggle('active',on); state[aid]=on; save(); };
+        q.appendChild(btn); q.appendChild(span);
+      });
+
+      const right=document.createElement('div');
+      const bx=document.createElement('button'); bx.className='markbtn'; bx.textContent='× 間違えた';
+      const bo=document.createElement('button'); bo.className='markbtn'; bo.textContent='○ 正解';
+      bx.onclick=()=>{ mark[id]='wrong'; saveMark(); render(); calcStats(); };
+      bo.onclick=()=>{ mark[id]='ok';    saveMark(); render(); calcStats(); };
+      right.appendChild(bx); right.appendChild(bo);
+
+      row.appendChild(left); row.appendChild(q); row.appendChild(right);
+      cardsEl.appendChild(row);
+    });
+    calcStats();
+  }
+
+  render();
+
+  // ツールバー
+  document.getElementById('shuffle').onclick=()=>{ items.sort(()=>Math.random()-.5); render(); };
+  document.getElementById('showAll').onclick=()=>{ document.querySelectorAll('.word').forEach(w=>w.classList.add('revealed')); document.querySelectorAll('.ans').forEach(r=>r.classList.add('active')); };
+  document.getElementById('hideAll').onclick=()=>{ document.querySelectorAll('.word').forEach(w=>w.classList.remove('revealed')); document.querySelectorAll('.ans').forEach(r=>r.classList.remove('active')); };
+  document.getElementById('filterWrong').onclick=()=>{ filterWrong=!filterWrong; document.getElementById('filterWrong').textContent=filterWrong?'すべて表示':'復習だけ表示'; render(); };
+  document.getElementById('reset').onclick=()=>{ if(confirm('学習状態をリセットしますか？')){ localStorage.removeItem(storeKey); localStorage.removeItem(markKey); state={}; mark={}; render(); } };
+})();
+</script>
+
+</body>
+</html>

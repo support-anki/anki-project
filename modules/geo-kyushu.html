@@ -1,0 +1,229 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>九州地方 地図学習</title>
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" crossorigin="anonymous">
+<style>
+:root {
+  --brand:#3b4675;
+  --accent:#06C755;
+}
+body {
+  margin:0;
+  font-family:"Yu Gothic","Hiragino Kaku Gothic ProN",Meiryo,sans-serif;
+  color:#333;
+}
+header {
+  background:#fff;
+  position:sticky;
+  top:0;
+  padding:10px;
+  text-align:center;
+  box-shadow:0 1px 3px rgba(0,0,0,.1);
+  z-index:10;
+}
+.tabs {
+  display:flex;
+  justify-content:center;
+  background:#f4f5f8;
+}
+.tab {
+  padding:10px 16px;
+  cursor:pointer;
+  color:var(--brand);
+  border-bottom:3px solid transparent;
+  user-select:none;
+}
+.tab.active {
+  border-bottom:3px solid var(--accent);
+  font-weight:600;
+}
+.page {
+  display:none;
+  grid-template-columns: 1fr min(42ch,45vw);
+  height:calc(100vh - 60px);
+}
+.page.active {
+  display:grid;
+}
+#map1, #map2 {
+  height:100%;
+  width:100%;
+}
+aside {
+  background:#fafafa;
+  border-left:1px solid #ddd;
+  overflow:auto;
+}
+.panel {
+  background:#fff;
+  padding:8px;
+  border-bottom:1px solid #ccc;
+  font-size:.9rem;
+}
+.answers {
+  padding:8px 12px;
+}
+.ans {
+  display:grid;
+  grid-template-columns:3ch 1fr auto;
+  align-items:center;
+  gap:8px;
+  padding:6px 0;
+  border-bottom:1px dotted #ddd;
+}
+.num {
+  background:var(--accent);
+  color:#fff;
+  width:2em;
+  height:2em;
+  border-radius:50%;
+  display:grid;
+  place-items:center;
+  font-weight:bold;
+}
+.word {
+  filter:blur(8px);
+  transition:.15s;
+}
+.word.revealed {
+  filter:none;
+}
+.btn {
+  border:1px solid #ccc;
+  background:#fff;
+  border-radius:6px;
+  padding:4px 8px;
+  cursor:pointer;
+}
+.btn:hover { background:#f0f0f0; }
+</style>
+</head>
+<body>
+
+<header>
+  <h1>九州地方 地図学習（タップで解答表示）</h1>
+</header>
+
+<div class="tabs">
+  <div class="tab active" data-target="#pane1">① 地形・気候・国立公園</div>
+  <div class="tab" data-target="#pane2">② 都市・産業</div>
+</div>
+
+<!-- ▼ タブ1 -->
+<section id="pane1" class="page pane active">
+  <div id="map1"></div>
+  <aside>
+    <div class="panel"><b>解答パネル</b>／画像：<code>../assets/img/kyushu-map1.png</code></div>
+    <div class="answers" id="answers1"></div>
+  </aside>
+</section>
+
+<!-- ▼ タブ2 -->
+<section id="pane2" class="page pane">
+  <div id="map2"></div>
+  <aside>
+    <div class="panel"><b>解答パネル</b>（タップで表示）／画像：<code>../assets/img/kyushu-map2.png</code></div>
+    <div class="answers" id="answers2"></div>
+  </aside>
+</section>
+
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" crossorigin="anonymous"></script>
+<script>
+// ▼ タブ切替
+document.querySelectorAll('.tab').forEach(t => t.addEventListener('click', () => {
+  document.querySelectorAll('.tab').forEach(x=>x.classList.remove('active'));
+  t.classList.add('active');
+  document.querySelectorAll('.pane').forEach(p=>p.classList.remove('active'));
+  document.querySelector(t.dataset.target).classList.add('active');
+}));
+
+// ▼ データ1
+const IMG1_URL = '../assets/img/kyushu-map1.png';
+const DATA1 = [
+  { id:'1', label:'対馬（朝鮮半島との交易）' },
+  { id:'2', label:'筑紫山地（低くてなだらか）' },
+  { id:'3', label:'筑紫平野（二毛作・クリーク）' },
+  { id:'4', label:'筑後川（筑紫次郎）' },
+  { id:'5', label:'有明海（干拓・のり養殖）' },
+  { id:'6', label:'諫早湾（干拓・干潟保護運動）' },
+  { id:'7', label:'雲仙岳（普賢岳・1990年大噴火）' },
+  { id:'8', label:'熊本平野（すいか）' },
+  { id:'9', label:'八代平野（いぐさ）' },
+  { id:'10', label:'阿蘇山（世界最大級のカルデラ）' },
+  { id:'11', label:'九州山地（高くてけわしい）' },
+  { id:'12', label:'球磨川（三大急流）' },
+  { id:'13', label:'宮崎平野（促成栽培）' },
+  { id:'14', label:'桜島（活火山）' },
+  { id:'15', label:'薩摩半島' },
+  { id:'16', label:'開聞岳（薩摩富士）' },
+  { id:'17', label:'大隅半島' },
+  { id:'18', label:'笠野原（シラス台地・さつまいも・畜産・茶）' },
+  { id:'19', label:'種子島（鉄砲・宇宙センター）' },
+  { id:'20', label:'与那国島（日本最西端）' },
+  { id:'21', label:'沖縄島（基地・サトウキビ・菊）' },
+  { id:'A', label:'屋久島国立公園（屋久杉など）' },
+  { id:'B', label:'西海国立公園（九十九島・五島列島）' },
+  { id:'C', label:'瀬戸内海国立公園（国東半島〜）' },
+  { id:'D', label:'阿蘇くじゅう国立公園' },
+  { id:'E', label:'雲仙天草国立公園' },
+  { id:'F', label:'霧島錦江湾国立公園' },
+  { id:'G', label:'屋久島国立公園' },
+  { id:'H', label:'奄美群島国立公園' },
+  { id:'I', label:'やんばる国立公園' },
+  { id:'J', label:'慶良間諸島国立公園' },
+  { id:'K', label:'西表石垣国立公園' }
+];
+
+// ▼ データ2
+const IMG2_URL = '../assets/img/kyushu-map2.png';
+const DATA2 = [
+  { id:'あ', label:'北九州市（政令市・八幡製鉄所）' },
+  { id:'い', label:'福岡市（政令市・百万都市）' },
+  { id:'う', label:'佐賀市' },
+  { id:'え', label:'伊万里市（陶磁器）' },
+  { id:'お', label:'有田町（陶磁器）' },
+  { id:'か', label:'佐世保市（造船・米軍基地）' },
+  { id:'き', label:'長崎市（造船・原爆）' },
+  { id:'く', label:'別府市（温泉）' }
+];
+
+// ▼ 共通関数
+function renderMap(divId, imgUrl, data, ansContainerId){
+  const img = new Image();
+  img.onload = ()=>{
+    const W = img.width, H = img.height;
+    const map = L.map(divId, {
+      crs: L.CRS.Simple, minZoom:-1, maxZoom:6,
+      zoomSnap:0.25, zoomDelta:0.5, attributionControl:false
+    });
+    const bounds = [[0,0],[H,W]];
+    L.imageOverlay(imgUrl,bounds).addTo(map);
+    map.fitBounds(bounds);
+    const list = document.getElementById(ansContainerId);
+    list.innerHTML = '';
+    data.forEach(d=>{
+      const row = document.createElement('div');
+      row.className='ans';
+      row.innerHTML = `<div class="num">${d.id}</div>
+        <div class="word">${d.label}</div>
+        <div><button class="btn">表示</button></div>`;
+      const word=row.querySelector('.word');
+      const btn=row.querySelector('button');
+      btn.addEventListener('click',()=>{
+        const on=!word.classList.contains('revealed');
+        word.classList.toggle('revealed',on);
+        btn.textContent=on?'隠す':'表示';
+      });
+      list.appendChild(row);
+    });
+  };
+  img.src=imgUrl;
+}
+renderMap('map1',IMG1_URL,DATA1,'answers1');
+renderMap('map2',IMG2_URL,DATA2,'answers2');
+</script>
+</body>
+</html>
