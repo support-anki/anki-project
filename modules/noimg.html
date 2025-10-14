@@ -1,0 +1,388 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>学習ページ</title>
+<link rel="stylesheet" href="../../assets/css/style.css">
+<style>
+/* 追加の軽い装飾だけ（既存style.cssに依存せず動くように） */
+.toolbar{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin:12px auto 16px;max-width:1000px;padding:0 12px}
+.toolbar .stats{margin-left:auto;color:#667}
+.card{background:#fff;border-radius:12px;padding:14px 16px;margin:12px auto;box-shadow:0 2px 6px rgba(0,0,0,.08);max-width:1000px}
+.ans{display:grid;grid-template-columns:72px 1fr auto;gap:12px;align-items:start}
+.num{font-weight:700}
+.q .word{display:none;margin-left:8px;color:#06C755;font-weight:700}
+.q .word.revealed{display:inline}
+.ans.active{background:#fafcff;border-radius:10px}
+.btn{background:#3b4675;color:#fff;border:none;border-radius:6px;padding:4px 10px;cursor:pointer}
+.btn.small{padding:2px 8px;font-size:.85em}
+.badge{display:inline-flex;gap:4px;align-items:center;border:1px solid #dfe3ea;border-radius:9999px;padding:.1em .5em;font-size:.75em;color:#445}
+.chip{display:inline-block;min-width:1.6em;text-align:center;border-radius:9999px;border:1px solid #cfd5e0;padding:0 .35em}
+.chip.ok{background:#e9fbf0;border-color:#c8f1d9;color:#147d3a}
+.chip.ng{background:#ffe8ea;border-color:#ffd1d6;color:#b30021}
+.chip.none{background:#f1f4f8;color:#556}
+.markbtn{border:1px solid #d1d5db;background:#fff;border-radius:6px;padding:3px 8px;cursor:pointer;font-size:.85em}
+.markbtn + .markbtn{margin-left:6px}
+.filter-on{outline:2px solid #3b4675}
+#voiceSel{background:#fff;color:#333;border:1px solid #d1d5db;border-radius:6px;padding:4px 8px}
+#rate{vertical-align:middle}
+</style>
+</head>
+<body>
+<header class="site"><h1 id="title">学習ページ</h1></header>
+
+<div class="toolbar">
+  <a class="btn" href="index.html">← 一覧へ</a>
+  <button class="btn" id="shuffle">ランダム並び替え</button>
+  <button class="btn" id="showAll">すべて表示</button>
+  <button class="btn" id="hideAll">すべて非表示</button>
+
+  <!-- 新規: フィルタ群 -->
+  <button class="btn" id="fltWeak">苦手だけ</button>
+  <button class="btn" id="fltUnseen">未学習だけ</button>
+  <button class="btn" id="clearFilter">フィルタ解除</button>
+
+  <button class="btn" id="reset">リセット</button>
+  <span class="stats" id="stats"></span>
+<!-- 音声読み上げコントロール -->
+<select id="voiceSel" class="btn">
+  <option value="">音声自動（日本語優先）</option>
+</select>
+<label style="display:inline-flex;align-items:center;gap:6px">
+  速度 <input id="rate" type="range" min="0.6" max="1.4" step="0.1" value="1" />
+</label>
+<button class="btn" id="speakAll">表示中を順に読み上げ</button>
+<button class="btn" id="stopTTS">停止</button>
+
+</div>
+
+<main id="cards"></main>
+
+<script>
+/*
+  追加仕様：
+  - 1回目/2回目の正誤を履歴として保存： hist[id] = { first: 'ok'|'ng'|null, second: 'ok'|'ng'|null, tries: number }
+  - 苦手だけ表示： first==='ng' または second==='ng' の項目だけ
+  - 未学習だけ表示： first==null && second==null の項目だけ
+  - 従来の「答えの表示状態」は state[aid]=true で維持
+*/
+
+// ▼ 選択肢を表示する関数（A～Dなど）
+function renderChoices(container, item){
+  if(!item.choices) return;
+  const wrap = document.createElement('div');
+  wrap.className = 'choices';
+  const list = item.choices.map(c => (typeof c === 'string') ? {key:c} : c);
+  list.forEach(c => {
+    const row = document.createElement('div');
+    row.className = 'choiceRow';
+    row.innerHTML = `
+      <span class="ckey">${c.key ?? ''}</span>
+      ${c.hint ? `<span class="chint">${c.hint}</span>` : ''}
+    `;
+    wrap.appendChild(row);
+  });
+  container.appendChild(wrap);
+}
+
+(async()=>{
+ // ====== ここから 音声読み上げ（TTS）セットアップ ======
+const synth = window.speechSynthesis;
+let voices = [];
+const voiceSel = () => document.getElementById('voiceSel');
+const rateEl = () => document.getElementById('rate');
+let readingQueue = null; // {list: [{text,el}], index, cancel:boolean}
+
+// 端末内の音声を取得（日本語っぽいものを優先選択）
+function loadVoices() {
+  voices = synth.getVoices();
+  const sel = voiceSel();
+  if (!sel) return;
+
+  // 一度だけ埋め直す
+  const prev = sel.value;
+  sel.innerHTML = '<option value="">音声自動（日本語優先）</option>';
+
+  voices.forEach((v, i) => {
+    const opt = document.createElement('option');
+    opt.value = String(i);
+    opt.textContent = `${v.name} (${v.lang})`;
+    sel.appendChild(opt);
+  });
+
+  // 既存選択を維持 or 日本語をデフォルト選択
+  const jaIdx = voices.findIndex(v => /^ja/i.test(v.lang) || /日本語/.test(v.name));
+  if (prev) sel.value = prev;
+  else if (jaIdx >= 0) sel.value = String(jaIdx);
+}
+loadVoices();
+if (typeof speechSynthesis !== 'undefined') {
+  speechSynthesis.onvoiceschanged = loadVoices;
+}
+
+function makeUtterance(rawText){
+  // （　）部分を見つけて「ポーズ」に置換
+  let text = rawText
+    .replace(/（　）/g, '……')   // 全角かっこ＋全角スペースをポーズ記号に
+    .replace(/\( *\)/g, '……')    // 半角でも対応
+    .replace(/（[^）]*）/g, '……'); // 万が一何か入っていても無視してポーズ
+
+  const u = new SpeechSynthesisUtterance(text);
+  const idx = parseInt(voiceSel()?.value || '', 10);
+  if (!isNaN(idx) && voices[idx]) u.voice = voices[idx];
+  u.rate = parseFloat(rateEl()?.value || '1') || 1;
+  u.pitch = 1;
+  u.volume = 1;
+
+  // 少しだけ間をあけて読むよう調整（句読点でもポーズを強調）
+  u.text = text.replace(/。/g, '。　').replace(/、/g, '、　');
+
+  return u;
+}
+
+
+function speakOnce(text, onend){
+  // 再生中を止めてから読み上げ（重なり防止）
+  synth.cancel();
+  const u = makeUtterance(text);
+  u.onend = () => onend && onend();
+  synth.speak(u);
+}
+
+function stopAll(){
+  if (readingQueue) readingQueue.cancel = true;
+  synth.cancel();
+  readingQueue = null;
+}
+
+// 表示中カードを順に読み上げ（質問文→答えを順に）
+function speakVisibleAll(){
+  // すでに再生中なら無視
+  if (readingQueue) return;
+
+  const rows = Array.from(document.querySelectorAll('.ans.card'));
+  const list = rows.map(row => {
+    const q = row.querySelector('.q')?.cloneNode(true);
+    // ボタンラベル等を取り除いて、テキストだけ抽出
+    let qText = '';
+    if (q) {
+      // ボタンのテキスト（「1？」など）を消す
+      q.querySelectorAll('button').forEach(b => b.remove());
+      qText = (q.textContent || '').replace(/\s+/g,' ').trim();
+    }
+    // 答え（.word.revealed のみ or 全部？ → 全部読み上げる方が勉強になる）
+    const answers = Array.from(row.querySelectorAll('.word')).map(w => (w.textContent||'').trim()).filter(Boolean);
+    const aText = answers.length ? `答え：${answers.join('、')}` : '';
+    const combined = aText ? `${qText}。 ${aText}` : qText;
+    return { text: combined, el: row };
+  }).filter(item => item.text);
+
+  if (list.length === 0) return;
+
+  readingQueue = { list, index: 0, cancel: false };
+  const next = () => {
+    const q = readingQueue;
+    if (!q || q.cancel || q.index >= q.list.length) { readingQueue = null; return; }
+    const item = q.list[q.index];
+
+    // 軽くハイライト
+    q.list.forEach(x => x.el.style.outline = '');
+    item.el.style.outline = '2px solid #3b4675';
+
+    speakOnce(item.text, () => {
+      item.el.style.outline = '';
+      if (readingQueue && !readingQueue.cancel) {
+        readingQueue.index++;
+        next();
+      }
+    });
+  };
+  next();
+}
+// ====== ここまで 音声読み上げ（TTS）セットアップ ======
+ 
+ const params = new URLSearchParams(location.search);
+  const dataParam = params.get('data');   // 例: ../../assets/data/jp/noimg/kanji-040.json
+  const titleParam = params.get('title') || '学習ページ';
+  document.title = titleParam;
+  document.getElementById('title').textContent = titleParam;
+
+  const cardsEl = document.getElementById('cards');
+  if(!dataParam){
+    cardsEl.innerHTML = '<div class="card">❗データURL（?data=...）が指定されていません。</div>';
+    return;
+  }
+
+  const dataUrl = new URL(dataParam, location.href);
+  let payload;
+  try{
+    const res = await fetch(dataUrl, {cache:'no-store'});
+    if(!res.ok) throw new Error(`HTTP ${res.status}`);
+    payload = await res.json();
+  }catch(e){
+    cardsEl.innerHTML = `<div class="card">❗データの取得に失敗：<code>${dataUrl}</code><br><small>${String(e)}</small></div>`;
+    return;
+  }
+  const items = Array.isArray(payload.items) ? payload.items.slice() : [];
+  if(items.length===0){
+    cardsEl.innerHTML = `<div class="card">❗読み込み成功ですが問題が0件です。<br>データURL：<code>${dataUrl}</code></div>`;
+    return;
+  }
+
+  // 保存キー（セットごとに独立）
+  const stateKey = `qa-state:${dataUrl.href}`;     // 解答の開閉
+  const histKey  = `qa-hist:${dataUrl.href}`;      // 1回目/2回目の正誤
+  let state={}, hist={};
+  try{ state = JSON.parse(localStorage.getItem(stateKey)||'{}'); }catch{}
+  try{ hist  = JSON.parse(localStorage.getItem(histKey )||'{}'); }catch{}
+
+  const statsEl = document.getElementById('stats');
+  let filterMode = 'all'; // 'all' | 'weak' | 'unseen'
+
+  function saveState(){ localStorage.setItem(stateKey, JSON.stringify(state)); }
+  function saveHist(){  localStorage.setItem(histKey,  JSON.stringify(hist));  }
+
+  // 集計（未/1回目○/1回目×/2回目○/2回目×）
+  function calcStats(){
+    let unseen=0, fOk=0, fNg=0, sOk=0, sNg=0;
+    items.forEach((it,i)=>{
+      const id = it.id || `Q${i+1}`;
+      const h = hist[id] || {};
+      if(!h.first && !h.second){ unseen++; return; }
+      if(h.first==='ok' && !h.second) fOk++;
+      if(h.first==='ng' && !h.second) fNg++;
+      if(h.second==='ok') sOk++;
+      if(h.second==='ng') sNg++;
+    });
+    statsEl.textContent = `未:${unseen} ｜ 1回目○:${fOk} ×:${fNg} ｜ 2回目○:${sOk} ×:${sNg}`;
+  }
+
+  // フィルタ条件
+  function passFilter(id){
+    const h = hist[id] || {};
+    if(filterMode==='weak')  return (h.first==='ng' || h.second==='ng');
+    if(filterMode==='unseen')return (!h.first && !h.second);
+    return true; // all
+  }
+
+  function histRow(id){
+    const h = hist[id] || {};
+    const chip = (label,val)=>{
+      const cls = val==='ok' ? 'ok' : (val==='ng' ? 'ng' : 'none');
+      const sym = val==='ok' ? '○' : (val==='ng' ? '×' : '・');
+      return `<span class="chip ${cls}">${label}${sym}</span>`;
+    };
+    return `<span class="badge">${chip('①',h.first)} ${chip('②',h.second)}</span>`;
+  }
+
+  function ensureHist(id){
+    if(!hist[id]) hist[id] = { first:null, second:null, tries:0 };
+    return hist[id];
+  }
+
+  function mark(id, kind){ // kind: 'ok'|'ng'
+    const h = ensureHist(id);
+    h.tries = (h.tries||0)+1;
+    if(!h.first){ h.first = kind; }
+    else if(!h.second){ h.second = kind; }
+    else { // 3回目以降は「2回目」を上書き更新（直近状態を保つ）
+      h.second = kind;
+    }
+    saveHist();
+    render();
+    calcStats();
+  }
+
+  function render(){
+    cardsEl.innerHTML = '';
+    items.forEach((it,i)=>{
+      const id = it.id || `Q${i+1}`;
+      if(!passFilter(id)) return;
+
+      const row = document.createElement('div');
+      row.className = 'card ans';
+      const left = document.createElement('div');
+      left.className = 'num';
+      left.innerHTML = `${i+1}<br>${histRow(id)}`;
+
+      const q = document.createElement('div');
+      q.className = 'q';
+      q.textContent = it.q;
+　　　renderChoices(q, it);
+
+// ▼ 画像付き問題（図を入れる）
+if (it.img) {
+  const ig = document.createElement('img');
+  ig.src = it.img;
+  ig.alt = '参照図';
+  ig.style.maxWidth = '100%';
+  ig.style.border = '1px solid #e5e7eb';
+  ig.style.borderRadius = '8px';
+  ig.style.margin = '6px 0';
+  q.appendChild(ig);
+}
+
+
+      
+
+      (it.answers||[]).forEach((ans,j)=>{
+        const aid = `${id}_${j+1}`;
+        const btn = document.createElement('button'); btn.className='btn small'; btn.textContent=`${j+1}？`;
+        const span = document.createElement('span'); span.className='word'; span.textContent=ans;
+        if(state[aid]){ span.classList.add('revealed'); row.classList.add('active'); }
+        btn.onclick = ()=>{
+          const on = !span.classList.contains('revealed');
+          span.classList.toggle('revealed',on);
+          row.classList.toggle('active',on);
+          state[aid]=on; saveState();
+        };
+        q.appendChild(btn); q.appendChild(span);
+      });
+
+      const right = document.createElement('div');
+      const bx = document.createElement('button'); bx.className='markbtn'; bx.textContent='× 間違えた';
+      const bo = document.createElement('button'); bo.className='markbtn'; bo.textContent='○ 正解';
+      bx.onclick = ()=> mark(id,'ng');
+      bo.onclick = ()=> mark(id,'ok');
+      right.appendChild(bx); right.appendChild(bo);
+
+      row.appendChild(left); row.appendChild(q); row.appendChild(right);
+      cardsEl.appendChild(row);
+    });
+
+    // フィルタボタンの見た目
+    document.getElementById('fltWeak').classList.toggle('filter-on', filterMode==='weak');
+    document.getElementById('fltUnseen').classList.toggle('filter-on', filterMode==='unseen');
+     document.getElementById('speakAll').onclick = () => { stopAll(); speakVisibleAll(); };
+document.getElementById('stopTTS').onclick   = () => { stopAll(); };
+  }
+
+  render(); calcStats();
+
+  // ツールバー操作
+  document.getElementById('shuffle').onclick = ()=>{ items.sort(()=>Math.random()-.5); render(); };
+  document.getElementById('showAll').onclick = ()=>{
+    document.querySelectorAll('.word').forEach(w=>w.classList.add('revealed'));
+    document.querySelectorAll('.ans').forEach(r=>r.classList.add('active'));
+  };
+  document.getElementById('hideAll').onclick = ()=>{
+    document.querySelectorAll('.word').forEach(w=>w.classList.remove('revealed'));
+    document.querySelectorAll('.ans').forEach(r=>r.classList.remove('active'));
+  };
+
+  document.getElementById('fltWeak').onclick = ()=>{ filterMode = (filterMode==='weak'?'all':'weak'); render(); };
+  document.getElementById('fltUnseen').onclick = ()=>{ filterMode = (filterMode==='unseen'?'all':'unseen'); render(); };
+  document.getElementById('clearFilter').onclick = ()=>{ filterMode='all'; render(); };
+
+  document.getElementById('reset').onclick = ()=>{
+    if(confirm('この単元の学習履歴（開閉・正誤）をすべて消去しますか？')){
+      localStorage.removeItem(stateKey);
+      localStorage.removeItem(histKey);
+      state={}; hist={};
+      render(); calcStats();
+    }
+  };
+})();
+</script>
+</body>
+</html>
