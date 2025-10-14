@@ -1,0 +1,10 @@
+{
+  "title": "理科（図なし）一覧",
+  "modules": [
+    {
+      "title": "下 第8回（例） 気象・気温",
+      "desc": "30問｜タップで答え／復習機能",
+      "path": "noimg.html?data=../../assets/data/sci/noimg/ex1.json&title=小4理科 第8回（例）"
+    }
+  ]
+}
