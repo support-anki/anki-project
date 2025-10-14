@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="robots" content="noindex,nofollow" />
+  <title>地理教材 一覧</title>
+  <link rel="stylesheet" href="../../assets/css/style.css" />
+</head>
+<body>
+<header class="site"><h1>🌏 地理教材 一覧</h1></header>
+<main class="grid" id="list"></main>
+
+<script>
+(async () => {
+  // ✅ location.hrefを基準に相対パスでmanifestを取得
+  const manifestUrl = new URL('../../assets/data/geo/manifest.json', location.href);
+  const list = document.getElementById('list');
+
+  try {
+    const res = await fetch(manifestUrl, { cache: 'no-store' });
+    if (!res.ok) throw new Error(`HTTP ${res.status}`);
+    const data = await res.json();
+
+    if (!data.modules?.length) {
+      list.innerHTML = '<div class="card">manifest.json に modules がありません。</div>';
+      return;
+    }
+
+    data.modules.forEach(m => {
+      const a = document.createElement('a');
+      a.className = 'card';
+      a.href = m.path;
+      a.innerHTML = `<h2>${m.title}</h2><p>タップで表示／復習機能あり</p>`;
+      list.appendChild(a);
+    });
+  } catch (e) {
+    list.innerHTML = `<div class="card">manifest.json を読めませんでした：<br><code>${manifestUrl}</code><br><small>${String(e)}</small></div>`;
+  }
+})();
+</script>
+</body>
+</html>
+
+

@@ -1,0 +1,213 @@
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="robots" content="noindex,nofollow" />
+  <title>図なし：漢字40問（九州関連）</title>
+  <link rel="stylesheet" href="../assets/css/style.css" />
+  <style>.qa-title{max-width:960px;margin:12px auto;padding:0 12px;color:#556}</style>
+</head>
+<body>
+ <div class="toolbar">
+  <a class="btn" href="../">← メニューへ</a>
+  <button class="btn" id="shuffle">ランダム並び替え</button>
+  <button class="btn" id="showAll">すべて表示</button>
+  <button class="btn" id="hideAll">すべて非表示</button>
+  <button class="btn" id="print">印刷（答え常時表示）</button>
+  <button class="btn" id="reset">学習状態リセット</button>
+  <button class="btn" id="filterWrong">復習だけ表示</button>
+  <span class="stats" id="stats"></span>
+</div>
+
+  <div class="qa-title">暗記シート（図なし・漢字40問）｜タップで答え表示 <span id="count" style="margin-left:.5em"></span></div>
+
+  <div class="page" id="scopeQA" style="grid-template-columns:1fr;">
+    <aside style="border-left:none">
+      <div class="answers" id="cards"></div>
+    </aside>
+  </div>
+
+
+  <!-- データ（JSON）: q = カタカナ混じり文／answers = 正解の漢字語（複数可） -->
+  <script id="qa-data" type="application/json">{
+    "items": [
+      {"id":"Q1","q":"風に散る花びらで水面がサクラ色に染まる。","answers":["桜色"]},
+      {"id":"Q2","q":"町の中心部を流れるタイガ。","answers":["大河"]},
+      {"id":"Q3","q":"石油危機でブッカが上がり、生活が苦しくなる。","answers":["物価"]},
+      {"id":"Q4","q":"呼び鈴を鳴らしてもオウトウがなかった。","answers":["応答"]},
+      {"id":"Q5","q":"たくさんの人前でエンゼツするのは勇気がいる。","answers":["演説"]},
+      {"id":"Q6","q":"先生のキョカを得て練習を休む。","answers":["許可"]},
+      {"id":"Q7","q":"洗濯機にはエキタイの洗剤を使う。","answers":["液体"]},
+      {"id":"Q8","q":"作文にカリの題名をつけて書き始める。","answers":["仮"]},
+      {"id":"Q9","q":"ムエキな抵抗をやめて降参する。","answers":["無益"]},
+      {"id":"Q10","q":"車のオウライが激しい幹線道路。","answers":["往来"]},
+      {"id":"Q11","q":"店じまいのため、商品をテイカの半額で売る。","answers":["定価"]},
+      {"id":"Q12","q":"カメンを脱いで正体をあらわす。","answers":["仮面"]},
+      {"id":"Q13","q":"後から設定を変更することがカノウである。","answers":["可能"]},
+      {"id":"Q14","q":"冷却材としてエキカしたチッソを用いる。","answers":["液化"]},
+      {"id":"Q15","q":"家から学校までオウフク一時間かかる。","answers":["往復"]},
+      {"id":"Q16","q":"ライトアップされたヨザクラをケンブツする。","answers":["夜桜","見物"]},
+      {"id":"Q17","q":"消毒し、包帯を巻いてけがのオウキュウショチをする。","answers":["応急処置"]},
+      {"id":"Q18","q":"隅田川のカコウ付近の三角州を埋め立てる。","answers":["河口"]},
+      {"id":"Q19","q":"コーチからユウエキな助言をもらう。","answers":["有益"]},
+      {"id":"Q20","q":"ニューヨークで日本の交響楽団がコウエンを行う。","answers":["公演"]},
+      {"id":"Q21","q":"タイセツな荷物を預ける。","answers":["大切"]},
+      {"id":"Q22","q":"大雪で車が立ちオウジョウする。","answers":["往生"]},
+      {"id":"Q23","q":"百円の商品に、三割の利益を見込んでアタイを付ける。","answers":["値"]},
+      {"id":"Q24","q":"先週からジョウエン中のミュージカルを見に行く。","answers":["上演"]},
+      {"id":"Q25","q":"けが人の耳もとで呼びかけてもハンノウがない。","answers":["反応"]},
+      {"id":"Q26","q":"漢字の名前にカタカナで読み方を振る。","answers":["片仮名"]},
+      {"id":"Q27","q":"アイガモは稲の害虫を食べてくれるエキチョウだ。","answers":["益鳥"]},
+      {"id":"Q28","q":"春の海岸で、ピンク色をしたサクラガイを拾う。","answers":["桜貝"]},
+      {"id":"Q29","q":"満場一致で議案をカケツする。","answers":["可決"]},
+      {"id":"Q30","q":"私のケツエキ型はA型です。","answers":["血液"]},
+      {"id":"Q31","q":"ベーブルースはオウネンの名野球選手である。","answers":["往年"]},
+      {"id":"Q32","q":"監督の激励にコタエル。","answers":["応える"]},
+      {"id":"Q33","q":"莫大なリエキをあげる。","answers":["利益"]},
+      {"id":"Q34","q":"コウカな宝石を身につけて、パーティーにサンカする。","answers":["高価"]},
+      {"id":"Q35","q":"返品フカの商品なので、慎重に選ぼう。","answers":["不可"]},
+      {"id":"Q36","q":"計画通りに実行可能かどうか、運動会のヨコウエンシュウを行う。","answers":["予行演習"]},
+      {"id":"Q37","q":"課題解決のためにカセツを立てて実験する。","answers":["仮説"]},
+      {"id":"Q38","q":"国破れてサンガありというが、敗戦の翌春も美しい花々が人々の目をなぐさめた。","answers":["山河"]},
+      {"id":"Q39","q":"イエキの中にふくまれている酸。","answers":["胃液"]},
+      {"id":"Q40","q":"春の到来を知らせるサクラゼンセン。","answers":["桜前線"]}
+    ]
+  }</script>
+
+  <script>
+  (function(){
+    const storeKey = 'kanji-kyushu-40-v1';
+    const data = JSON.parse(document.getElementById('qa-data').textContent);
+    const cardsEl = document.getElementById('cards'); const countEl=document.getElementById('count');
+    let state={}; try{ state=JSON.parse(localStorage.getItem(storeKey)||'{}'); }catch{}
+    function save(){ localStorage.setItem(storeKey, JSON.stringify(state)); }
+
+    function render(items){
+      cardsEl.innerHTML='';
+      items.forEach((it,idx)=>{
+        const id=it.id||`Q${idx+1}`;
+        const row=document.createElement('div'); row.className='ans'; row.id='ans-'+id;
+        const left=document.createElement('div'); left.className='num'; left.textContent=(idx+1);
+        const q=document.createElement('div'); q.className='q'; q.textContent=it.q;
+        const right=document.createElement('div'); right.innerHTML='&nbsp;';
+        row.appendChild(left); row.appendChild(q); row.appendChild(right);
+        (it.answers||[]).forEach((ans,i)=>{
+          const ansId=`${id}_${i+1}`;
+          const btn=document.createElement('button'); btn.className='btn'; btn.textContent=(i+1)+'？'; btn.dataset.target=`#${ansId}`;
+          const span=document.createElement('span'); span.id=ansId; span.className='word'; span.textContent=ans;
+          if(state[ansId]){ span.classList.add('revealed'); row.classList.add('active'); }
+          btn.addEventListener('click',()=>{ const on=!span.classList.contains('revealed'); span.classList.toggle('revealed',on); row.classList.toggle('active',on); state[ansId]=on; save(); });
+          q.appendChild(btn); q.appendChild(span);
+        });
+        cardsEl.appendChild(row);
+      });
+      countEl.textContent=`${items.length}問`;
+    }
+
+    let items=data.items.slice();
+    render(items);
+
+    document.getElementById('showAll').addEventListener('click',()=>{
+      document.querySelectorAll('.word').forEach(w=>w.classList.add('revealed'));
+      document.querySelectorAll('.ans').forEach(r=>r.classList.add('active'));
+      // 状態保存
+      data.items.forEach((it,idx)=>{ (it.answers||[]).forEach((_,i)=>{ state[`${it.id||`Q${idx+1}`}_${i+1}`]=true; });}); save();
+    });
+    document.getElementById('hideAll').addEventListener('click',()=>{
+      document.querySelectorAll('.word').forEach(w=>w.classList.remove('revealed'));
+      document.querySelectorAll('.ans').forEach(r=>r.classList.remove('active'));
+      state={}; save();
+    });
+    document.getElementById('shuffle').addEventListener('click',()=>{ items = items.sort(()=>Math.random()-0.5); render(items); });
+    document.getElementById('print').addEventListener('click',()=>window.print());
+    document.getElementById('reset').addEventListener('click',()=>{ if(confirm('学習状態を消去しますか？')){ state={}; save(); location.reload(); } });
+  })();
+ (function(){
+  const url = new URL(location.href);
+  const dataParam = url.searchParams.get('data') || ''; //（将来JSON外部化に備え）
+  const baseKey = dataParam || document.title; // シートごとにキーを変える
+  const storeKey = `qa-state:${baseKey}`;
+  const markKey  = `qa-mark:${baseKey}`;
+
+  const data = JSON.parse(document.getElementById('qa-data').textContent); // 既存
+  const cardsEl = document.getElementById('cards');
+  const statsEl = document.getElementById('stats');
+  let state={}, mark={}; // state:解答表示状況 / mark: ○×
+  try { state = JSON.parse(localStorage.getItem(storeKey)||'{}'); } catch {}
+  try { mark  = JSON.parse(localStorage.getItem(markKey)||'{}'); } catch {}
+
+  function save(){ localStorage.setItem(storeKey, JSON.stringify(state)); }
+  function saveMark(){ localStorage.setItem(markKey, JSON.stringify(mark)); }
+
+  function calcStats(items){
+    let ok=0, wrong=0, none=0;
+    items.forEach((it, idx)=>{
+      const id = it.id || `Q${idx+1}`;
+      const m = mark[id];
+      if(m==='ok') ok++; else if(m==='wrong') wrong++; else none++;
+    });
+    statsEl.textContent = `○${ok} ×${wrong} 未${none}`;
+  }
+
+  function render(items, filterWrong=false){
+    cardsEl.innerHTML = '';
+    items.forEach((it, idx)=>{
+      const id = it.id || `Q${idx+1}`;
+      if(filterWrong && mark[id] !== 'wrong') return; // 復習だけ
+
+      const row = document.createElement('div'); row.className='ans'; row.id='ans-'+id;
+
+      // 左：番号＋バッジ
+      const left = document.createElement('div'); left.className='num'; left.textContent=(idx+1);
+      const badge = document.createElement('span'); badge.className='badge'; badge.textContent='未';
+      if(mark[id]==='ok'){ badge.classList.add('ok'); badge.textContent='○'; }
+      if(mark[id]==='wrong'){ badge.classList.add('wrong'); badge.textContent='×'; }
+      left.appendChild(badge);
+
+      // 中：問題文＋解答ボタン群（既存の表示/非表示ロジック）
+      const q = document.createElement('div'); q.className='q'; q.textContent = it.q;
+      (it.answers||[]).forEach((ans,i)=>{
+        const ansId=`${id}_${i+1}`;
+        const btn=document.createElement('button'); btn.className='btn'; btn.textContent=`${i+1}？`;
+        const span=document.createElement('span'); span.id=ansId; span.className='word'; span.textContent=ans;
+        if(state[ansId]){ span.classList.add('revealed'); row.classList.add('active'); }
+        btn.addEventListener('click',()=>{
+          const on=!span.classList.contains('revealed');
+          span.classList.toggle('revealed',on); row.classList.toggle('active',on);
+          state[ansId]=on; save();
+        });
+        q.appendChild(btn); q.appendChild(span);
+      });
+
+      // 右：○×マークボタン
+      const right = document.createElement('div');
+      const bx = document.createElement('button'); bx.className='markbtn'; bx.textContent='× 間違えた';
+      const bo = document.createElement('button'); bo.className='markbtn'; bo.textContent='○ 正解';
+      bx.addEventListener('click',()=>{ mark[id]='wrong'; saveMark(); render(items, filterWrong); calcStats(items); });
+      bo.addEventListener('click',()=>{ mark[id]='ok';    saveMark(); render(items, filterWrong); calcStats(items); });
+      right.appendChild(bx); right.appendChild(bo);
+
+      row.appendChild(left); row.appendChild(q); row.appendChild(right);
+      cardsEl.appendChild(row);
+    });
+    calcStats(items);
+  }
+
+  let items = data.items.slice();
+  let filterWrong=false;
+  render(items, filterWrong);
+
+  // 既存ボタンに加えてフィルタ
+  document.getElementById('filterWrong').addEventListener('click', ()=>{
+    filterWrong = !filterWrong;
+    document.getElementById('filterWrong').textContent = filterWrong ? 'すべて表示' : '復習だけ表示';
+    render(items, filterWrong);
+  });
+
+  // 既存の showAll/hideAll/shuffle/print/reset はそのまま（必要ならここに接続）
+})();
+
+  </script>
+</body>
+</html>

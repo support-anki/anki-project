@@ -1,0 +1,10 @@
+{
+  "title": "国語教材 一覧",
+  "modules": [
+    {
+      "title": "下第7回漢字",
+      "desc": "タップで表示／復習機能付き",
+      "path": "../../modules/geo/noimg.html?data=../../assets/data/jp/noimg/kanji-040.json&title=漢字40問（第1弾）"
+    }
+  ]
+}
