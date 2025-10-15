@@ -4,6 +4,16 @@
     {
       "title": "下第7回漢字",
       "path": "../noimg.html?data=/anki-project/assets/data/jp/noimg/kanji-040.json&title=漢字40問（第1弾）"
+    },
+    {
+      "title": "漢検7級 学習用（統合版）",
+      "path": "../noimg.html?data=/anki-project/assets/data/jp/noimg/kanken7_all.json&title=漢検7級 学習用（統合版）",
+      "thumbnail": "../assets/img/thumb/kanji7.png",
+      "category": "国語・漢字",
+      "grade": "小4〜小5",
+      "tags": ["漢字", "語彙", "練習", "書き取り", "小学生"],
+      "updated": "2025-10-15"
     }
   ]
 }
+
