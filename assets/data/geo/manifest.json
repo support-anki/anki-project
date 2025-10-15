@@ -11,3 +11,21 @@
     }
   ]
 }
+
+{
+  "title": "地理教材 一覧",
+  "modules": [
+    {
+      "title": "九州地方（地図あり・2枚タブ）",
+      "path": "geo-kyushu.html",
+      "thumbnail": "../assets/img/thumb/kyushu-map.png",
+      "category": "地理・地図",
+      "tags": ["地図", "地形", "国立公園", "九州地方"],
+      "updated": "2025-10-15"
+    },
+    {
+      "title": "第8回 気候と各地のくらし（図なし・復習付き）",
+      "path": "noimg.html?data=../../assets/data/geo/noimg/ge8-kikou.json&title=小4社会 第8回 気候と各地のくらし（図なし・復習付き）"
+    }
+  ]
+}
