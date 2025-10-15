@@ -26,6 +26,12 @@
 .filter-on{outline:2px solid #3b4675}
 #voiceSel{background:#fff;color:#333;border:1px solid #d1d5db;border-radius:6px;padding:4px 8px}
 #rate{vertical-align:middle}
+.choices{ margin:.4em 0 0; padding-left:0 }
+.choiceRow{ display:flex; gap:.6em; align-items:flex-start; margin:.25em 0 }
+.ckey{ display:inline-block; min-width:1.8em; text-align:center; border:1px solid #cfd5e0;
+       border-radius:9999px; padding:0 .45em; background:#f7f9fb; color:#334 }
+.chint{ flex:1; line-height:1.6 }
+
 </style>
 </head>
 <body>
@@ -67,12 +73,26 @@
   - 従来の「答えの表示状態」は state[aid]=true で維持
 */
 
-// ▼ 選択肢を表示する関数（A～Dなど）
+// ▼ 選択肢を表示する関数（「ア：説明」「イ：…」の文字列／オブジェクト両対応）
 function renderChoices(container, item){
   if(!item.choices) return;
   const wrap = document.createElement('div');
   wrap.className = 'choices';
-  const list = item.choices.map(c => (typeof c === 'string') ? {key:c} : c);
+
+  const list = item.choices.map(c => {
+    if (typeof c === 'string') {
+      // 文字列 "ア：説明" / "A: desc" / "ア 説明" などを「キー＋説明」に自動分割
+      const m = c.match(/^([A-DＡ-Ｄア-エあ-おｲｳｴｱ])\s*[:：．。\-–ー]?\s*(.*)$/);
+      if (m) return { key: m[1], hint: m[2] || '' };
+      return { key: c, hint: '' }; // "ア" だけのケース
+    }
+    // {key:'ア', hint:'説明'} / {label:'ア', text:'説明'} など広めに吸収
+    return {
+      key: c.key ?? c.label ?? c.id ?? '',
+      hint: c.hint ?? c.text ?? ''
+    };
+  });
+
   list.forEach(c => {
     const row = document.createElement('div');
     row.className = 'choiceRow';
