@@ -8,15 +8,14 @@
     {
       "title": "第8回 気候と各地のくらし（図なし・復習付き）",
       "path": "../noimg.html?data=/anki-project/assets/data/geo/noimg/ge8-kikou.json&title=小4社会 第8回 気候と各地のくらし（図なし・復習付き）"
+    },
+    {
+      "title": "九州地方の地図",
+      "path": "../img.html?data=/anki-project/assets/data/geo/mapdata/ge-kyushu.json&title=九州地方の地図",
+      "thumbnail": "../assets/img/thumb/kyushu.png",
+      "category": "社会・地理（図あり）",
+      "tags": ["地図", "九州", "都道府県", "産業", "地形"],
+      "updated": "2025-10-15"
     }
-{
-  "title": "九州地方の地図",
-  "path": "../img.html?data=/anki-project/assets/data/geo/mapdata/ge-kyushu.json&title=九州地方の地図",
-  "thumbnail": "../assets/img/thumb/kyushu.png",
-  "category": "社会・地理（図あり）",
-  "tags": ["地図", "九州", "都道府県", "産業", "地形"],
-  "updated": "2025-10-15"
-}
   ]
 }
-
