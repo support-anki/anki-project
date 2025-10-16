@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>図あり教材（共通テンプレート・正誤記録対応）</title>
+  <title>図あり教材（共通テンプレート・正誤記録対応・noimg統一版）</title>
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
   <style>
     :root {
@@ -12,7 +12,7 @@
       --text: #222;
       --muted: #667085;
       --brand: #3b4675;
-      --accent: #06C755;
+      --accent: #22c55e;
       --danger: #ef4444;
     }
     html, body { height: 100%; margin: 0; font-family: system-ui, 'Noto Sans JP', sans-serif; background: var(--bg); color: var(--text); }
@@ -33,8 +33,8 @@
     .tab.active { background: var(--brand); color: #fff; border-color: var(--brand); }
     .aside-body { padding: 12px; overflow: auto; display: grid; gap: 10px; }
     .qitem { border: 1px solid #ddd; border-radius: 10px; padding: 8px; background: #fff; }
-    .qitem.correct { border-color: #22c55e; background: #f0fff4; }
-    .qitem.wrong { border-color: #ef4444; background: #fff5f5; }
+    .qitem.correct { border-color: var(--accent); background: #f0fff4; }
+    .qitem.wrong { border-color: var(--danger); background: #fff5f5; }
     .qtop { display: flex; justify-content: space-between; align-items: center; }
     .qid { font-weight: 700; }
     .status { display: flex; gap: 6px; align-items: center; }
@@ -55,7 +55,7 @@
         <span class="pill"><input type="checkbox" id="toggleAnswers" /> <label for="toggleAnswers">答えを常に表示</label></span>
         <span class="pill"><input type="checkbox" id="toggleLabels" checked /> <label for="toggleLabels">番号ラベルを表示</label></span>
         <button class="btn" id="fitBtn">全体表示</button>
-        <button class="btn" id="resetBtn">未表示にリセット</button>
+        <button class="btn" id="resetBtn">未表示・記録をリセット</button>
         <button class="btn" id="exportBtn">JSONをコピー</button>
         <button class="btn" id="editBtn">編集モード</button>
       </div>
@@ -71,7 +71,7 @@
       <div class="aside-body" id="qList"></div>
     </aside>
   </main>
-  <div class="footer" style="text-align:center;color:#888;font-size:12px;">番号をクリックして答えを確認。正誤は端末に保存されます。</div>
+  <div class="footer" style="text-align:center;color:#888;font-size:12px;">番号をクリックして答えを確認。正解・誤答は端末に保存されます。</div>
   <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
   <script>
   const qs = new URLSearchParams(location.search);
@@ -100,10 +100,15 @@
   function setupMarkers(points){points.forEach(pt=>{const m=L.marker([pt.y,pt.x],{icon:makeIcon(pt)}).addTo(map);m.on('click',()=>toggleReveal(pt.id));state.markers[pt.id]=m;});refreshMarkers();}
   function makeIcon(pt){const res=state.results[pt.id];let cls='num-marker';if(res==='correct')cls+=' ok';if(res==='wrong')cls+=' bad';const num=els.toggleLabels.checked?pt.id:'';return L.divIcon({html:`<div class="${cls}">${num}</div>`,className:'',iconSize:[28,28],iconAnchor:[14,14]});}
   function refreshMarkers(){Object.entries(state.markers).forEach(([id,m])=>{const pt=state.data.points.find(p=>p.id===id);if(pt.img===state.activeImgId){m.addTo(map);}else{map.removeLayer(m);}m.setIcon(makeIcon(pt));});}
-  function renderList(){const active=state.activeImgId;const always=els.toggleAnswers.checked;const list=state.data.points.filter(p=>p.img===active);els.qList.innerHTML='';list.forEach(pt=>{const shown=always||state.revealed.has(pt.id);const res=state.results[pt.id];const card=document.createElement('div');card.className='qitem'+(res==='correct'?' correct':res==='wrong'?' wrong':'');card.innerHTML=`<div class="qtop"><div class="status"><span class="qid">${pt.id}</span>${res==='correct'?'<span class="chip ok">✅正解</span>':res==='wrong'?'<span class="chip bad">❌誤答</span>':''}</div><div class="qactions"><button class="btn" data-a="reveal">${shown?'隠す':'表示'}</button><button class="btn ghost" data-a="ok">✅</button><button class="btn ghost" data-a="ng">❌</button></div></div><div class="answer" ${shown?'':'style="display:none"'}>${pt.answer??pt.label??''}</div>`;card.querySelector('[data-a="reveal"]').onclick=()=>toggleReveal(pt.id);card.querySelector('[data-a="ok"]').onclick=()=>mark(pt.id,'correct',card);card.querySelector('[data-a="ng"]').onclick=()=>mark(pt.id,'wrong',card);els.qList.appendChild(card);});}
+  function renderList(){const active=state.activeImgId;const always=els.toggleAnswers.checked;const list=state.data.points.filter(p=>p.img===active);els.qList.innerHTML='';list.forEach(pt=>{const shown=always||state.revealed.has(pt.id);const res=state.results[pt.id];const card=document.createElement('div');card.className='qitem'+(res==='correct'?' correct':res==='wrong'?' wrong':'');card.innerHTML=`<div class="qtop"><div class="status"><span class="qid">${pt.id}</span>${res==='correct'?'<span class="chip ok">✅ 正解</span>':res==='wrong'?'<span class="chip bad">❌ 誤答</span>':''}</div><div class="qactions"><button class="btn primary" data-a="reveal">${shown?'隠す':'表示'}</button><button class="btn ghost" data-a="ok">✅</button><button class="btn ghost" data-a="ng">❌</button></div></div><div class="answer" ${shown?'':'style="display:none"'}>${pt.answer??pt.label??''}</div>`;card.querySelector('[data-a="reveal"]').onclick=()=>toggleReveal(pt.id);card.querySelector('[data-a="ok"]').onclick=()=>mark(pt.id,'correct');card.querySelector('[data-a="ng"]').onclick=()=>mark(pt.id,'wrong');els.qList.appendChild(card);});els.counter.textContent=`${state.revealed.size} / ${state.data.points.length}`;}
   function toggleReveal(id){if(state.revealed.has(id))state.revealed.delete(id);else state.revealed.add(id);save();renderList();}
-  function mark(id,res,card){state.results[id]=res;save();renderList();}
+  function mark(id,res){state.results[id]=res;save();renderList();}
   function save(){localStorage.setItem(storeKey('revealed'),JSON.stringify([...state.revealed]));localStorage.setItem(storeKey('results'),JSON.stringify(state.results));}
+  els.reset.onclick=()=>{if(confirm('すべての正誤記録と表示状態をリセットしますか？')){state.results={};state.revealed.clear();save();renderList();refreshMarkers();}};
+  els.fit.onclick=()=>fitActive();
+  els.exportBtn.onclick=()=>{navigator.clipboard.writeText(JSON.stringify(state.data,null,2));alert('JSONをコピーしました');};
+  els.toggleAnswers.onchange=()=>renderList();
+  els.toggleLabels.onchange=()=>refreshMarkers();
   </script>
 </body>
 </html>
