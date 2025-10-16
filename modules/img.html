@@ -284,23 +284,24 @@
     list.forEach(pt => {
       const card = document.createElement('div');
       card.className = 'qitem';
-      const shown = always || state.revealed.has(pt.id);
-      card.innerHTML = `
-        <div class="qtop">
-          <div>
-            <span class="qid">${pt.id}</span>
-            <span class="qlabel">${pt.label || ''}</span>
-          </div>
-          <div class="qactions">
-            <button class="btn" data-action="focus">地図</button>
-            <button class="btn primary" data-action="reveal">${shown ? '隠す' : '表示'}</button>
-          </div>
-        </div>
-        <div class="answer" ${shown ? '' : 'style="display:none"'}>
-          <div>${pt.answer ?? pt.label ?? ''}</div>
-          ${pt.note ? `<div class="hint">${pt.note}</div>` : ''}
-        </div>
-      `;
+      const shown = always || state.revealed.has(pt.id);card.innerHTML = `
+  <div class="qtop">
+    <div>
+      <span class="qid">${pt.id}</span>
+      <!-- 問題では名称は出さない -->
+      <!-- <span class="qlabel">${pt.label || ''}</span> -->
+    </div>
+    <div class="qactions">
+      <button class="btn" data-action="focus">地図</button>
+      <button class="btn primary" data-action="reveal">${shown ? '隠す' : '表示'}</button>
+    </div>
+  </div>
+  <div class="answer" ${shown ? '' : 'style="display:none"'}>
+    <div>${pt.answer ?? pt.label ?? ''}</div>
+    ${pt.note ? `<div class="hint">${pt.note}</div>` : ''}
+  </div>
+`;
+
       card.querySelector('[data-action="focus"]').addEventListener('click', () => {
         const m = state.markers[pt.id];
         if (m) {
