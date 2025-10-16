@@ -3,58 +3,48 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>図あり教材（共通テンプレート）</title>
-  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
+  <title>図あり教材（共通テンプレート・正誤記録対応）</title>
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
   <style>
     :root {
       --bg: #f7f7fb;
       --card: #ffffff;
       --text: #222;
       --muted: #667085;
-      --brand: #3b4675; /* ましろ総合法律事務所ベース */
-      --accent: #06C755; /* LINEグリーン */
+      --brand: #3b4675;
+      --accent: #06C755;
+      --danger: #ef4444;
     }
-    html, body { height: 100%; }
-    body { margin: 0; background: var(--bg); color: var(--text); font-family: system-ui, -apple-system, Segoe UI, Roboto, "Hiragino Kaku Gothic ProN", "Noto Sans JP", "Yu Gothic UI", "Yu Gothic", Meiryo, sans-serif; }
-    header {
-      position: sticky; top: 0; z-index: 50; backdrop-filter: blur(6px);
-      background: rgba(255,255,255,0.85); border-bottom: 1px solid #e5e7eb;
-    }
+    html, body { height: 100%; margin: 0; font-family: system-ui, 'Noto Sans JP', sans-serif; background: var(--bg); color: var(--text); }
+    header { position: sticky; top: 0; z-index: 50; backdrop-filter: blur(6px); background: rgba(255,255,255,0.9); border-bottom: 1px solid #e5e7eb; }
     .wrap { max-width: 1200px; margin: 0 auto; padding: 12px 16px; }
     .title { font-size: 18px; font-weight: 700; }
-    .toolbar { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; margin-top: 8px; }
-    .pill { display: inline-flex; align-items: center; gap: 6px; padding: 6px 10px; border-radius: 999px; background: var(--card); border: 1px solid #e5e7eb; font-size: 13px; }
-    .pill input[type="checkbox"] { transform: translateY(1px); }
-    .btn { cursor: pointer; border: 1px solid #e5e7eb; background: var(--card); border-radius: 10px; padding: 8px 12px; font-size: 14px; }
+    .toolbar { display: flex; gap: 8px; flex-wrap: wrap; align-items: center; margin-top: 8px; }
+    .pill { display: inline-flex; align-items: center; gap: 4px; border: 1px solid #ddd; background: #fff; border-radius: 999px; padding: 6px 10px; font-size: 13px; }
+    .btn { cursor: pointer; border: 1px solid #ddd; border-radius: 8px; padding: 6px 10px; font-size: 14px; background: #fff; }
     .btn.primary { background: var(--brand); color: #fff; border-color: var(--brand); }
     .btn.ghost { background: transparent; }
-    .layout { display: grid; grid-template-columns: 1fr 360px; gap: 12px; max-width: 1200px; margin: 12px auto; padding: 0 16px 24px; }
-    #map { width: 100%; height: calc(100vh - 150px); border-radius: 14px; background: #e9edf3; box-shadow: 0 1px 0 rgba(0,0,0,0.03) inset; }
-    aside { background: var(--card); border: 1px solid #e5e7eb; border-radius: 14px; overflow: hidden; display: flex; flex-direction: column; min-height: 320px; }
-    .aside-head { padding: 12px; border-bottom: 1px solid #f0f2f5; display: flex; gap: 8px; align-items: center; justify-content: space-between; }
-    .aside-head .tabs { display: flex; gap: 6px; flex-wrap: wrap; }
-    .tab { border: 1px solid #e5e7eb; background: #fff; padding: 6px 10px; font-size: 13px; border-radius: 999px; cursor: pointer; }
+    .layout { display: grid; grid-template-columns: 1fr 380px; gap: 12px; margin: 12px auto; max-width: 1200px; padding: 0 16px 24px; }
+    #map { width: 100%; height: calc(100vh - 150px); border-radius: 12px; background: #e9edf3; }
+    aside { background: var(--card); border: 1px solid #e5e7eb; border-radius: 12px; display: flex; flex-direction: column; }
+    .aside-head { padding: 10px; border-bottom: 1px solid #eee; display: flex; justify-content: space-between; align-items: center; }
+    .tabs { display: flex; gap: 6px; flex-wrap: wrap; }
+    .tab { border: 1px solid #ddd; border-radius: 999px; padding: 6px 10px; font-size: 13px; cursor: pointer; }
     .tab.active { background: var(--brand); color: #fff; border-color: var(--brand); }
     .aside-body { padding: 12px; overflow: auto; display: grid; gap: 10px; }
-    .qitem { border: 1px solid #e5e7eb; border-radius: 12px; padding: 10px; display: grid; gap: 6px; background: #fff; }
-    .qtop { display: flex; align-items: center; justify-content: space-between; gap: 8px; }
+    .qitem { border: 1px solid #ddd; border-radius: 10px; padding: 8px; background: #fff; }
+    .qitem.correct { border-color: #22c55e; background: #f0fff4; }
+    .qitem.wrong { border-color: #ef4444; background: #fff5f5; }
+    .qtop { display: flex; justify-content: space-between; align-items: center; }
     .qid { font-weight: 700; }
-    .qlabel { color: var(--muted); font-size: 13px; }
-    .answer { background: #f8fafc; border: 1px dashed #d8dee9; border-radius: 10px; padding: 8px; font-size: 14px; }
-    .chip { font-size: 12px; padding: 2px 8px; border-radius: 999px; background: #f1f5f9; border: 1px solid #e5e7eb; }
-    .qactions { display: flex; gap: 6px; }
-    .hint { color: var(--muted); font-size: 12px; }
-    .footer { text-align: center; color: #94a3b8; font-size: 12px; padding: 8px 16px 18px; }
-
-    /* Responsive */
-    @media (max-width: 960px) {
-      .layout { grid-template-columns: 1fr; }
-      #map { height: 48vh; }
-    }
-
-    /* Leaflet number marker */
-    .num-marker { width: 28px; height: 28px; border-radius: 50%; display: grid; place-items: center; font-weight: 700; border: 2px solid #fff; box-shadow: 0 2px 6px rgba(0,0,0,0.2); background: var(--accent); color: #fff; }
-    .num-marker.dim { background: #94a3b8; }
+    .status { display: flex; gap: 6px; align-items: center; }
+    .chip { font-size: 12px; padding: 2px 8px; border-radius: 999px; border: 1px solid #ddd; }
+    .chip.ok { background: #dcfce7; border-color: #86efac; }
+    .chip.bad { background: #fee2e2; border-color: #fca5a5; }
+    .answer { background: #f8fafc; border: 1px dashed #d8dee9; border-radius: 8px; padding: 8px; font-size: 14px; }
+    .num-marker { width: 28px; height: 28px; border-radius: 50%; display: grid; place-items: center; font-weight: 700; border: 2px solid #fff; background: #64748b; color: #fff; box-shadow: 0 2px 6px rgba(0,0,0,0.2); }
+    .num-marker.ok { background: var(--accent); }
+    .num-marker.bad { background: var(--danger); }
   </style>
 </head>
 <body>
@@ -62,310 +52,58 @@
     <div class="wrap">
       <div class="title" id="pageTitle">図あり教材</div>
       <div class="toolbar">
-        <span class="pill"><input type="checkbox" id="toggleAnswers"/> <label for="toggleAnswers">答えを常に表示</label></span>
-        <span class="pill"><input type="checkbox" id="toggleLabels" checked/> <label for="toggleLabels">番号ラベルを表示</label></span>
+        <span class="pill"><input type="checkbox" id="toggleAnswers" /> <label for="toggleAnswers">答えを常に表示</label></span>
+        <span class="pill"><input type="checkbox" id="toggleLabels" checked /> <label for="toggleLabels">番号ラベルを表示</label></span>
         <button class="btn" id="fitBtn">全体表示</button>
-        <button class="btn ghost" id="resetBtn">未表示にリセット</button>
-        <button class="btn" id="exportBtn" title="表示中データをJSONでコピー">JSONをコピー</button>
-        <button class="btn" id="editBtn" title="編集モード切替 (ドラッグで座標調整)">編集モード</button>
+        <button class="btn" id="resetBtn">未表示にリセット</button>
+        <button class="btn" id="exportBtn">JSONをコピー</button>
+        <button class="btn" id="editBtn">編集モード</button>
       </div>
     </div>
   </header>
-
   <main class="layout">
-    <div id="map" aria-label="地図表示"></div>
+    <div id="map"></div>
     <aside>
       <div class="aside-head">
-        <div class="tabs" id="imgTabs" aria-label="画像タブ"></div>
+        <div class="tabs" id="imgTabs"></div>
         <div class="hint" id="counter">—</div>
       </div>
-      <div class="aside-body" id="qList" aria-label="問題リスト"></div>
+      <div class="aside-body" id="qList"></div>
     </aside>
   </main>
-  <div class="footer">画像をタップ／番号をクリックすると答えが表示されます。編集は ?edit=1 をURLに付けると有効になります。</div>
-
+  <div class="footer" style="text-align:center;color:#888;font-size:12px;">番号をクリックして答えを確認。正誤は端末に保存されます。</div>
   <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
   <script>
-  /*
-   * 図あり教材 共通テンプレート img.html
-   * クエリ:
-   *  - data: JSONのURL (必須)
-   *  - title: ページタイトル (任意)
-   *  - edit=1: 編集モードON（ドラッグで座標調整／JSON書き出し）
-   *
-   * JSON スキーマ（例）
-   * {
-   *   "title": "小4社会 九州地方の地図",
-   *   "images": [
-   *     { "id": "map1", "src": "/anki-project/assets/img/kyushu-map1.png", "width": 2200, "height": 1600, "label": "基本図" },
-   *     { "id": "map2", "src": "/anki-project/assets/img/kyushu-map2.png", "width": 2200, "height": 1600, "label": "拡大図" }
-   *   ],
-   *   "points": [
-   *     { "id": "001", "img": "map1", "x": 820, "y": 540, "label": "福岡県", "answer": "福岡県（県庁所在地：福岡市）", "note": "人口最多の県" },
-   *     { "id": "002", "img": "map1", "x": 1080, "y": 690, "label": "佐賀県", "answer": "佐賀県", "note": "有明海" }
-   *   ]
-   * }
-   *
-   * 座標系: 画像ピクセル（0,0 原点=左上）。Leaflet CRS.Simple を使用。
-   */
-
   const qs = new URLSearchParams(location.search);
   const dataUrl = qs.get('data');
-  const pageTitle = qs.get('title') || '図あり教材';
-  const editFromQS = qs.get('edit') === '1';
-  document.getElementById('pageTitle').textContent = pageTitle;
-
+  const title = qs.get('title') || '図あり教材';
+  document.getElementById('pageTitle').textContent = title;
   const els = {
-    map: document.getElementById('map'),
-    tabs: document.getElementById('imgTabs'),
     qList: document.getElementById('qList'),
-    counter: document.getElementById('counter'),
-    fitBtn: document.getElementById('fitBtn'),
-    resetBtn: document.getElementById('resetBtn'),
+    tabs: document.getElementById('imgTabs'),
+    fit: document.getElementById('fitBtn'),
+    reset: document.getElementById('resetBtn'),
     exportBtn: document.getElementById('exportBtn'),
-    editBtn: document.getElementById('editBtn'),
     toggleAnswers: document.getElementById('toggleAnswers'),
     toggleLabels: document.getElementById('toggleLabels'),
+    counter: document.getElementById('counter')
   };
-
-  if (!dataUrl) {
-    alert('data クエリにJSONのURLを指定してください。\n例: /modules/img.html?data=../../assets/data/geo/mapdata/ge-kyushu.json&title=九州地方の地図');
-  }
-
-  /** 状態 **/
-  const state = {
-    data: null, // 取得したJSON
-    map: null,
-    imageLayers: {}, // {imgId: { layer, bounds }}
-    markers: {}, // {pointId: marker}
-    activeImgId: null,
-    revealed: new Set(JSON.parse(localStorage.getItem(storeKey('revealed')) || '[]')),
-    edit: editFromQS,
-  };
-
-  function storeKey(key){ return `anki-img:${dataUrl}:${key}`; }
-  function saveRevealed(){ localStorage.setItem(storeKey('revealed'), JSON.stringify([...state.revealed])); }
-  function resetRevealed(){ state.revealed.clear(); saveRevealed(); renderList(); refreshMarkerStyles(); }
-
-  /* Leaflet 初期化 */
-  const map = L.map('map', { crs: L.CRS.Simple, minZoom: -4, zoomSnap: 0.1 });
-  state.map = map;
-
-  /* UI ハンドラ */
-  els.fitBtn.addEventListener('click', () => fitActive());
-  els.resetBtn.addEventListener('click', () => resetRevealed());
-  els.toggleAnswers.addEventListener('change', () => renderList());
-  els.toggleLabels.addEventListener('change', () => refreshMarkerStyles());
-  els.exportBtn.addEventListener('click', exportJSON);
-  els.editBtn.addEventListener('click', () => toggleEdit());
-
-  fetch(dataUrl).then(r => r.json()).then(json => {
-    state.data = json;
-    if (json.title) document.getElementById('pageTitle').textContent = json.title;
-
-    // 画像タブ生成
-    setupImages(json.images);
-
-    // マーカー追加
-    setupMarkers(json.points);
-
-    // リスト描画
-    renderList();
-
-    // 初期フィット
-    fitActive();
-
-    // 編集モード反映
-    setEditMode(state.edit);
-  }).catch(err => {
-    console.error(err);
-    alert('JSONの読み込みに失敗しました。パスとCORS設定を確認してください。');
-  });
-
-  function setupImages(images){
-    if (!Array.isArray(images) || images.length === 0) {
-      throw new Error('images が空です。少なくとも1枚の画像を指定してください。');
-    }
-    els.tabs.innerHTML = '';
-    images.forEach((img, idx) => {
-      // bounds: [ [yMin, xMin], [yMax, xMax] ] だが、CRS.Simpleは[ [0,0],[h,w] ]にする
-      const bounds = [[0,0], [img.height, img.width]];
-      const layer = L.imageOverlay(img.src, bounds, { opacity: 1, interactive: false });
-      state.imageLayers[img.id] = { layer, bounds, meta: img };
-      
-      const t = document.createElement('button');
-      t.className = 'tab' + (idx===0 ? ' active' : '');
-      t.textContent = img.label || img.id || `画像${idx+1}`;
-      t.addEventListener('click', () => setActiveImage(img.id));
-      els.tabs.appendChild(t);
-
-      if (idx===0) {
-        state.activeImgId = img.id;
-        layer.addTo(map);
-        map.setMaxBounds(bounds);
-        map.fitBounds(bounds);
-      }
-    });
-  }
-
-  function setActiveImage(imgId){
-    if (imgId === state.activeImgId) return;
-    // 画像レイヤ切替
-    Object.entries(state.imageLayers).forEach(([id, obj]) => {
-      if (id === imgId) {
-        if (!map.hasLayer(obj.layer)) obj.layer.addTo(map);
-      } else {
-        if (map.hasLayer(obj.layer)) map.removeLayer(obj.layer);
-      }
-    });
-    state.activeImgId = imgId;
-    // マーカーの表示切替
-    refreshMarkersVisibility();
-    // タブ状態
-    [...els.tabs.children].forEach(btn => btn.classList.remove('active'));
-    const i = [...els.tabs.children].find(b => b.textContent === (state.imageLayers[imgId].meta.label || imgId));
-    if (i) i.classList.add('active');
-    fitActive();
-  }
-
-  function fitActive(){
-    const cur = state.imageLayers[state.activeImgId];
-    if (cur) map.fitBounds(cur.bounds, { padding: [10,10] });
-  }
-
-  function setupMarkers(points){
-    if (!Array.isArray(points)) return;
-    points.forEach(pt => {
-      const marker = L.marker([pt.y, pt.x], { draggable: state.edit, icon: makeNumIcon(pt) });
-      marker.addTo(map);
-      marker.on('click', () => reveal(pt.id));
-      if (state.edit) marker.on('dragend', (e) => onDrag(pt, e));
-      state.markers[pt.id] = marker;
-    });
-    refreshMarkersVisibility();
-  }
-
-  function refreshMarkersVisibility(){
-    const active = state.activeImgId;
-    const showLabels = els.toggleLabels.checked;
-    Object.entries(state.markers).forEach(([id, marker]) => {
-      const pt = state.data.points.find(p => p.id === id);
-      const visible = pt.img === active;
-      if (visible) {
-        if (!map.hasLayer(marker)) marker.addTo(map);
-      } else {
-        if (map.hasLayer(marker)) map.removeLayer(marker);
-      }
-      // アイコン更新（番号ラベル表示/非表示）
-      marker.setIcon(makeNumIcon(pt, !showLabels));
-    });
-  }
-
-  function makeNumIcon(pt, hideNumber){
-    const num = pt.id.replace(/^0+/, '') || pt.id;
-    const html = `<div class="num-marker ${state.revealed.has(pt.id) ? '' : 'dim'}">${hideNumber ? '' : num}</div>`;
-    return L.divIcon({ html, className: '', iconSize: [28,28], iconAnchor: [14,14] });
-  }
-
-  function refreshMarkerStyles(){
-    Object.entries(state.markers).forEach(([id, marker]) => {
-      const pt = state.data.points.find(p => p.id === id);
-      const hideNumber = !els.toggleLabels.checked;
-      marker.setIcon(makeNumIcon(pt, hideNumber));
-    });
-  }
-
-  function renderList(){
-    const always = els.toggleAnswers.checked;
-    const active = state.activeImgId;
-    const list = state.data.points.filter(p => p.img === active).sort((a,b)=>a.id.localeCompare(b.id));
-    els.qList.innerHTML = '';
-    els.counter.textContent = `${state.revealed.size} / ${state.data.points.length}`;
-    list.forEach(pt => {
-      const card = document.createElement('div');
-      card.className = 'qitem';
-      const shown = always || state.revealed.has(pt.id);card.innerHTML = `
-  <div class="qtop">
-    <div>
-      <span class="qid">${pt.id}</span>
-      <!-- 問題では名称は出さない -->
-      <!-- <span class="qlabel">${pt.label || ''}</span> -->
-    </div>
-    <div class="qactions">
-      <button class="btn" data-action="focus">地図</button>
-      <button class="btn primary" data-action="reveal">${shown ? '隠す' : '表示'}</button>
-    </div>
-  </div>
-  <div class="answer" ${shown ? '' : 'style="display:none"'}>
-    <div>${pt.answer ?? pt.label ?? ''}</div>
-    ${pt.note ? `<div class="hint">${pt.note}</div>` : ''}
-  </div>
-`;
-
-      card.querySelector('[data-action="focus"]').addEventListener('click', () => {
-        const m = state.markers[pt.id];
-        if (m) {
-          map.setView(m.getLatLng(), Math.max(map.getZoom(), 0), { animate: true });
-          m.openPopup();
-        }
-      });
-      card.querySelector('[data-action="reveal"]').addEventListener('click', () => {
-        toggleReveal(pt.id);
-      });
-      els.qList.appendChild(card);
-    });
-  }
-
-  function reveal(id){
-    if (!state.revealed.has(id)) {
-      state.revealed.add(id);
-      saveRevealed();
-      renderList();
-      refreshMarkerStyles();
-    }
-  }
-  function hide(id){
-    if (state.revealed.has(id)) {
-      state.revealed.delete(id);
-      saveRevealed();
-      renderList();
-      refreshMarkerStyles();
-    }
-  }
-  function toggleReveal(id){
-    if (els.toggleAnswers.checked) return; // 常時表示ONの時は無効
-    if (state.revealed.has(id)) hide(id); else reveal(id);
-  }
-
-  function setEditMode(on){
-    state.edit = !!on;
-    els.editBtn.textContent = on ? '編集モード: ON' : '編集モード';
-    Object.entries(state.markers).forEach(([id, marker]) => marker.dragging && marker.dragging[on ? 'enable' : 'disable']());
-  }
-  function toggleEdit(){ setEditMode(!state.edit); }
-
-  function onDrag(pt, e){
-    const ll = e.target.getLatLng();
-    pt.x = ll.lng; pt.y = ll.lat;
-    refreshMarkerStyles();
-  }
-
-  async function exportJSON(){
-    if (!state.data) return;
-    try {
-      const text = JSON.stringify(state.data, null, 2);
-      await navigator.clipboard.writeText(text);
-      alert('JSONをクリップボードにコピーしました。');
-    } catch(e){
-      console.error(e);
-      // フォールバック: ダウンロード
-      const blob = new Blob([JSON.stringify(state.data, null, 2)], {type: 'application/json'});
-      const a = document.createElement('a');
-      a.href = URL.createObjectURL(blob);
-      a.download = 'mapdata.json';
-      a.click();
-    }
-  }
+  const map = L.map('map', { crs: L.CRS.Simple, minZoom: -4 });
+  const state = { data:null, activeImgId:null, markers:{}, results:{}, revealed:new Set() };
+  function storeKey(k){return `anki-img:${dataUrl}:${k}`;}
+  state.results = JSON.parse(localStorage.getItem(storeKey('results'))||'{}');
+  state.revealed = new Set(JSON.parse(localStorage.getItem(storeKey('revealed'))||'[]'));
+  fetch(dataUrl).then(r=>r.json()).then(j=>{state.data=j;setupImages(j.images);setupMarkers(j.points);renderList();fitActive();});
+  function setupImages(images){images.forEach((img,i)=>{const b=[[0,0],[img.height,img.width]];const layer=L.imageOverlay(img.src,b).addTo(map);state.imageLayers=state.imageLayers||{};state.imageLayers[img.id]={layer,bounds:b};if(i==0){state.activeImgId=img.id;map.fitBounds(b);}const t=document.createElement('button');t.className='tab'+(i==0?' active':'');t.textContent=img.label||img.id;t.onclick=()=>setActiveImage(img.id);els.tabs.appendChild(t);});}
+  function setActiveImage(id){state.activeImgId=id;Object.entries(state.imageLayers).forEach(([k,v])=>{if(k===id){v.layer.addTo(map);}else{map.removeLayer(v.layer);}});refreshMarkers();renderList();fitActive();}
+  function fitActive(){const cur=state.imageLayers[state.activeImgId];if(cur)map.fitBounds(cur.bounds);}
+  function setupMarkers(points){points.forEach(pt=>{const m=L.marker([pt.y,pt.x],{icon:makeIcon(pt)}).addTo(map);m.on('click',()=>toggleReveal(pt.id));state.markers[pt.id]=m;});refreshMarkers();}
+  function makeIcon(pt){const res=state.results[pt.id];let cls='num-marker';if(res==='correct')cls+=' ok';if(res==='wrong')cls+=' bad';const num=els.toggleLabels.checked?pt.id:'';return L.divIcon({html:`<div class="${cls}">${num}</div>`,className:'',iconSize:[28,28],iconAnchor:[14,14]});}
+  function refreshMarkers(){Object.entries(state.markers).forEach(([id,m])=>{const pt=state.data.points.find(p=>p.id===id);if(pt.img===state.activeImgId){m.addTo(map);}else{map.removeLayer(m);}m.setIcon(makeIcon(pt));});}
+  function renderList(){const active=state.activeImgId;const always=els.toggleAnswers.checked;const list=state.data.points.filter(p=>p.img===active);els.qList.innerHTML='';list.forEach(pt=>{const shown=always||state.revealed.has(pt.id);const res=state.results[pt.id];const card=document.createElement('div');card.className='qitem'+(res==='correct'?' correct':res==='wrong'?' wrong':'');card.innerHTML=`<div class="qtop"><div class="status"><span class="qid">${pt.id}</span>${res==='correct'?'<span class="chip ok">✅正解</span>':res==='wrong'?'<span class="chip bad">❌誤答</span>':''}</div><div class="qactions"><button class="btn" data-a="reveal">${shown?'隠す':'表示'}</button><button class="btn ghost" data-a="ok">✅</button><button class="btn ghost" data-a="ng">❌</button></div></div><div class="answer" ${shown?'':'style="display:none"'}>${pt.answer??pt.label??''}</div>`;card.querySelector('[data-a="reveal"]').onclick=()=>toggleReveal(pt.id);card.querySelector('[data-a="ok"]').onclick=()=>mark(pt.id,'correct',card);card.querySelector('[data-a="ng"]').onclick=()=>mark(pt.id,'wrong',card);els.qList.appendChild(card);});}
+  function toggleReveal(id){if(state.revealed.has(id))state.revealed.delete(id);else state.revealed.add(id);save();renderList();}
+  function mark(id,res,card){state.results[id]=res;save();renderList();}
+  function save(){localStorage.setItem(storeKey('revealed'),JSON.stringify([...state.revealed]));localStorage.setItem(storeKey('results'),JSON.stringify(state.results));}
   </script>
 </body>
 </html>
