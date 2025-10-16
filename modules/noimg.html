@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>図なし教材（大きな文字・従来＋速度調整・一括読み）</title>
+  <title>図なし教材（大きな文字・速度調整・一括読み・再生コントロール）</title>
   <style>
     :root { --bg:#f7f7fb; --card:#fff; --ink:#1f2937; --muted:#667085; --brand:#3b4675; --ok:#22c55e; --ng:#ef4444; --border:#e5e7eb; }
     html,body{height:100%;margin:0;font-family:system-ui,-apple-system,Segoe UI,Roboto,"Noto Sans JP","Yu Gothic",Meiryo,sans-serif;color:var(--ink);background:var(--bg)}
@@ -57,6 +57,9 @@
         </span>
         <button class="btn" id="speakAllBtn" title="上から順に読み上げ">全体をよむ</button>
         <button class="btn" id="speakWrongBtn" title="誤答だけ読み上げ">まちがいだけよむ</button>
+        <button class="btn ghost" id="pauseBtn" title="一時停止">⏸ 一時停止</button>
+        <button class="btn ghost" id="resumeBtn" title="再開">▶ 再開</button>
+        <button class="btn ghost" id="stopBtn" title="停止">⏹ 停止</button>
         <button class="btn" id="resetBtn">りれきをリセット</button>
       </div>
     </div>
@@ -84,6 +87,9 @@
     rateDisp: document.getElementById('rateDisp'),
     speakAll: document.getElementById('speakAllBtn'),
     speakWrong: document.getElementById('speakWrongBtn'),
+    pause: document.getElementById('pauseBtn'),
+    resume: document.getElementById('resumeBtn'),
+    stop: document.getElementById('stopBtn'),
     reset: document.getElementById('resetBtn')
   };
   els.shuffle.checked = shuffleQS;
@@ -213,16 +219,32 @@
   function save(){ localStorage.setItem(key('results'), JSON.stringify(results)); }
   function shuffle(a){ for(let i=a.length-1;i>0;i--){ const j=Math.floor(Math.random()*(i+1)); [a[i],a[j]]=[a[j],a[i]]; } return a; }
 
-  // ====== 読み上げ（従来仕様：個別のみ） ======
-  function speakSentence(t){ try{ const u=new SpeechSynthesisUtterance(t); u.lang='ja-JP'; u.rate=parseFloat(els.rate.value)||1; speechSynthesis.cancel(); speechSynthesis.speak(u);}catch(e){} }
-  function delay(ms){ return new Promise(r=>setTimeout(r, ms)); }
-  async function speakQuestion(it){ const parts = String(it.q||'').split(/（[^）]*）/g); for(let i=0;i<parts.length;i++){ const p=parts[i].trim(); if(p) speakSentence(p); if(i<parts.length-1) await delay(600); } }
-  function speakAnswer(it){ const ans = (it.answers && it.answers[0]) || ''; if(ans) speakSentence(`こたえ。 ${ans}`); }
-  function speakFeedback(ok){ speakSentence(ok ? 'せいかい！' : 'ちがうよ'); }
-  function delay(ms){ return new Promise(r=>setTimeout(r, ms)); }
-  async function speakQuestion(it){ const parts = String(it.q||'').split(/（[^）]*）/g); for(let i=0;i<parts.length;i++){ const p=parts[i].trim(); if(p) speakSentence(p); if(i<parts.length-1) await delay(600); } }
-  function speakAnswer(it){ const ans = (it.answers && it.answers[0]) || ''; if(ans) speakSentence(`こたえ。 ${ans}`); }
-  function speakFeedback(ok){ speakSentence(ok ? 'せいかい！' : 'ちがうよ'); }
+  // ====== 読み上げ（速度調整・逐次待機版） ======
+  function speakSentenceAsync(t){
+    return new Promise((resolve)=>{
+      try{
+        const u = new SpeechSynthesisUtterance(String(t||''));
+        u.lang = 'ja-JP';
+        u.rate = parseFloat(els.rate.value) || 1;
+        u.onend = ()=> resolve();
+        u.onerror = ()=> resolve();
+        speechSynthesis.speak(u);
+      }catch(e){ resolve(); }
+    });
+  }
+  async function speakQuestion(it){
+    const parts = String(it.q||'').split(/（[^）]*）/g);
+    for(let i=0;i<parts.length;i++){
+      const p = parts[i].trim();
+      if(p) await speakSentenceAsync(p);
+      if(i<parts.length-1) await new Promise(r=>setTimeout(r,600));
+    }
+  }
+  async function speakAnswer(it){
+    const ans = (it.answers && it.answers[0]) || '';
+    if(ans){ await speakSentenceAsync('こたえ。'); await speakSentenceAsync(ans); }
+  }
+  async function speakFeedback(ok){ await speakSentenceAsync(ok ? 'せいかい！' : 'ちがうよ'); }
 
   // ====== UI ======
   els.reset.addEventListener('click', ()=>{ if(confirm('正誤のりれきをぜんぶ消しますか？')){ results={}; save(); location.reload(); } });
@@ -230,7 +252,30 @@
   els.voice.addEventListener('change', ()=>{ const url=new URL(location.href); url.searchParams.set('voice', els.voice.checked?'true':'false'); history.replaceState(null, '', url.toString()); });
   els.review.addEventListener('change', ()=>{ const url=new URL(location.href); url.searchParams.set('review', els.review.checked?'true':'false'); location.href=url.toString(); });
   els.rate.addEventListener('input', ()=>{ const v=parseFloat(els.rate.value)||1; els.rateDisp.textContent = v.toFixed(1)+'×'; localStorage.setItem(key('rate'), v.toString()); });
+
+  // 再生コントロール
+  els.pause.addEventListener('click', ()=>{ try{ if('pause' in speechSynthesis) speechSynthesis.pause(); else speechSynthesis.cancel(); }catch(e){} });
+  els.resume.addEventListener('click', ()=>{ try{ if('resume' in speechSynthesis) speechSynthesis.resume(); }catch(e){} });
+  els.stop.addEventListener('click', ()=>{ try{ speechSynthesis.cancel(); }catch(e){} });
+
   // 一括読み上げ
+  els.speakAll.addEventListener('click', ()=>{
+    if(!els.voice.checked){ alert('よみあげをONにしてください'); return; }
+    try{ speechSynthesis.cancel(); }catch(e){}
+    const cards = [...document.querySelectorAll('.qcard')];
+    const items = cards.map(c=>({ id:c.getAttribute('data-id'), q:c.querySelector('.qtext')?.textContent||'', answers:[c.querySelector('.result strong')?.textContent||''] }));
+    (async()=>{ for(const it of items){ await speakQuestion(it); await speakAnswer(it);} })();
+  });
+  els.speakWrong.addEventListener('click', ()=>{
+    if(!els.voice.checked){ alert('よみあげをONにしてください'); return; }
+    try{ speechSynthesis.cancel(); }catch(e){}
+    const cards = [...document.querySelectorAll('.qcard')];
+    const wrongIds = Object.entries(results).filter(([id,v])=>v==='wrong').map(([id])=>id);
+    const items = cards.filter(c=> wrongIds.includes(c.getAttribute('data-id')))
+      .map(c=>({ id:c.getAttribute('data-id'), q:c.querySelector('.qtext')?.textContent||'', answers:[c.querySelector('.result strong')?.textContent||''] }));
+    if(!items.length){ alert('誤答の問題がありません'); return; }
+    (async()=>{ for(const it of items){ await speakQuestion(it); await speakAnswer(it);} })();
+  });
   els.speakAll.addEventListener('click', ()=>{
     if(!els.voice.checked){ alert('よみあげをONにしてください'); return; }
     const cards = [...document.querySelectorAll('.qcard')];
