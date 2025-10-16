@@ -3,61 +3,40 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>図なし教材（大きな文字版）</title>
+  <title>図なし教材（大きな文字版・復習＆読み上げ対応）</title>
   <style>
     :root {
-      --bg: #f7f7fb;
-      --card: #ffffff;
-      --ink: #1f2937;
-      --muted: #667085;
-      --brand: #3b4675;
-      --ok: #22c55e;
-      --ng: #ef4444;
-      --border: #e5e7eb;
+      --bg: #f7f7fb; --card:#fff; --ink:#1f2937; --muted:#667085; --brand:#3b4675; --ok:#22c55e; --ng:#ef4444; --border:#e5e7eb;
     }
-    html, body { height: 100%; margin: 0; font-family: system-ui, -apple-system, Segoe UI, Roboto, "Noto Sans JP", "Yu Gothic", Meiryo, sans-serif; color: var(--ink); background: var(--bg); }
-    /* 👀 大きな文字・広めの行間 */
-    body { font-size: 18px; line-height: 1.7; }
-
-    header { position: sticky; top: 0; z-index: 50; backdrop-filter: blur(6px); background: rgba(255,255,255,0.92); border-bottom: 1px solid var(--border); }
+    html, body { height:100%; margin:0; font-family: system-ui, -apple-system, Segoe UI, Roboto, "Noto Sans JP", "Yu Gothic", Meiryo, sans-serif; color:var(--ink); background:var(--bg); }
+    body { font-size:18px; line-height:1.7; }
+    header { position:sticky; top:0; z-index:50; backdrop-filter:blur(6px); background:rgba(255,255,255,.92); border-bottom:1px solid var(--border); }
     .wrap { max-width: 960px; margin: 0 auto; padding: 14px 16px; }
     .title { font-size: 20px; font-weight: 800; }
-    .toolbar { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 8px; }
-    .pill { display: inline-flex; align-items: center; gap: 6px; padding: 8px 12px; border: 1px solid var(--border); border-radius: 999px; background: #fff; font-size: 0.95em; }
-
-    .btn { cursor: pointer; border: 1px solid var(--border); background: #fff; border-radius: 12px; padding: 10px 14px; font-size: 1rem; }
-    .btn.primary { background: var(--brand); color: #fff; border-color: var(--brand); }
+    .toolbar { display:flex; flex-wrap:wrap; gap:8px; margin-top:8px; }
+    .pill { display:inline-flex; align-items:center; gap:6px; padding:8px 12px; border:1px solid var(--border); border-radius:999px; background:#fff; font-size:.95em; }
+    .btn { cursor:pointer; border:1px solid var(--border); background:#fff; border-radius:12px; padding:10px 14px; font-size:1rem; }
+    .btn.primary { background: var(--brand); color:#fff; border-color:var(--brand); }
     .btn.ghost { background: transparent; }
-
-    main { max-width: 960px; margin: 12px auto 24px; padding: 0 16px; display: grid; gap: 14px; }
-
-    .qcard { background: var(--card); border: 1px solid var(--border); border-radius: 14px; padding: 14px; display: grid; gap: 10px; }
-    .qtop { display: flex; align-items: center; justify-content: space-between; gap: 8px; }
-    .qid { font-weight: 800; letter-spacing: 0.02em; }
-    .note { color: var(--muted); font-size: 0.95em; }
-
-    .qtext { font-size: 1.1em; }
-    .choices { display: grid; gap: 8px; }
-    .choiceRow { display: grid; gap: 8px; }
-
-    .choice { display: flex; align-items: center; gap: 10px; padding: 10px 12px; border: 1px solid var(--border); border-radius: 12px; background: #fff; cursor: pointer; user-select: none; }
-    .choice input { width: 20px; height: 20px; }
-
-    .result { display: none; border: 1px dashed var(--border); background: #f8fafc; border-radius: 12px; padding: 10px; }
-    .qcard.correct { border-color: #bbf7d0; background: #f0fff4; }
-    .qcard.wrong { border-color: #fecaca; background: #fff5f5; }
-
-    .chips { display: inline-flex; gap: 6px; align-items: center; }
-    .chip { font-size: 0.9em; padding: 2px 10px; border-radius: 999px; border: 1px solid var(--border); background: #f1f5f9; }
-    .chip.ok { background: #dcfce7; border-color: #86efac; }
-    .chip.bad { background: #fee2e2; border-color: #fca5a5; }
-
-    footer { text-align: center; color: #94a3b8; font-size: 0.95em; padding: 6px 0 20px; }
-
-    @media (max-width: 640px) {
-      .title { font-size: 19px; }
-      .btn { padding: 10px 12px; }
-    }
+    main { max-width: 960px; margin: 12px auto 24px; padding: 0 16px; display:grid; gap:14px; }
+    .qcard { background:var(--card); border:1px solid var(--border); border-radius:14px; padding:14px; display:grid; gap:10px; }
+    .qtop { display:flex; align-items:center; justify-content:space-between; gap:8px; }
+    .qid { font-weight:800; letter-spacing:.02em; }
+    .note { color:var(--muted); font-size:.95em; }
+    .qtext { font-size:1.1em; }
+    .choices { display:grid; gap:8px; }
+    .choiceRow { display:grid; gap:8px; }
+    .choice { display:flex; align-items:center; gap:10px; padding:10px 12px; border:1px solid var(--border); border-radius:12px; background:#fff; cursor:pointer; user-select:none; }
+    .choice input { width:20px; height:20px; }
+    .result { display:none; border:1px dashed var(--border); background:#f8fafc; border-radius:12px; padding:10px; }
+    .qcard.correct { border-color:#bbf7d0; background:#f0fff4; }
+    .qcard.wrong { border-color:#fecaca; background:#fff5f5; }
+    .chips { display:inline-flex; gap:6px; align-items:center; }
+    .chip { font-size:.9em; padding:2px 10px; border-radius:999px; border:1px solid var(--border); background:#f1f5f9; }
+    .chip.ok { background:#dcfce7; border-color:#86efac; }
+    .chip.bad { background:#fee2e2; border-color:#fca5a5; }
+    footer { text-align:center; color:#94a3b8; font-size:.95em; padding:6px 0 20px; }
+    .empty { color:#64748b; background:#fff; border:1px dashed var(--border); padding:14px; border-radius:12px; }
   </style>
 </head>
 <body>
@@ -67,31 +46,35 @@
       <div class="toolbar" role="toolbar" aria-label="操作">
         <span class="pill"><input type="checkbox" id="shuffle"> <label for="shuffle">ならべかえ</label></span>
         <span class="pill"><input type="checkbox" id="voice"> <label for="voice">よみあげ</label></span>
+        <span class="pill"><input type="checkbox" id="review"> <label for="review">復習モード（誤答のみ）</label></span>
         <button class="btn" id="resetBtn">りれきをリセット</button>
       </div>
     </div>
   </header>
 
   <main id="list" aria-live="polite"></main>
-  <footer>えらんで答えよう。まちがえた問題はもう一度とけます。</footer>
+  <footer>えらんで答えよう。間違えた問題だけを「復習モード」で解くことができます。</footer>
 
   <script>
   // ---- 設定 ----
   const qs = new URLSearchParams(location.search);
   const dataUrl = qs.get('data');
   const title = qs.get('title') || '図なし教材';
+  document.getElementById('pageTitle').textContent = title;
   const shuffleQS = qs.get('shuffle') === 'true';
   const voiceQS = qs.get('voice') === 'true';
-  document.getElementById('pageTitle').textContent = title;
+  const reviewQS = qs.get('review') === 'true';
 
   const els = {
     list: document.getElementById('list'),
     shuffle: document.getElementById('shuffle'),
     voice: document.getElementById('voice'),
+    review: document.getElementById('review'),
     reset: document.getElementById('resetBtn')
   };
   els.shuffle.checked = shuffleQS;
   els.voice.checked = voiceQS;
+  els.review.checked = reviewQS || (localStorage.getItem(key('review')) === '1');
 
   // ---- LocalStorage Keys ----
   const key = (k)=>`anki-noimg:${dataUrl}:${k}`;
@@ -106,12 +89,20 @@
   function init(data){
     if(data.title) document.getElementById('pageTitle').textContent = data.title;
     let items = Array.isArray(data.items) ? data.items.slice() : [];
+    if (els.review.checked) items = items.filter(it => results[it.id] === 'wrong');
     if (els.shuffle.checked) items = shuffle(items);
     render(items);
   }
 
   function render(items){
     els.list.innerHTML = '';
+    if (!items.length){
+      const msg = document.createElement('div');
+      msg.className = 'empty';
+      msg.textContent = els.review.checked ? 'いまは復習する問題がありません。' : '問題がありません。';
+      els.list.appendChild(msg);
+      return;
+    }
     items.forEach(it => {
       const card = document.createElement('section');
       card.className = 'qcard' + (results[it.id]==='correct' ? ' correct' : results[it.id]==='wrong' ? ' wrong' : '');
@@ -135,7 +126,7 @@
           const row = document.createElement('label');
           row.className = 'choice';
           row.innerHTML = `<input type="radio" name="q_${it.id}" value="${idx}"><div class="ctext">${c}</div>`;
-          row.addEventListener('click', (e)=>onChoose(it, idx, card));
+          row.addEventListener('click', ()=>onChoose(it, idx, card));
           grp.appendChild(row);
         });
         choicesWrap.appendChild(grp);
@@ -149,11 +140,13 @@
       actions.className = 'actions';
       actions.innerHTML = `
         <button class="btn" data-a="reveal">こたえ</button>
+        <button class="btn ghost" data-a="speak">🔊 よむ</button>
         <button class="btn ghost" data-a="ok">✅</button>
         <button class="btn ghost" data-a="ng">❌</button>
       `;
 
-      actions.querySelector('[data-a="reveal"]').addEventListener('click', ()=>toggleResult(result));
+      actions.querySelector('[data-a="reveal"]').addEventListener('click', ()=>{ toggleResult(result); if(els.voice.checked) speakAnswer(it); });
+      actions.querySelector('[data-a="speak"]').addEventListener('click', ()=> speakQuestion(it));
       actions.querySelector('[data-a="ok"]').addEventListener('click', ()=>mark(card, 'correct'));
       actions.querySelector('[data-a="ng"]').addEventListener('click', ()=>mark(card, 'wrong'));
 
@@ -179,7 +172,7 @@
     const text = (item.choices && item.choices[idx]) || '';
     const isCorrect = correctSet.has(text) || correctSet.has(String(idx)) || correctSet.has(String.fromCharCode(0x30A2 + idx)); // idx or ア/イ/ウ/エ 対応
     mark(card, isCorrect ? 'correct' : 'wrong');
-    if (els.voice.checked) speakSentence(`${isCorrect ? 'せいかい' : 'ちがうよ'}`);
+    if (els.voice.checked) speakFeedback(isCorrect);
   }
 
   function mark(card, state){
@@ -188,23 +181,37 @@
     card.classList.toggle('correct', state==='correct');
     card.classList.toggle('wrong', state==='wrong');
     const chips = card.querySelector('.chips');
-    if (chips){ chips.innerHTML = `<span class="qid">#${id}</span>${badge(state)}`; }
+    if (chips){ chips.innerHTML = `<span class=\"qid\">#${id}</span>${badge(state)}`; }
   }
 
   function save(){ localStorage.setItem(key('results'), JSON.stringify(results)); }
 
-  function shuffle(a){
-    for(let i=a.length-1;i>0;i--){ const j=Math.floor(Math.random()*(i+1)); [a[i],a[j]]=[a[j],a[i]]; }
-    return a;
-  }
+  function shuffle(a){ for(let i=a.length-1;i>0;i--){ const j=Math.floor(Math.random()*(i+1)); [a[i],a[j]]=[a[j],a[i]]; } return a; }
 
-  // 読み上げ（簡易）
+  // ====== 読み上げ ======
   function speakSentence(t){ try{ const u=new SpeechSynthesisUtterance(t); u.lang='ja-JP'; speechSynthesis.cancel(); speechSynthesis.speak(u);}catch(e){} }
+  function speakPause(ms=600){ return new Promise(r=>setTimeout(r,ms)); }
+  async function speakQuestion(it){
+    try{
+      const parts = String(it.q||'').split(/（[^）]*）/g); // 空欄はポーズ
+      for(let i=0;i<parts.length;i++){
+        const p = parts[i].trim(); if(p) speakSentence(p);
+        if(i<parts.length-1) await speakPause();
+      }
+    }catch(e){}
+  }
+  function speakAnswer(it){ const ans = (it.answers && it.answers[0]) || ''; speakSentence(`こたえ。 ${ans}`); }
+  function speakFeedback(ok){ speakSentence(ok ? 'せいかい！' : 'ちがうよ'); }
 
-  // UIイベント
-  els.reset.addEventListener('click', ()=>{ if(confirm('正誤のりれきをぜんぶ消しますか？')){ results={}; save(); location.reload(); } });
+  // ====== UIイベント ======
+  els.reset.addEventListener('click', ()=>{
+    if(confirm('正誤のりれきと表示設定をぜんぶ消しますか？')){
+      results={}; save(); location.reload();
+    }
+  });
   els.shuffle.addEventListener('change', ()=>{ const url=new URL(location.href); url.searchParams.set('shuffle', els.shuffle.checked?'true':'false'); location.href=url.toString(); });
   els.voice.addEventListener('change', ()=>{ const url=new URL(location.href); url.searchParams.set('voice', els.voice.checked?'true':'false'); history.replaceState(null, '', url.toString()); });
+  els.review.addEventListener('change', ()=>{ localStorage.setItem(key('review'), els.review.checked?'1':'0'); const url=new URL(location.href); url.searchParams.set('review', els.review.checked?'true':'false'); location.href=url.toString(); });
   </script>
 </body>
 </html>
