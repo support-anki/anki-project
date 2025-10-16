@@ -11,11 +11,19 @@
     },
     {
       "title": "九州地方の地図",
-      "path": "../img.html?data=/anki-project/assets/data/geo/mapdata/ge-kyushu.json&title=九州地方の地図",
+      "path": "../img.html?data=../assets/data/geo/mapdata/ge-kyushu.json&title=九州地方の地図",
       "thumbnail": "../assets/img/thumb/kyushu.png",
       "category": "社会・地理（図あり）",
       "tags": ["地図", "九州", "都道府県", "産業", "地形"],
-      "updated": "2025-10-15"
+      "updated": "2025-10-16"
+    },
+    {
+      "title": "都道府県を覚えよう（図あり）",
+      "path": "../img.html?data=../assets/data/geo/mapdata/japan-todofuken.json&title=都道府県を覚えよう",
+      "thumbnail": "../assets/img/thumb/japan.png",
+      "category": "社会・地理（図あり）",
+      "tags": ["地図", "都道府県", "日本", "暗記"],
+      "updated": "2025-10-16"
     }
   ]
 }
