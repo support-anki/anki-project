@@ -24,6 +24,15 @@
       "category": "社会・地理（図あり）",
       "tags": ["地図", "都道府県", "日本", "暗記"],
       "updated": "2025-10-16"
+    },
+
+    {
+      "title": "県名と異なる県庁所在地（番号→県庁所在地）",
+      "path": "../img.html?data=../assets/data/geo/mapdata/geo-kencho.json&title=県名と異なる県庁所在地（番号→県庁所在地）",
+      "thumbnail": "../assets/img/thumb/japan-kencho.png",
+      "category": "社会・地理（図あり）",
+      "tags": ["都道府県","県庁所在地","日本地図","図あり"],
+      "updated": "2025-10-17"
     }
   ]
 }
