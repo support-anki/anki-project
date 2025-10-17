@@ -130,59 +130,51 @@
 
   // ====== 表示（画像付き選択肢対応） ======
   function escapeHTML(s) {
-  const str = String(s ?? '');
-  return str.replace(/[&<>"']/g, (m) => {
-    if (m === '&') return '&amp;';
-    if (m === '<') return '&lt;';
-    if (m === '>') return '&gt;';
-    if (m === '"') return '&quot;';
-    if (m === "'") return '&#39;';
-    return m;
+  var str = s == null ? '' : String(s);
+  return str.replace(/[&<>"']/g, function(m){
+    switch (m) {
+      case '&': return '&amp;';
+      case '<': return '&lt;';
+      case '>': return '&gt;';
+      case '"': return '&quot;';
+      case "'": return '&#39;';
+      default: return m;
+    }
   });
-}[m]));
-  }
-  function choiceText(c){
-  if (typeof c === 'string') return c;
-  return c?.text ?? c?.label ?? c?.caption ?? c?.hint ?? c?.desc ?? '';
 }
-  function choiceId(c, idx){
+
+function choiceText(c) {
   if (typeof c === 'string') return c;
-  if (c?.key != null) return String(c.key); // A/B/C/D などのキー
-  if (c?.id  != null) return String(c.id);
+  return (c && (c.text ?? c.label ?? c.caption ?? c.hint ?? c.desc)) || '';
+}
+
+function choiceId(c, idx) {
+  if (typeof c === 'string') return c;
+  if (c && c.key != null) return String(c.key);
+  if (c && c.id  != null) return String(c.id);
   return String(idx);
 }
-  function choiceHTML(c, idx){
+
+function choiceHTML(c, idx) {
   if (typeof c === 'string') {
-    return `<div class="ctext">${escapeHTML(c)}</div>`;
+    return '<div class="ctext">' + escapeHTML(c) + '</div>';
   }
-  const key = c?.key != null ? String(c.key) : '';
-  const label = escapeHTML(choiceText(c)); // hint/text/label/caption/desc を統合
-  const img = c?.img || c?.image || c?.src;
-  const alt = escapeHTML(c?.alt || choiceText(c) || `選択肢${idx+1}`);
-  const keyHTML = key ? `<span class="ckey">${escapeHTML(key)}：</span>` : '';
-  const imgHTML = img ? `<div class="cimg"><img src="${img}" alt="${alt}"></div>` : '';
-  return `<div class="ctext">${keyHTML}${label}</div>${imgHTML}`;
-}</div>`;
-    const key = c?.key != null ? String(c.key) : '';
-    const label = escapeHTML(choiceText(c));
-    const img = c?.img || c?.image || c?.src;
-    const alt = escapeHTML(c?.alt || choiceText(c) || `選択肢${idx+1}`);
-    const imgHTML = img ? `<div class="cimg"><img src="${img}" alt="${alt}"></div>` : '';
-    const keyHTML = key ? `<span class="ckey">${escapeHTML(key)}：</span>` : '';
-    return `<div class="ctext">${keyHTML}${label}</div>${imgHTML}`;
-  }</div>`;
-    const label = escapeHTML(choiceText(c));
-    const img = c?.img || c?.image || c?.src;
-    const alt = escapeHTML(c?.alt || choiceText(c) || `選択肢${idx+1}`);
-    const imgHTML = img ? `<div class="cimg"><img src="${img}" alt="${alt}"></div>` : '';
-    return `<div class="ctext">${label}</div>${imgHTML}`;
-  }
-  function isCorrectChoice(item, idx){
-    const answers = new Set(item.answers || []);
-    const c = item.choices?.[idx];
-    const candidates = [ String(idx), String.fromCharCode(0x30A2 + idx), choiceText(c), choiceId(c, idx) ].filter(Boolean);
-    return candidates.some(t => answers.has(t));
-  }
+  var key = c && c.key != null ? String(c.key) : '';
+  var label = escapeHTML(choiceText(c));
+  var img = c && (c.img || c.image || c.src);
+  var alt = escapeHTML((c && (c.alt || choiceText(c))) || ('選択肢' + (idx+1)));
+  var keyHTML = key ? '<span class="ckey">' + escapeHTML(key) + '：</span>' : '';
+  var imgHTML = img ? '<div class="cimg"><img src="' + img + '" alt="' + alt + '"></div>' : '';
+  return '<div class="ctext">' + keyHTML + label + '</div>' + imgHTML;
+}
+
+function isCorrectChoice(item, idx){
+  var answers = new Set(item.answers || []);
+  var c = item.choices ? item.choices[idx] : undefined;
+  var candidates = [ String(idx), String.fromCharCode(0x30A2 + idx), choiceText(c), choiceId(c, idx) ].filter(Boolean);
+  for (var i=0;i<candidates.length;i++){ if (answers.has(candidates[i])) return true; }
+  return false;
+}
 
   function render(items){
     els.list.innerHTML = '';
