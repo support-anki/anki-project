@@ -129,15 +129,16 @@
   }
 
   // ====== 表示（画像付き選択肢対応） ======
-  function escapeHTML(s){
+  function escapeHTML(s) {
   const str = String(s ?? '');
-  return str.replace(/[&<>"']/g, (m) =>
-    m === '&' ? '&amp;' :
-    m === '<' ? '&lt;'  :
-    m === '>' ? '&gt;'  :
-    m === '"' ? '&quot;':
-                '&#39;'
-  );
+  return str.replace(/[&<>"']/g, (m) => {
+    if (m === '&') return '&amp;';
+    if (m === '<') return '&lt;';
+    if (m === '>') return '&gt;';
+    if (m === '"') return '&quot;';
+    if (m === "'") return '&#39;';
+    return m;
+  });
 }[m]));
   }
   function choiceText(c){
