@@ -3,11 +3,11 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>図なし教材（大きな文字・速度調整・一括読み・再生コントロール）</title>
+  <title>図なし教材（大きな文字・速度調整・一括読み・再生コントロール・画像付き選択肢対応）</title>
   <style>
     :root { --bg:#f7f7fb; --card:#fff; --ink:#1f2937; --muted:#667085; --brand:#3b4675; --ok:#22c55e; --ng:#ef4444; --border:#e5e7eb; }
     html,body{height:100%;margin:0;font-family:system-ui,-apple-system,Segoe UI,Roboto,"Noto Sans JP","Yu Gothic",Meiryo,sans-serif;color:var(--ink);background:var(--bg)}
-    /* 文字を大きく（以外は従来通り） */
+    /* 文字を大きく（他は従来踏襲） */
     body{font-size:18px;line-height:1.7}
 
     header{position:sticky;top:0;z-index:50;backdrop-filter:blur(6px);background:rgba(255,255,255,.92);border-bottom:1px solid var(--border)}
@@ -15,6 +15,7 @@
     .title{font-size:20px;font-weight:800}
     .toolbar{display:flex;flex-wrap:wrap;gap:8px;margin-top:8px;align-items:center}
     .pill{display:inline-flex;align-items:center;gap:6px;padding:8px 12px;border:1px solid var(--border);border-radius:999px;background:#fff;font-size:.95em}
+    .range{display:inline-flex;align-items:center;gap:8px;padding:6px 10px;border:1px solid var(--border);border-radius:10px;background:#fff;font-size:.95em}
     .btn{cursor:pointer;border:1px solid var(--border);background:#fff;border-radius:12px;padding:10px 14px;font-size:1rem}
     .btn.primary{background:var(--brand);color:#fff;border-color:var(--brand)}
     .btn.ghost{background:transparent}
@@ -27,8 +28,11 @@
     .qtext{font-size:1.1em}
     .choices{display:grid;gap:8px}
     .choiceRow{display:grid;gap:8px}
-    .choice{display:flex;align-items:center;gap:10px;padding:10px 12px;border:1px solid var(--border);border-radius:12px;background:#fff;cursor:pointer;user-select:none}
-    .choice input{width:20px;height:20px}
+    .choice{display:flex;align-items:flex-start;gap:10px;padding:10px 12px;border:1px solid var(--border);border-radius:12px;background:#fff;cursor:pointer;user-select:none}
+    .choice input{width:20px;height:20px;margin-top:2px}
+    .choice .cimg{margin-top:6px}
+    .choice .cimg img{max-width:100%;height:auto;border-radius:8px;border:1px solid var(--border);display:block}
+
     .result{display:none;border:1px dashed var(--border);background:#f8fafc;border-radius:12px;padding:10px}
     .qcard.correct{border-color:#bbf7d0;background:#f0fff4}
     .qcard.wrong{border-color:#fecaca;background:#fff5f5}
@@ -40,7 +44,7 @@
 
     .empty{color:#64748b;background:#fff;border:1px dashed var(--border);padding:14px;border-radius:12px}
     footer{text-align:center;color:#94a3b8;font-size:.95em;padding:6px 0 20px}
-  .range{display:inline-flex;align-items:center;gap:8px;padding:6px 10px;border:1px solid var(--border);border-radius:10px;background:#fff;font-size:.95em}
+    @media (max-width:640px){.title{font-size:19px}.btn{padding:10px 12px}}
   </style>
 </head>
 <body>
@@ -92,15 +96,15 @@
     stop: document.getElementById('stopBtn'),
     reset: document.getElementById('resetBtn')
   };
-  els.shuffle.checked = shuffleQS;
-  els.voice.checked = voiceQS;
-  els.review.checked = reviewQS;
 
   // LocalStorage キー（従来と同じ）
   const key = (k)=>`anki-noimg:${dataUrl}:${k}`;
-  let results = JSON.parse(localStorage.getItem(key('results')) || '{}');
+  let results = JSON.parse(localStorage.getItem(key('results')) || '{}'); // {id:'correct'|'wrong'}
   const savedRate = parseFloat(localStorage.getItem(key('rate')) || '1');
-  if (!isNaN(savedRate)) { els.rate.value = savedRate; els.rateDisp.textContent = savedRate.toFixed(1) + '×'; } // {id:'correct'|'wrong'}
+  if (!isNaN(savedRate)) { els.rate.value = savedRate; els.rateDisp.textContent = savedRate.toFixed(1) + '×'; }
+  els.shuffle.checked = shuffleQS;
+  els.voice.checked = voiceQS;
+  els.review.checked = reviewQS;
 
   // ====== データ読み込み ======
   if (!dataUrl){ alert('data= でJSONのURLを指定してください'); }
@@ -123,6 +127,27 @@
     render(items);
   }
 
+  // ====== 表示（画像付き選択肢対応） ======
+  function escapeHTML(s){
+    return String(s ?? '').replace(/[&<>"']/g, m => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;','\'':'&#39;'}[m]));
+  }
+  function choiceText(c){ if (typeof c === 'string') return c; return c?.text ?? c?.label ?? c?.caption ?? ''; }
+  function choiceId(c, idx){ if (typeof c === 'string') return c; if (c?.id != null) return String(c.id); return String(idx); }
+  function choiceHTML(c, idx){
+    if (typeof c === 'string') return `<div class="ctext">${escapeHTML(c)}</div>`;
+    const label = escapeHTML(choiceText(c));
+    const img = c?.img || c?.image || c?.src;
+    const alt = escapeHTML(c?.alt || choiceText(c) || `選択肢${idx+1}`);
+    const imgHTML = img ? `<div class="cimg"><img src="${img}" alt="${alt}"></div>` : '';
+    return `<div class="ctext">${label}</div>${imgHTML}`;
+  }
+  function isCorrectChoice(item, idx){
+    const answers = new Set(item.answers || []);
+    const c = item.choices?.[idx];
+    const candidates = [ String(idx), String.fromCharCode(0x30A2 + idx), choiceText(c), choiceId(c, idx) ].filter(Boolean);
+    return candidates.some(t => answers.has(t));
+  }
+
   function render(items){
     els.list.innerHTML = '';
     if (!items.length){
@@ -133,7 +158,7 @@
     }
 
     items.forEach(it => {
-      const q = it.q || '';                    // 従来: q 必須
+      const q = it.q || '';
       const answers = Array.isArray(it.answers) ? it.answers : [];
       const choices = Array.isArray(it.choices) ? it.choices : [];
 
@@ -158,7 +183,7 @@
         choices.forEach((c, idx) => {
           const row = document.createElement('label');
           row.className = 'choice';
-          row.innerHTML = `<input type="radio" name="q_${it.id}" value="${idx}"><div class="ctext">${c}</div>`;
+          row.innerHTML = `<input type="radio" name="q_${it.id}" value="${idx}"><div class="cwrap">${choiceHTML(c, idx)}</div>`;
           row.addEventListener('click', ()=>onChoose(it, idx, card));
           grp.appendChild(row);
         });
@@ -173,13 +198,13 @@
       actions.className = 'actions';
       actions.innerHTML = `
         <button class="btn" data-a="reveal">こたえ</button>
-        <button class="btn ghost" data-a="speak">🔊 よむ</button>
+        <button class="btn ghost" data-a="speakQ">🔊 よむ</button>
         <button class="btn ghost" data-a="ok">✅</button>
         <button class="btn ghost" data-a="ng">❌</button>
       `;
 
-      actions.querySelector('[data-a="reveal"]').addEventListener('click', ()=>{ toggle(result); if(els.voice.checked) speakAnswer(it); });
-      actions.querySelector('[data-a="speak"]').addEventListener('click', ()=> speakQuestion(it));
+      actions.querySelector('[data-a="reveal"]').addEventListener('click', ()=>{ toggle(result); if(els.voice.checked) speakAnswer({answers}); });
+      actions.querySelector('[data-a="speakQ"]').addEventListener('click', ()=> speakQuestion({q}));
       actions.querySelector('[data-a="ok"]').addEventListener('click', ()=>mark(card,'correct'));
       actions.querySelector('[data-a="ng"]').addEventListener('click', ()=>mark(card,'wrong'));
 
@@ -192,19 +217,13 @@
     });
   }
 
-  function badge(state){
-    if (state==='correct') return '<span class="chip ok">✅ 正解</span>';
-    if (state==='wrong') return '<span class="chip bad">❌ 誤答</span>';
-    return '';
-  }
+  function badge(state){ if (state==='correct') return '<span class="chip ok">✅ 正解</span>'; if (state==='wrong') return '<span class="chip bad">❌ 誤答</span>'; return ''; }
   function toggle(el){ el.style.display = (el.style.display==='block') ? 'none' : 'block'; }
 
   function onChoose(item, idx, card){
-    const correctSet = new Set(item.answers || []);
-    const text = (item.choices && item.choices[idx]) || '';
-    const isCorrect = correctSet.has(text) || correctSet.has(String(idx)) || correctSet.has(String.fromCharCode(0x30A2 + idx)); // idx or ア/イ/ウ/エ 対応
-    mark(card, isCorrect ? 'correct' : 'wrong');
-    if (els.voice.checked) speakFeedback(isCorrect);
+    const correct = isCorrectChoice(item, idx);
+    mark(card, correct ? 'correct' : 'wrong');
+    if (els.voice.checked) speakFeedback(correct);
   }
 
   function mark(card, state){
@@ -246,6 +265,22 @@
   }
   async function speakFeedback(ok){ await speakSentenceAsync(ok ? 'せいかい！' : 'ちがうよ'); }
 
+  // ====== 一括読み（多重起動ガード・1問目二重対策） ======
+  let speaking = false;
+  async function clearTTS(){ try{ speechSynthesis.cancel(); }catch(e){} await new Promise(r=>setTimeout(r,180)); }
+  async function startBatchSpeak(items){
+    if (speaking) return;
+    speaking = true;
+    await clearTTS();
+    try{
+      for (const it of items){
+        await speakQuestion(it);
+        await speakAnswer(it);
+        if (!speaking) break;
+      }
+    } finally { speaking = false; }
+  }
+
   // ====== UI ======
   els.reset.addEventListener('click', ()=>{ if(confirm('正誤のりれきをぜんぶ消しますか？')){ results={}; save(); location.reload(); } });
   els.shuffle.addEventListener('change', ()=>{ const url=new URL(location.href); url.searchParams.set('shuffle', els.shuffle.checked?'true':'false'); location.href=url.toString(); });
@@ -256,40 +291,23 @@
   // 再生コントロール
   els.pause.addEventListener('click', ()=>{ try{ if('pause' in speechSynthesis) speechSynthesis.pause(); else speechSynthesis.cancel(); }catch(e){} });
   els.resume.addEventListener('click', ()=>{ try{ if('resume' in speechSynthesis) speechSynthesis.resume(); }catch(e){} });
-  els.stop.addEventListener('click', ()=>{ try{ speechSynthesis.cancel(); }catch(e){} });
+  els.stop.addEventListener('click', ()=>{ speaking = false; try{ speechSynthesis.cancel(); }catch(e){} });
 
   // 一括読み上げ
-  els.speakAll.addEventListener('click', ()=>{
+  els.speakAll.addEventListener('click', async ()=>{
     if(!els.voice.checked){ alert('よみあげをONにしてください'); return; }
-    try{ speechSynthesis.cancel(); }catch(e){}
     const cards = [...document.querySelectorAll('.qcard')];
     const items = cards.map(c=>({ id:c.getAttribute('data-id'), q:c.querySelector('.qtext')?.textContent||'', answers:[c.querySelector('.result strong')?.textContent||''] }));
-    (async()=>{ for(const it of items){ await speakQuestion(it); await speakAnswer(it);} })();
+    await startBatchSpeak(items);
   });
-  els.speakWrong.addEventListener('click', ()=>{
+  els.speakWrong.addEventListener('click', async ()=>{
     if(!els.voice.checked){ alert('よみあげをONにしてください'); return; }
-    try{ speechSynthesis.cancel(); }catch(e){}
     const cards = [...document.querySelectorAll('.qcard')];
     const wrongIds = Object.entries(results).filter(([id,v])=>v==='wrong').map(([id])=>id);
     const items = cards.filter(c=> wrongIds.includes(c.getAttribute('data-id')))
       .map(c=>({ id:c.getAttribute('data-id'), q:c.querySelector('.qtext')?.textContent||'', answers:[c.querySelector('.result strong')?.textContent||''] }));
     if(!items.length){ alert('誤答の問題がありません'); return; }
-    (async()=>{ for(const it of items){ await speakQuestion(it); await speakAnswer(it);} })();
-  });
-  els.speakAll.addEventListener('click', ()=>{
-    if(!els.voice.checked){ alert('よみあげをONにしてください'); return; }
-    const cards = [...document.querySelectorAll('.qcard')];
-    const items = cards.map(c=>({ q:c.querySelector('.qtext')?.textContent||'', answers:[c.querySelector('.result strong')?.textContent||''] }));
-    (async()=>{ for(const it of items){ await speakQuestion(it); await delay(800); await speakAnswer(it); await delay(800);} })();
-  });
-  els.speakWrong.addEventListener('click', ()=>{
-    if(!els.voice.checked){ alert('よみあげをONにしてください'); return; }
-    const cards = [...document.querySelectorAll('.qcard')];
-    const wrongIds = Object.entries(results).filter(([id,v])=>v==='wrong').map(([id])=>id);
-    const items = cards.filter(c=> wrongIds.includes(c.getAttribute('data-id')))
-      .map(c=>({ q:c.querySelector('.qtext')?.textContent||'', answers:[c.querySelector('.result strong')?.textContent||''] }));
-    if(!items.length){ alert('誤答の問題がありません'); return; }
-    (async()=>{ for(const it of items){ await speakQuestion(it); await delay(800); await speakAnswer(it); await delay(800);} })();
+    await startBatchSpeak(items);
   });
   </script>
 </body>
