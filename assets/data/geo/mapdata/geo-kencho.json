@@ -1,0 +1,32 @@
+{
+  "title": "県名と異なる県庁所在地（番号→県庁所在地）",
+  "images": [
+    {
+      "id": "japan",
+      "label": "地図",
+      "src": "../assets/img/geo/japan-kencho.png",
+      "width": 725,
+      "height": 685
+    }
+  ],
+  "points": [
+    { "id": "1",  "img": "japan", "x": 80,  "y": 90,  "answer": "札幌市",   "label": "北海道" },
+    { "id": "2",  "img": "japan", "x": 130, "y": 120, "answer": "大津市",   "label": "滋賀県" },
+    { "id": "3",  "img": "japan", "x": 80,  "y": 150, "answer": "前橋市",   "label": "群馬県" },
+    { "id": "4",  "img": "japan", "x": 130, "y": 180, "answer": "さいたま市", "label": "埼玉県" },
+    { "id": "5",  "img": "japan", "x": 80,  "y": 210, "answer": "名古屋市", "label": "愛知県" },
+    { "id": "6",  "img": "japan", "x": 130, "y": 240, "answer": "仙台市",   "label": "宮城県" },
+    { "id": "7",  "img": "japan", "x": 80,  "y": 270, "answer": "松江市",   "label": "島根県" },
+    { "id": "8",  "img": "japan", "x": 130, "y": 300, "answer": "神戸市",   "label": "兵庫県" },
+    { "id": "9",  "img": "japan", "x": 80,  "y": 330, "answer": "宇都宮市", "label": "栃木県" },
+    { "id": "10", "img": "japan", "x": 130, "y": 360, "answer": "盛岡市",   "label": "岩手県" },
+    { "id": "11", "img": "japan", "x": 80,  "y": 390, "answer": "甲府市",   "label": "山梨県" },
+    { "id": "12", "img": "japan", "x": 130, "y": 420, "answer": "津市",     "label": "三重県" },
+    { "id": "13", "img": "japan", "x": 80,  "y": 450, "answer": "横浜市",   "label": "神奈川県" },
+    { "id": "14", "img": "japan", "x": 130, "y": 480, "answer": "水戸市",   "label": "茨城県" },
+    { "id": "15", "img": "japan", "x": 80,  "y": 510, "answer": "金沢市",   "label": "石川県" },
+    { "id": "16", "img": "japan", "x": 130, "y": 540, "answer": "松山市",   "label": "愛媛県" },
+    { "id": "17", "img": "japan", "x": 80,  "y": 570, "answer": "高松市",   "label": "香川県" },
+    { "id": "18", "img": "japan", "x": 130, "y": 600, "answer": "那覇市",   "label": "沖縄県" }
+  ]
+}
