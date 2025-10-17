@@ -3,7 +3,7 @@
   "images": [
     {
       "id": "map1",
-      "src": "../assets/img/todofuken-map.png",
+      "src": "../assets/img/geo/todofuken-map.png",
       "width": 844,
       "height": 768,
       "label": "都道府県地図"
