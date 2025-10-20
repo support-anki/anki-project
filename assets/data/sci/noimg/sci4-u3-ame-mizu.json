@@ -10,7 +10,7 @@
     {
       "id": "011",
       "q": "下の図は『水の循環』を表しています。図の流れにあうように、（　）に入る語を選びなさい。",
-      "img": "/anki-project/assets/img/u3/water-cycle-line.png",
+      "img": "/anki-project/assets/sci/img/u3/water-cycle-line.png",
       "answers": ["蒸発", "雲", "雨"],
       "choices": [
         "ア：蒸発 → 雲 → 雨",
@@ -31,7 +31,7 @@
     {
       "id": "018",
       "q": "次の図を見て答えなさい。このように海の水が蒸発し、雲になって雨としてもどるしくみを何といいますか。",
-      "img": "/anki-project/assets/img/u3/water-cycle-line.png",
+      "img": "/anki-project/assets/img/sci/u3/water-cycle-line.png",
       "answers": ["水の循環"]
     },
 
@@ -39,3 +39,4 @@
     { "id": "020", "q": "雨がふるしくみを、空気の温度と水蒸気の変化を使って説明しなさい。", "answers": ["空気が冷えると水蒸気が水滴になり、集まって雲になり、落ちて雨になる"] }
   ]
 }
+
