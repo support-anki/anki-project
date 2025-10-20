@@ -10,7 +10,7 @@
     {
   "id": "011",
   "q": "下の図（①→②→③→④）を見て、流れに合う説明を1つ選びなさい。",
-  "img": "/anki-project/assets/img/sci/u3/water-cycle-line-num.png",
+  "img": "/anki-project/assets/img/sci/u3/water-cycle-line.png",
   "answers": ["ア"],
   "choices": [
     "ア：①蒸発 → ②雲 → ③雨 → ④川・海へ（正しい流れ）",
@@ -31,7 +31,7 @@
 {
   "id": "018",
   "q": "この図のように、海→（①）→（②）→（③）→川・海へとくり返すしくみを何といいますか。",
-  "img": "/anki-project/assets/img/sci/u3/water-cycle-line-num.png",
+  "img": "/anki-project/assets/img/sci/u3/water-cycle-line.png",
   "answers": ["水の循環"]
 },
 
@@ -39,3 +39,4 @@
     { "id": "020", "q": "雨がふるしくみを、空気の温度と水蒸気の変化を使って説明しなさい。", "answers": ["空気が冷えると水蒸気が水滴になり、集まって雲になり、落ちて雨になる"] }
   ]
 }
+
