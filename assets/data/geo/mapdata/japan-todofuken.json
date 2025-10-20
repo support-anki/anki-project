@@ -1,11 +1,11 @@
 {
   "title": "都道府県を覚えよう",
- "images": [
+"images": [
   {
     "id": "japan",
     "src": "/anki-project/assets/img/geo/todofuken-map.png",
-    "width": 725,
-    "height": 685,
+    "width": 844,
+    "height": 768,
     "label": "地図"
   }
 ],
