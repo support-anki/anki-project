@@ -12,9 +12,9 @@
       "category": "理科（小4）",
       "tags": ["季節と生物", "観察", "温度計", "春"],
       "updated": "2025-10-20"
-    }
+    },
 　　{
-      "title": "小4理科｜天気と1日の気温［啓林館・混在形式］",
+      "title": "小4理科｜天気と1日の気温［啓林館］",
       "path": "../noimg.html?data=/anki-project/assets/data/sci/noimg/sci4-u2-tenki-kion.json&title=%E5%B0%8F4%E7%90%86%E7%A7%91%EF%BD%9C%E5%A4%A9%E6%B0%97%E3%81%A81%E6%97%A5%E3%81%AE%E6%B0%97%E6%B8%A9%EF%BC%BB%E5%95%93%E6%9E%97%E9%A4%A8%E3%83%BB%E6%B7%B7%E5%9C%A8%E5%BD%A2%E5%BC%8F%EF%BC%BD",
       "thumbnail": "../assets/img/thumb/sci4-tenki-kion.png",
       "category": "理科（小4）",
@@ -22,4 +22,5 @@
       "updated": "2025-10-20"
     }
   ]
+
 }
