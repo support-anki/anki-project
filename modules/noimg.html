@@ -238,6 +238,14 @@ function isCorrectChoice(item, idx){
 
       card.appendChild(qtop);
       card.appendChild(qtext);
+// 問題本文レベルの画像（item.img）を表示
+if (it.img) {
+  const qimg = document.createElement('figure');
+  qimg.className = 'qimg';
+  const alt = escapeHTML(it.alt || it.q || '図');
+  qimg.innerHTML = `<img src="${it.img}" alt="${alt}">`;
+  card.appendChild(qimg);
+}
       card.appendChild(choicesWrap);
       card.appendChild(actions);
       card.appendChild(result);
