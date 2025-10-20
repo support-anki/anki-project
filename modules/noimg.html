@@ -219,8 +219,10 @@ function isCorrectChoice(item, idx){
       }
 
       const result = document.createElement('div');
-      result.className = 'result';
-      result.innerHTML = `<div>こたえ：<strong>${(answers[0] || '')}</strong></div>${it.note ? `<div class="note">${it.note}</div>` : ''}`;
+result.className = 'result';
+const ansDisp = (answers && answers.length) ? answers.join(' / ') : '';
+result.innerHTML = `<div>こたえ：<strong>${escapeHTML(ansDisp)}</strong></div>${it.note ? `<div class="note">${it.note}</div>` : ''}`;
+
 
       const actions = document.createElement('div');
       actions.className = 'actions';
@@ -295,10 +297,11 @@ if (it.img) {
       if(i<parts.length-1) await new Promise(r=>setTimeout(r,600));
     }
   }
-  async function speakAnswer(it){
-    const ans = (it.answers && it.answers[0]) || '';
-    if(ans){ await speakSentenceAsync('こたえ。'); await speakSentenceAsync(ans); }
-  }
+ async function speakAnswer(it){
+  const list = Array.isArray(it.answers) ? it.answers.filter(Boolean) : [];
+  const ans = list.length ? list.join('、') : '';
+  if(ans){ await speakSentenceAsync('こたえ。'); await speakSentenceAsync(ans); }
+}
   async function speakFeedback(ok){ await speakSentenceAsync(ok ? 'せいかい！' : 'ちがうよ'); }
 
   // ====== 一括読み（多重起動ガード・1問目二重対策） ======
