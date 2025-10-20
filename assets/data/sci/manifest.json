@@ -20,6 +20,14 @@
       "category": "理科（小4）",
       "tags": ["気温", "グラフ読取", "百葉箱", "天気"],
       "updated": "2025-10-20"
+    },
+    {
+      "title": "小4理科｜雨の降り方と水のゆくえ［啓林館］",
+      "path": "../noimg.html?data=/anki-project/assets/data/sci/noimg/sci4-u3-ame-mizu.json&title=%E5%B0%8F4%E7%90%86%E7%A7%91%EF%BD%9C%E9%9B%A8%E3%81%AE%E9%99%8D%E3%82%8A%E6%96%B9%E3%81%A8%E6%B0%B4%E3%81%AE%E3%82%86%E3%81%8F%E3%81%88%EF%BC%BB%E5%95%93%E6%9E%97%E9%A4%A8%EF%BC%BD",
+      "thumbnail": "../assets/img/thumb/sci4-ame-mizu.png",
+      "category": "理科（小4）",
+      "tags": ["水の循環", "蒸発", "凝結", "地面", "天気"],
+      "updated": "2025-10-20"
     }
   ]
 }
