@@ -1,13 +1,13 @@
 {
   "title": "都道府県を覚えよう",
   "images": [
-  {
-    "id": "map1",
-    "src": "/anki-project/assets/img/geo/todofuken-map.png",
-    "width": 844,
-    "height": 768,
-    "label": "都道府県地図"
-  }
+    {
+      "id": "map1",
+      "src": "/anki-project/assets/img/geo/todofuken-map.png",
+      "width": 844,
+      "height": 768,
+      "label": "都道府県地図"
+    }
   ],
   "points": [
     { "id": "1",  "img": "map1", "x": 0, "y": 0, "label": "1",  "answer": "北海道" },
@@ -59,4 +59,3 @@
     { "id": "47", "img": "map1", "x": 0, "y": 0, "label": "47", "answer": "沖縄県" }
   ]
 }
-
