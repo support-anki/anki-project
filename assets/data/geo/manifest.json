@@ -33,6 +33,15 @@
       "category": "社会・地理（図あり）",
       "tags": ["都道府県","県庁所在地","日本地図","図あり"],
       "updated": "2025-10-17"
-    }
+    },
+    {
+  "title": "日本の主な山地・山脈・高地（クリックで答え）",
+  "path": "../img.html?data=/anki-project/assets/data/geo/mapdata/ge-mountains.json&title=日本の主な山地・山脈・高地（クリックで答え）",
+  "thumbnail": "../assets/img/thumb/japan-mountains.png",
+  "category": "社会・地理（図あり）",
+  "tags": ["日本地理","山脈","山地","高地","地図"],
+  "updated": "2025-10-21"
+}
   ]
 }
+
