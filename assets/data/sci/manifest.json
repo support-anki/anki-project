@@ -44,7 +44,14 @@
       "category": "理科（小4）",
       "tags": ["電気", "直列", "並列", "導体", "安全"],
       "updated": "2025-10-20"
-    }
-
+    },
+    {
+  "title": "小4理科｜夏の生き物（混在：図あり＋図なし）",
+  "path": "../noimg.html?data=/anki-project/assets/data/sci/noimg/sci4-u3-natsu-mixed.json&title=小4理科｜夏の生き物（混在）",
+  "thumbnail": "../assets/img/thumb/sci4-natsu-mixed.png",
+  "category": "理科（小4）",
+  "tags": ["季節と生物", "夏", "植物", "動物", "気温", "図あり"],
+  "updated": "2025-10-21"
+}
   ]
 }
