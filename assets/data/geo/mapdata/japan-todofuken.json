@@ -6,7 +6,8 @@
       "src": "/anki-project/assets/img/geo/todofuken-map.png",
       "width": 844,
       "height": 768,
-      "label": "地図"
+      "label": "地図",
+      "hideMarkers": true
     }
   ],
   "points": [
@@ -59,3 +60,4 @@
     { "id": "47", "img": "map1", "x": 450, "y": 730, "label": "沖縄県", "answer": "沖縄県" }
   ]
 }
+
