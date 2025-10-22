@@ -1,0 +1,39 @@
+{
+  "title": "日本の主な川・湖（番号→名称）",
+  "hideMarkers": true,
+  "images": [
+    {
+      "id": "map1",
+      "src": "/anki-project/assets/img/geo/japan-rivers-lakes.png",
+      "width": 1684,
+      "height": 1191,
+      "label": "日本の主な川・湖"
+    }
+  ],
+  "points": [
+    { "id": "001", "img": "map1", "x": 1120, "y": 130, "label": "1",  "answer": "天塩川" },
+    { "id": "002", "img": "map1", "x": 1200, "y": 210, "label": "2",  "answer": "石狩川" },
+    { "id": "003", "img": "map1", "x": 1410, "y": 280, "label": "3",  "answer": "十勝川" },
+    { "id": "004", "img": "map1", "x": 1185, "y": 520, "label": "4",  "answer": "北上川" },
+    { "id": "005", "img": "map1", "x": 1245, "y": 600, "label": "5",  "answer": "阿武隈川" },
+    { "id": "006", "img": "map1", "x": 1270, "y": 690, "label": "6",  "answer": "利根川" },
+    { "id": "007", "img": "map1", "x": 1235, "y": 720, "label": "7",  "answer": "荒川" },
+    { "id": "008", "img": "map1", "x": 1325, "y": 720, "label": "8",  "answer": "霞ヶ浦" },
+    { "id": "009", "img": "map1", "x": 1190, "y": 790, "label": "9",  "answer": "富士川" },
+    { "id": "010", "img": "map1", "x": 1090, "y": 830, "label": "10", "answer": "天竜川" },
+    { "id": "011", "img": "map1", "x":  985, "y": 780, "label": "11", "answer": "木曽川" },
+    { "id": "012", "img": "map1", "x":  955, "y": 835, "label": "12", "answer": "琵琶湖" },
+    { "id": "013", "img": "map1", "x":  940, "y": 880, "label": "13", "answer": "淀川" },
+    { "id": "014", "img": "map1", "x": 1000, "y": 930, "label": "14", "answer": "紀ノ川" },
+    { "id": "015", "img": "map1", "x": 1000, "y": 700, "label": "15", "answer": "庄川" },
+    { "id": "016", "img": "map1", "x": 1035, "y": 680, "label": "16", "answer": "黒部川" },
+    { "id": "017", "img": "map1", "x": 1080, "y": 650, "label": "17", "answer": "信濃川" },
+    { "id": "018", "img": "map1", "x": 1105, "y": 600, "label": "18", "answer": "阿賀野川" },
+    { "id": "019", "img": "map1", "x": 1080, "y": 520, "label": "19", "answer": "最上川" },
+    { "id": "020", "img": "map1", "x": 1005, "y": 460, "label": "20", "answer": "雄物川" },
+    { "id": "021", "img": "map1", "x":  980, "y": 1040,"label": "21", "answer": "吉野川" },
+    { "id": "022", "img": "map1", "x":  805, "y":   900,"label": "22", "answer": "江の川" },
+    { "id": "023", "img": "map1", "x":  625, "y":   960,"label": "23", "answer": "筑後川" },
+    { "id": "024", "img": "map1", "x": 1330, "y":  1080,"label": "24", "answer": "（確認用スペア）" }
+  ]
+}
