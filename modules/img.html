@@ -136,6 +136,8 @@
     .then(r => { if (!r.ok) throw new Error(`HTTP ${r.status}`); return r.json(); })
     .then(json => {
       state.data = json;
+      state.data = json;
+      window.currentMapData = json; // ← これを追加！
       if (json.title) document.getElementById('pageTitle').textContent = json.title;
       setupImages(json.images);
       setupMarkers(json.points);
