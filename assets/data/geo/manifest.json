@@ -41,7 +41,16 @@
   "category": "社会・地理（図あり）",
   "tags": ["日本地理","山脈","山地","高地","地図"],
   "updated": "2025-10-21"
+},
+    {
+  "title": "地図記号を覚えよう（番号→地図記号名）",
+  "path": "../img.html?data=/anki-project/assets/data/geo/mapdata/geo-map-symbols.json&title=地図記号を覚えよう",
+  "thumbnail": "../assets/img/thumb/map-symbols.png",
+  "category": "社会・地理（図あり）",
+  "tags": ["地図記号","社会","地理","暗記","図あり"],
+  "updated": "2025-10-22"
 }
   ]
 }
+
 
