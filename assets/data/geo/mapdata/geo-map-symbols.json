@@ -2,8 +2,8 @@
   "title": "地図記号を覚えよう（番号→地図記号名）",
   "hideMarkers": true,
   "images": [
-    { "id": "map1", "src": "/anki-project/assets/img/geo/map-symbols1-numbered.png", "width": 1191, "height": 1684, "label": "地図記号テスト1（番号付き）" },
-    { "id": "map2", "src": "/anki-project/assets/img/geo/map-symbols2-numbered.png", "width": 1191, "height": 1684, "label": "地図記号テスト2（番号付き）" }
+    { "id": "map1", "src": "/anki-project/assets/img/geo/map-symbols1.png", "width": 1191, "height": 1684, "label": "地図記号テスト1（番号付き）" },
+    { "id": "map2", "src": "/anki-project/assets/img/geo/map-symbols2.png", "width": 1191, "height": 1684, "label": "地図記号テスト2（番号付き）" }
   ],
   "points": [
     { "id": "001", "img": "map1", "x": 0, "y": 0, "label": "1",  "answer": "市役所" },
@@ -63,3 +63,4 @@
     { "id": "056", "img": "map2", "x": 0, "y": 0, "label": "56", "answer": "荒地" }
   ]
 }
+
