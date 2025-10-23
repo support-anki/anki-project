@@ -1,0 +1,20 @@
+{
+  "modules": [
+    {
+      "title": "第8回 多角形の性質（図なし＋図つき統合版）",
+      "path": "../../modules/noimg.html?data=/anki-project/assets/data/math/noimg/ma4-08-unit-noimg-fig.json&title=小4算数 第8回 多角形の性質",
+      "desc": "内角・外角・対角線などを図つきで学ぶ",
+      "category": "算数",
+      "tags": ["多角形","図形","角度","小4"],
+      "updated": "2025-10-23"
+    },
+    {
+      "title": "単元横断ミックス出題",
+      "path": "../../trainer/mix.html",
+      "desc": "複数単元をタグ選択してランダム出題（復習対応）",
+      "category": "算数",
+      "tags": ["総合","タグ出題","復習","小4"],
+      "updated": "2025-10-23"
+    }
+  ]
+}
