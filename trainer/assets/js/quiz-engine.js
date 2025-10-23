@@ -2,7 +2,7 @@
 const QuizEngine = (() => {
   // ▼ミックス対象にするJSON（必要に応じて増やしてください）
   const DEFAULT_SOURCES = [
-    "/anki-project/assets/data/math/noimg/ma4-08-unit-v2.json"
+    "/anki-project/assets/data/math/noimg/ma4-08-unit-noimg-fig.json"
   ];
 
   // URLに ?src=... を並べたらそれを優先（例：&src=/...v2.json&src=/...9.json）
