@@ -1,41 +1,65 @@
-// 単元横断クイズエンジン（タグ選択・自信度4段階・復習優先・図表示対応）
+// 単元横断クイズエンジン（カタログ対応・科目タグ自動付与・タグ選択・復習優先）
 const QuizEngine = (() => {
-  // ▼ミックス対象にするJSON（必要に応じて増やしてください）
-  const DEFAULT_SOURCES = [
-    "/anki-project/assets/data/math/noimg/ma4-08-unit-noimg-fig.json"
-  ];
+  // 既定カタログ（全教科の教材JSON URLを列挙）
+  const DEFAULT_CATALOG = "/anki-project/assets/data/meta/mix-sources.json";
 
-  // URLに ?src=... を並べたらそれを優先（例：&src=/...v2.json&src=/...9.json）
-  const fromURL = (() => {
-    try { return (new URLSearchParams(location.search)).getAll("src"); }
-    catch { return []; }
+  const q = new URLSearchParams(location.search);
+  const DEBUG = q.get("debug") === "1";
+  const CAT_URL = q.get("catalog") || DEFAULT_CATALOG;
+
+  // ?src= を1つ以上指定したら、それを最優先（その場ミックス）
+  const srcFromURL = (() => {
+    try { return q.getAll("src"); } catch { return []; }
   })();
-  const SOURCES = (fromURL && fromURL.length) ? fromURL : DEFAULT_SOURCES;
 
   const LS_PREFIX = "anki-mix:";
-  const q = new URLSearchParams(location.search);
-  const DEBUG = q.get("debug") === "1"; // ?debug=1 なら内部情報を表示
 
   const fetchJSON = (u) => fetch(u, {cache:"no-store"}).then(r=>{
     if(!r.ok) throw new Error(`fetch ${u} -> ${r.status}`);
     return r.json();
   });
 
+  // カタログを読み込み → sources[] を返す
+  async function loadCatalog(catUrl){
+    try{
+      const data = await fetchJSON(catUrl);
+      const list = Array.isArray(data) ? data : (Array.isArray(data.sources) ? data.sources : []);
+      return list.filter(Boolean);
+    }catch(e){
+      console.warn("catalog load failed:", catUrl, e);
+      return [];
+    }
+  }
+
+  // 全読み込み： (a) ?src= があればそれ, なければ (b) カタログ
   async function loadAll() {
+    const sources = (srcFromURL && srcFromURL.length) ? srcFromURL : await loadCatalog(CAT_URL);
     const packs = [];
-    for (const src of SOURCES) {
+    for (const src of sources) {
       try { packs.push({src, data: await fetchJSON(src)}); }
       catch(e){ console.warn("load fail:", src, e); }
     }
     return packs;
   }
 
+  // パスから科目名タグを推定
+  function subjectTagFromPath(src){
+    const s = src || "";
+    if (s.includes("/math/")) return "算数";
+    if (s.includes("/jp/"))   return "国語";
+    if (s.includes("/sci/"))  return "理科";
+    if (s.includes("/geo/"))  return "社会";
+    return null;
+  }
+
+  // items に __src と tags を整備（科目タグも注入）
   function flatItems(src, data){
-    return (data.items||[]).map(it => ({
-      ...it,
-      __src: src,
-      tags: it.tags || data.tags || []
-    }));
+    const subj = subjectTagFromPath(src);
+    return (data.items || []).map(it => {
+      const tags = [...(it.tags || []), ...((data.tags || []))];
+      if (subj && !tags.includes(subj)) tags.push(subj);
+      return { ...it, __src: src, tags };
+    });
   }
 
   // ===== タグ一覧を収集 =====
@@ -90,7 +114,6 @@ const QuizEngine = (() => {
         if (onlyLow) return (x.__avg ?? 0) < 1.5 || x.__seen < 3;   // 苦手だけ
         return (x.__avg ?? 0) < 2.0 || x.__seen < 3;                // 復習優先
       });
-      // プールが少なすぎるときは補充
       if (pool.length < Math.max(5, limit))
         pool = [...pool, ...scored.filter(x=>!pool.includes(x))];
     }
@@ -110,12 +133,10 @@ const QuizEngine = (() => {
     el.className = "card";
     const tags = (item.tags||[]).map(t=>`<span class="pill">${t}</span>`).join("");
 
-    // 上部メタ：デフォルトはURL非表示。?debug=1 の時だけ表示
     const {avg, hist} = readHist(item.__src, item.id||item.q||"");
     const badge = avg==null ? "記録なし" : `直近3回 平均=${avg.toFixed(2)}（${hist.length}）`;
     const sourceInfo = DEBUG ? `　<small>${item.__src}</small>` : "";
 
-    // ヒント文：item.hint が無ければ aim をヒント代替に使う
     const hintText = item.hint || (item.aim ? `ねらい：${item.aim}` : "内角の和／外角の和／対角線／等積変形／特殊三角形 などから選ぶ");
 
     el.innerHTML = `
@@ -145,7 +166,6 @@ const QuizEngine = (() => {
       box.style.display = "block";
     };
 
-    // 自信度（0..3）を履歴に記録
     ["c0_","c1_","c2_","c3_"].forEach((p,conf)=>{
       document.getElementById(p+idx).onclick = ()=>pushHist(item.__src, item.id||item.q||"", conf);
     });
