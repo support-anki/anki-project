@@ -1,8 +1,22 @@
 {
   "sources": [
     "/anki-project/assets/data/math/noimg/ma4-08-unit-noimg-fig.json",
-    "/anki-project/assets/data/jp/noimg/jp4-xx-sample.json",
-    "/anki-project/assets/data/sci/noimg/sci4-xx-sample.json",
-    "/anki-project/assets/data/geo/noimg/ge7-kyushu.json"
+
+    "/anki-project/assets/data/jp/noimg/ge8-kikou.json",
+    "/anki-project/assets/data/jp/noimg/jp_pref_kanji.json",
+    "/anki-project/assets/data/jp/noimg/kanji-040.json",
+    "/anki-project/assets/data/jp/noimg/kanji41-08.json",
+    "/anki-project/assets/data/jp/noimg/kanken7_all.json",
+
+    "/anki-project/assets/data/sci/noimg/ge7-tokekata2.json",
+    "/anki-project/assets/data/sci/noimg/sci4-u1-atatakasa-spring.json",
+    "/anki-project/assets/data/sci/noimg/sci4-u2-tenki-kion.json",
+    "/anki-project/assets/data/sci/noimg/sci4-u3-ame-mizu.json",
+    "/anki-project/assets/data/sci/noimg/sci4-u3-natsu-mixed.json",
+    "/anki-project/assets/data/sci/noimg/sci4-u4-denki.json",
+    "/anki-project/assets/data/sci/noimg/sci8-ryusui.json",
+
+    "/anki-project/assets/data/geo/noimg/ge7-kyushu.json",
+    "/anki-project/assets/data/geo/noimg/ge8-kikou.json"
   ]
 }
