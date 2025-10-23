@@ -1,13 +1,11 @@
-// 単元横断クイズエンジン（タグ選択対応版）
+// 単元横断クイズエンジン（タグ選択・自信度4段階・復習優先・図表示対応）
 const QuizEngine = (() => {
-  // ミックス対象にしたいJSONをここへ（恒久設定）
+  // ▼ミックス対象にするJSON（必要に応じて増やしてください）
   const DEFAULT_SOURCES = [
     "/anki-project/assets/data/math/noimg/ma4-08-unit-v2.json"
-    "/anki-project/assets/data/math/noimg/ma4-09-circle.json",
-  "/anki-project/assets/data/geo/noimg/ge7-kyushu.json"
   ];
 
-  // URLで ?src=... が渡されていればそれを優先（任意機能）
+  // URLに ?src=... を並べたらそれを優先（例：&src=/...v2.json&src=/...9.json）
   const fromURL = (() => {
     try { return (new URLSearchParams(location.search)).getAll("src"); }
     catch { return []; }
@@ -16,15 +14,18 @@ const QuizEngine = (() => {
 
   const LS_PREFIX = "anki-mix:";
 
-  const fetchJSON = (u) => fetch(u, {cache:"no-store"}).then(r=>r.json());
+  const fetchJSON = (u) => fetch(u, {cache:"no-store"}).then(r=>{
+    if(!r.ok) throw new Error(`fetch ${u} -> ${r.status}`);
+    return r.json();
+  });
 
   async function loadAll() {
-    const res = [];
+    const packs = [];
     for (const src of SOURCES) {
-      try { res.push({src, data: await fetchJSON(src)}); }
+      try { packs.push({src, data: await fetchJSON(src)}); }
       catch(e){ console.warn("load fail:", src, e); }
     }
-    return res;
+    return packs;
   }
 
   function flatItems(src, data){
@@ -35,19 +36,16 @@ const QuizEngine = (() => {
     }));
   }
 
-  // ========= 新規: タグ発見 =========
+  // ===== タグ一覧を収集 =====
   async function discoverTags(){
     const packs = await loadAll();
-    const countMap = new Map();
+    const count = new Map();
     for (const p of packs) {
-      const items = flatItems(p.src, p.data);
-      for (const it of items) {
-        (it.tags||[]).forEach(t=>{
-          countMap.set(t, (countMap.get(t)||0) + 1);
-        });
+      for (const it of flatItems(p.src, p.data)) {
+        (it.tags||[]).forEach(t => count.set(t, (count.get(t)||0)+1));
       }
     }
-    const tags = [...countMap.entries()].map(([name,count])=>({name,count}));
+    const tags = [...count.entries()].map(([name,count])=>({name,count}));
     return { tags, sources: packs.map(p=>p.src) };
   }
 
@@ -57,7 +55,9 @@ const QuizEngine = (() => {
     return items.filter(it => it.tags && it.tags.some(t=>set.has(t)));
   }
 
-  function key(src,id){ return `${LS_PREFIX}${src}#${id}`; }
+  // ===== 学習履歴（直近3回平均）=====
+  const key = (src,id)=>`${LS_PREFIX}${src}#${id}`;
+
   function readHist(src,id){
     try{
       const arr = JSON.parse(localStorage.getItem(key(src,id))||"[]");
@@ -66,13 +66,16 @@ const QuizEngine = (() => {
       return {hist:last3, avg};
     }catch{ return {hist:[], avg:null}; }
   }
+
   function pushHist(src,id,conf){
     let arr=[]; try{ arr = JSON.parse(localStorage.getItem(key(src,id))||"[]"); }catch{}
-    arr.push({t:Date.now(), c:conf}); if(arr.length>10) arr = arr.slice(-10);
+    arr.push({t:Date.now(), c:conf});
+    if(arr.length>10) arr = arr.slice(-10);
     localStorage.setItem(key(src,id), JSON.stringify(arr));
   }
 
-  function shuffle(a){ for(let i=a.length-1;i>0;i--){ const j=Math.floor(Math.random()*(i+1)); [a[i],a[j]]=[a[j],a[i]]; } return a; }
+  const shuffle=a=>{for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]]}return a};
+
   function pick(all, {needReview=false, onlyLow=false, limit=10, shuffleOK=true}){
     const scored = all.map(it=>{
       const {avg, hist} = readHist(it.__src, it.id||it.q||"");
@@ -82,10 +85,12 @@ const QuizEngine = (() => {
     let pool = scored;
     if (needReview || onlyLow) {
       pool = scored.filter(x=>{
-        if (onlyLow) return (x.__avg ?? 0) < 1.5 || x.__seen < 3;
-        return (x.__avg ?? 0) < 2.0 || x.__seen < 3;
+        if (onlyLow) return (x.__avg ?? 0) < 1.5 || x.__seen < 3;   // 苦手だけ
+        return (x.__avg ?? 0) < 2.0 || x.__seen < 3;                // 復習優先
       });
-      if (pool.length < Math.max(5, limit)) pool = [...pool, ...scored.filter(x=>!pool.includes(x))];
+      // プールが少なすぎるときは補充
+      if (pool.length < Math.max(5, limit))
+        pool = [...pool, ...scored.filter(x=>!pool.includes(x))];
     }
 
     if (shuffleOK) shuffle(pool);
@@ -134,6 +139,8 @@ const QuizEngine = (() => {
       box.textContent = `答え：${ans}${note}`;
       box.style.display = "block";
     };
+
+    // 自信度（0..3）を履歴に記録
     ["c0_","c1_","c2_","c3_"].forEach((p,conf)=>{
       document.getElementById(p+idx).onclick = ()=>pushHist(item.__src, item.id||item.q||"", conf);
     });
