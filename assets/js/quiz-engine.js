@@ -1,8 +1,17 @@
+// 単元横断クイズエンジン（タグ選択対応版）
 const QuizEngine = (() => {
-  const SOURCES = [
-    "/anki-project/assets/data/math/noimg/ma4-08-polygon-mix.json"
-    // 今後ここに追加：他教科のnoimgもOK
+  // ミックス対象にしたいJSONをここへ（恒久設定）
+  const DEFAULT_SOURCES = [
+    "/anki-project/assets/data/math/noimg/ma4-08-unit-v2.json"
   ];
+
+  // URLで ?src=... が渡されていればそれを優先（任意機能）
+  const fromURL = (() => {
+    try { return (new URLSearchParams(location.search)).getAll("src"); }
+    catch { return []; }
+  })();
+  const SOURCES = (fromURL && fromURL.length) ? fromURL : DEFAULT_SOURCES;
+
   const LS_PREFIX = "anki-mix:";
 
   const fetchJSON = (u) => fetch(u, {cache:"no-store"}).then(r=>r.json());
@@ -24,6 +33,22 @@ const QuizEngine = (() => {
     }));
   }
 
+  // ========= 新規: タグ発見 =========
+  async function discoverTags(){
+    const packs = await loadAll();
+    const countMap = new Map();
+    for (const p of packs) {
+      const items = flatItems(p.src, p.data);
+      for (const it of items) {
+        (it.tags||[]).forEach(t=>{
+          countMap.set(t, (countMap.get(t)||0) + 1);
+        });
+      }
+    }
+    const tags = [...countMap.entries()].map(([name,count])=>({name,count}));
+    return { tags, sources: packs.map(p=>p.src) };
+  }
+
   function byTags(items, tags){
     if(!tags || !tags.length) return items;
     const set = new Set(tags);
@@ -31,7 +56,6 @@ const QuizEngine = (() => {
   }
 
   function key(src,id){ return `${LS_PREFIX}${src}#${id}`; }
-
   function readHist(src,id){
     try{
       const arr = JSON.parse(localStorage.getItem(key(src,id))||"[]");
@@ -40,7 +64,6 @@ const QuizEngine = (() => {
       return {hist:last3, avg};
     }catch{ return {hist:[], avg:null}; }
   }
-
   function pushHist(src,id,conf){
     let arr=[]; try{ arr = JSON.parse(localStorage.getItem(key(src,id))||"[]"); }catch{}
     arr.push({t:Date.now(), c:conf}); if(arr.length>10) arr = arr.slice(-10);
@@ -48,7 +71,6 @@ const QuizEngine = (() => {
   }
 
   function shuffle(a){ for(let i=a.length-1;i>0;i--){ const j=Math.floor(Math.random()*(i+1)); [a[i],a[j]]=[a[j],a[i]]; } return a; }
-
   function pick(all, {needReview=false, onlyLow=false, limit=10, shuffleOK=true}){
     const scored = all.map(it=>{
       const {avg, hist} = readHist(it.__src, it.id||it.q||"");
@@ -71,14 +93,12 @@ const QuizEngine = (() => {
   function figHTML(fig, withImages){
     if(!withImages || !fig || !fig.src) return "";
     const cap = fig.caption ? `<div class="muted" style="margin-top:4px">${fig.caption}</div>` : "";
-    const size = (fig.width||fig.height) ? `style="${fig.width?`width:${fig.width}px;`:``}${fig.height?`height:${fig.height}px;`:``}"` : "";
-    return `<div style="margin:10px 0"><img class="fig" src="${fig.src}" ${size}>${cap}</div>`;
+    return `<div style="margin:10px 0"><img class="fig" src="${fig.src}">${cap}</div>`;
   }
 
   function render(container, item, idx, total, withImages){
     const el = document.createElement("div");
     el.className = "card";
-
     const tags = (item.tags||[]).map(t=>`<span class="pill">${t}</span>`).join("");
     const aim = item.aim ? `<div class="muted" style="margin-top:8px">ねらい：${item.aim}</div>` : "";
 
@@ -112,7 +132,6 @@ const QuizEngine = (() => {
       box.textContent = `答え：${ans}${note}`;
       box.style.display = "block";
     };
-
     ["c0_","c1_","c2_","c3_"].forEach((p,conf)=>{
       document.getElementById(p+idx).onclick = ()=>pushHist(item.__src, item.id||item.q||"", conf);
     });
@@ -131,5 +150,5 @@ const QuizEngine = (() => {
     return {count: picked.length, used: packs.map(p=>p.src)};
   }
 
-  return { mount };
+  return { mount, discoverTags };
 })();
