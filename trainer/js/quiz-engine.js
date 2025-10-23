@@ -1,110 +1,154 @@
-<!doctype html>
-<html lang="ja">
-<head>
-<meta charset="utf-8" />
-<meta name="viewport" content="width=device-width,initial-scale=1" />
-<title>単元横断ミックス出題</title>
-<style>
-  :root{--bg:#f7f7fb;--ink:#1f2937;--muted:#667085;--card:#fff;--border:#e5e7eb;--brand:#3b4675;}
-  html,body{margin:0;background:var(--bg);color:var(--ink);font-family:system-ui,-apple-system,Segoe UI,Roboto,Noto Sans JP,sans-serif}
-  .wrap{max-width:960px;margin:28px auto;padding:16px}
-  .card{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:18px;margin:14px 0;box-shadow:0 2px 8px rgba(0,0,0,.04)}
-  .row{display:flex;gap:12px;flex-wrap:wrap;align-items:center}
-  .btn{padding:10px 14px;border-radius:10px;border:1px solid #d1d5db;background:#fff;cursor:pointer}
-  .btn.primary{background:var(--brand);color:#fff;border:none}
-  .muted{color:var(--muted)}
-  .pill{display:inline-block;padding:.25em .6em;border-radius:999px;background:#eef2ff;color:#3730a3;font-size:.8rem;margin-right:6px}
-  img.fig{max-width:100%;border:1px solid var(--border);border-radius:10px}
-  .tags{display:flex;flex-wrap:wrap;gap:8px}
-  .tagbox{display:flex;align-items:center;gap:6px;border:1px solid var(--border);border-radius:999px;padding:6px 10px;background:#fff}
-  .tagbox input{accent-color:#3b4675}
-</style>
-</head>
-<body>
-<div class="wrap">
-  <h1>単元横断ミックス出題</h1>
-  <div id="controls" class="card">
-    <div class="row">
-      <input id="limitInput" class="btn" type="number" min="1" max="100" value="10" style="width:110px">
-      <label><input id="shuffleInput" type="checkbox" checked> シャッフル</label>
-      <label><input id="needReview" type="checkbox"> 復習優先</label>
-      <label><input id="onlyLow" type="checkbox"> 苦手だけ</label>
-      <label><input id="withImages" type="checkbox" checked> 図を表示</label>
-      <button id="startBtn" class="btn primary">出題開始</button>
-    </div>
+// 単元横断クイズエンジン（タグ選択対応版）
+const QuizEngine = (() => {
+  // ミックス対象にしたいJSONをここへ（恒久設定）
+  const DEFAULT_SOURCES = [
+    "/anki-project/assets/data/math/noimg/ma4-08-unit-v2.json"
+  ];
 
-    <div class="muted" style="margin:10px 0">タグを選んでください（複数選択可）</div>
-    <div class="tags" id="tagArea"></div>
-    <div class="row" style="margin-top:8px">
-      <button id="allBtn" class="btn">すべて選択</button>
-      <button id="noneBtn" class="btn">選択解除</button>
-      <button id="invertBtn" class="btn">反転</button>
-    </div>
-
-    <div class="muted" id="sourceMeta" style="margin-top:10px"></div>
-  </div>
-
-  <div id="quizArea"></div>
-</div>
-
-<script src="/anki-project/trainer/assets/js/quiz-engine.js?v=1" defer></script>
-
-<script>
-  const LS_TAGS = "anki-mix:last-tags";
-  const q = new URLSearchParams(location.search);
-
-  // タグUIを構築
-  (async () => {
-    const info = await QuizEngine.discoverTags(); // {tags:[{name,count}], sources:[]}
-    const tagArea = document.getElementById("tagArea");
-    const preset = (q.get("tags") ? q.get("tags").split(",").filter(Boolean)
-                    : JSON.parse(localStorage.getItem(LS_TAGS)||"[]"));
-    const set = new Set(preset);
-
-    info.tags.sort((a,b)=> b.count-a.count || a.name.localeCompare(b.name,"ja"));
-    for (const t of info.tags) {
-      const id = "t_"+t.name;
-      const w = document.createElement("label");
-      w.className = "tagbox";
-      w.innerHTML = `<input type="checkbox" id="${id}" value="${t.name}" ${set.has(t.name)?"checked":""}>
-                     <span>${t.name}</span><span class="muted">(${t.count})</span>`;
-      tagArea.appendChild(w);
-    }
-    document.getElementById("sourceMeta").textContent = `読み込み候補：${info.sources.length}ファイル / タグ数：${info.tags.length}`;
+  // URLで ?src=... が渡されていればそれを優先（任意機能）
+  const fromURL = (() => {
+    try { return (new URLSearchParams(location.search)).getAll("src"); }
+    catch { return []; }
   })();
+  const SOURCES = (fromURL && fromURL.length) ? fromURL : DEFAULT_SOURCES;
 
-  // 便利ボタン
-  const checks = () => [...document.querySelectorAll("#tagArea input[type=checkbox]")];
-  document.getElementById("allBtn").onclick = ()=>checks().forEach(c=>c.checked=true);
-  document.getElementById("noneBtn").onclick = ()=>checks().forEach(c=>c.checked=false);
-  document.getElementById("invertBtn").onclick = ()=>checks().forEach(c=>c.checked=!c.checked);
+  const LS_PREFIX = "anki-mix:";
 
-  // 出題開始
-  async function start(){
-    const tags = checks().filter(c=>c.checked).map(c=>c.value);
-    localStorage.setItem(LS_TAGS, JSON.stringify(tags));
-    const limit = +document.getElementById("limitInput").value;
-    const shuffle = document.getElementById("shuffleInput").checked;
-    const needReview = document.getElementById("needReview").checked;
-    const onlyLow = document.getElementById("onlyLow").checked;
-    const withImages = document.getElementById("withImages").checked;
+  const fetchJSON = (u) => fetch(u, {cache:"no-store"}).then(r=>r.json());
 
-    const {count, used} = await QuizEngine.mount({
-      container: "#quizArea",
-      tags, limit, shuffle, needReview, onlyLow, withImages
-    });
-    document.getElementById("sourceMeta").textContent = `使用：${used.length}ファイル / 出題：${count}問 / 選択タグ：${tags.join(",")||"（なし）"}`;
+  async function loadAll() {
+    const res = [];
+    for (const src of SOURCES) {
+      try { res.push({src, data: await fetchJSON(src)}); }
+      catch(e){ console.warn("load fail:", src, e); }
+    }
+    return res;
   }
-  document.getElementById("startBtn").onclick = start;
 
-  // クエリに limit 等があれば反映
-  if(q.get("limit")) document.getElementById("limitInput").value = q.get("limit");
-  if(q.get("shuffle")==="false") document.getElementById("shuffleInput").checked = false;
-  if(q.get("need_review")==="true") document.getElementById("needReview").checked = true;
-  if(q.get("only_low")==="true") document.getElementById("onlyLow").checked = true;
+  function flatItems(src, data){
+    return (data.items||[]).map(it => ({
+      ...it,
+      __src: src,
+      tags: it.tags || data.tags || []
+    }));
+  }
 
-  // 自動開始（クエリに auto=1 がある場合）
-  if(q.get("auto")==="1") start();
-</script>
-</body>
-</html>
+  // ========= 新規: タグ発見 =========
+  async function discoverTags(){
+    const packs = await loadAll();
+    const countMap = new Map();
+    for (const p of packs) {
+      const items = flatItems(p.src, p.data);
+      for (const it of items) {
+        (it.tags||[]).forEach(t=>{
+          countMap.set(t, (countMap.get(t)||0) + 1);
+        });
+      }
+    }
+    const tags = [...countMap.entries()].map(([name,count])=>({name,count}));
+    return { tags, sources: packs.map(p=>p.src) };
+  }
+
+  function byTags(items, tags){
+    if(!tags || !tags.length) return items;
+    const set = new Set(tags);
+    return items.filter(it => it.tags && it.tags.some(t=>set.has(t)));
+  }
+
+  function key(src,id){ return `${LS_PREFIX}${src}#${id}`; }
+  function readHist(src,id){
+    try{
+      const arr = JSON.parse(localStorage.getItem(key(src,id))||"[]");
+      const last3 = arr.slice(-3);
+      const avg = last3.length ? last3.reduce((a,b)=>a+b.c,0)/last3.length : null;
+      return {hist:last3, avg};
+    }catch{ return {hist:[], avg:null}; }
+  }
+  function pushHist(src,id,conf){
+    let arr=[]; try{ arr = JSON.parse(localStorage.getItem(key(src,id))||"[]"); }catch{}
+    arr.push({t:Date.now(), c:conf}); if(arr.length>10) arr = arr.slice(-10);
+    localStorage.setItem(key(src,id), JSON.stringify(arr));
+  }
+
+  function shuffle(a){ for(let i=a.length-1;i>0;i--){ const j=Math.floor(Math.random()*(i+1)); [a[i],a[j]]=[a[j],a[i]]; } return a; }
+  function pick(all, {needReview=false, onlyLow=false, limit=10, shuffleOK=true}){
+    const scored = all.map(it=>{
+      const {avg, hist} = readHist(it.__src, it.id||it.q||"");
+      return {...it, __avg:avg, __seen:hist.length};
+    });
+
+    let pool = scored;
+    if (needReview || onlyLow) {
+      pool = scored.filter(x=>{
+        if (onlyLow) return (x.__avg ?? 0) < 1.5 || x.__seen < 3;
+        return (x.__avg ?? 0) < 2.0 || x.__seen < 3;
+      });
+      if (pool.length < Math.max(5, limit)) pool = [...pool, ...scored.filter(x=>!pool.includes(x))];
+    }
+
+    if (shuffleOK) shuffle(pool);
+    return limit ? pool.slice(0, limit) : pool;
+  }
+
+  function figHTML(fig, withImages){
+    if(!withImages || !fig || !fig.src) return "";
+    const cap = fig.caption ? `<div class="muted" style="margin-top:4px">${fig.caption}</div>` : "";
+    return `<div style="margin:10px 0"><img class="fig" src="${fig.src}">${cap}</div>`;
+  }
+
+  function render(container, item, idx, total, withImages){
+    const el = document.createElement("div");
+    el.className = "card";
+    const tags = (item.tags||[]).map(t=>`<span class="pill">${t}</span>`).join("");
+    const aim = item.aim ? `<div class="muted" style="margin-top:8px">ねらい：${item.aim}</div>` : "";
+
+    const {avg, hist} = readHist(item.__src, item.id||item.q||"");
+    const badge = avg==null ? "記録なし" : `直近3回 平均=${avg.toFixed(2)}（${hist.length}）`;
+
+    el.innerHTML = `
+      <div class="muted">Q${idx+1}/${total}　<small>${item.__src}</small> ｜ ${badge}</div>
+      <div class="q">${item.q}</div>
+      ${figHTML(item.figure, withImages)}
+      ${tags ? `<div style="margin-top:6px">${tags}</div>` : ""}
+      <details style="margin-top:8px"><summary class="btn">ヒント（使う作戦は？）</summary>
+        <div class="answer">${item.hint || "内角の和／外角の和／対角線／等積変形／特殊三角形 などから選ぶ"}</div>
+      </details>
+      <button class="btn" id="reveal${idx}" style="margin-top:10px">こたえを表示</button>
+      <div id="ans${idx}" class="answer" style="display:none;margin-top:10px;"></div>
+      <div class="row" style="margin-top:10px">
+        <button class="btn" id="c0_${idx}">🔁 もう一度</button>
+        <button class="btn" id="c1_${idx}">△ むずかしい</button>
+        <button class="btn" id="c2_${idx}">○ だいたい</button>
+        <button class="btn" id="c3_${idx}">◎ かんぺき</button>
+      </div>
+      ${aim}
+    `;
+    document.querySelector(container).appendChild(el);
+
+    document.getElementById(`reveal${idx}`).onclick = ()=>{
+      const box = document.getElementById(`ans${idx}`);
+      const ans = (item.answers||[]).join(" ／ ");
+      const note = item.note ? `\n— 解説：${item.note}` : "";
+      box.textContent = `答え：${ans}${note}`;
+      box.style.display = "block";
+    };
+    ["c0_","c1_","c2_","c3_"].forEach((p,conf)=>{
+      document.getElementById(p+idx).onclick = ()=>pushHist(item.__src, item.id||item.q||"", conf);
+    });
+  }
+
+  async function mount({container="#quizArea", tags=[], limit=10, shuffle=true, needReview=false, onlyLow=false, withImages=true}={}){
+    const packs = await loadAll();
+    let all = [];
+    for (const p of packs) all.push(...flatItems(p.src, p.data));
+    all = byTags(all, tags);
+
+    const picked = pick(all, {needReview, onlyLow, limit, shuffleOK:shuffle});
+    const root = document.querySelector(container); root.innerHTML = "";
+    picked.forEach((it,i)=>render(container, it, i, picked.length, withImages));
+
+    return {count: picked.length, used: packs.map(p=>p.src)};
+  }
+
+  return { mount, discoverTags };
+})();
