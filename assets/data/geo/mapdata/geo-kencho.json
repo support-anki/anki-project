@@ -4,6 +4,7 @@
     {
       "id": "japan",
       "label": "地図",
+      "hideMarkers": true
       "src": "../assets/img/geo/japan-kencho.png",
       "width": 725,
       "height": 685
@@ -30,3 +31,4 @@
     { "id": "18", "img": "japan", "x": 130, "y": 600, "answer": "那覇市",   "label": "沖縄県" }
   ]
 }
+
