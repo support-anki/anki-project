@@ -13,6 +13,8 @@ const QuizEngine = (() => {
   const SOURCES = (fromURL && fromURL.length) ? fromURL : DEFAULT_SOURCES;
 
   const LS_PREFIX = "anki-mix:";
+  const q = new URLSearchParams(location.search);
+  const DEBUG = q.get("debug") === "1"; // ?debug=1 なら内部情報を表示
 
   const fetchJSON = (u) => fetch(u, {cache:"no-store"}).then(r=>{
     if(!r.ok) throw new Error(`fetch ${u} -> ${r.status}`);
@@ -107,18 +109,22 @@ const QuizEngine = (() => {
     const el = document.createElement("div");
     el.className = "card";
     const tags = (item.tags||[]).map(t=>`<span class="pill">${t}</span>`).join("");
-    const aim = item.aim ? `<div class="muted" style="margin-top:8px">ねらい：${item.aim}</div>` : "";
 
+    // 上部メタ：デフォルトはURL非表示。?debug=1 の時だけ表示
     const {avg, hist} = readHist(item.__src, item.id||item.q||"");
     const badge = avg==null ? "記録なし" : `直近3回 平均=${avg.toFixed(2)}（${hist.length}）`;
+    const sourceInfo = DEBUG ? `　<small>${item.__src}</small>` : "";
+
+    // ヒント文：item.hint が無ければ aim をヒント代替に使う
+    const hintText = item.hint || (item.aim ? `ねらい：${item.aim}` : "内角の和／外角の和／対角線／等積変形／特殊三角形 などから選ぶ");
 
     el.innerHTML = `
-      <div class="muted">Q${idx+1}/${total}　<small>${item.__src}</small> ｜ ${badge}</div>
+      <div class="muted">Q${idx+1}/${total}${sourceInfo} ｜ ${badge}</div>
       <div class="q">${item.q}</div>
       ${figHTML(item.figure, withImages)}
       ${tags ? `<div style="margin-top:6px">${tags}</div>` : ""}
       <details style="margin-top:8px"><summary class="btn">ヒント（使う作戦は？）</summary>
-        <div class="answer">${item.hint || "内角の和／外角の和／対角線／等積変形／特殊三角形 などから選ぶ"}</div>
+        <div class="answer">${hintText}</div>
       </details>
       <button class="btn" id="reveal${idx}" style="margin-top:10px">こたえを表示</button>
       <div id="ans${idx}" class="answer" style="display:none;margin-top:10px;"></div>
@@ -128,7 +134,6 @@ const QuizEngine = (() => {
         <button class="btn" id="c2_${idx}">○ だいたい</button>
         <button class="btn" id="c3_${idx}">◎ かんぺき</button>
       </div>
-      ${aim}
     `;
     document.querySelector(container).appendChild(el);
 
