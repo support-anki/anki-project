@@ -34,6 +34,11 @@
     .choice .cimg{margin-top:6px}
     .choice .cimg img{max-width:100%;height:auto;border-radius:8px;border:1px solid var(--border);display:block}
 
+    /* ▼本文の図（JSONの figure / img を描画） */
+    .qimg{margin:10px 0}
+    .qimg img{max-width:100%;height:auto;border:1px solid var(--border);border-radius:10px;display:block}
+    .qimg figcaption{color:var(--muted);font-size:.9rem;margin-top:4px}
+
     .result{display:none;border:1px dashed var(--border);background:#f8fafc;border-radius:12px;padding:10px}
     .qcard.correct{border-color:#bbf7d0;background:#f0fff4}
     .qcard.wrong{border-color:#fecaca;background:#fff5f5}
@@ -46,7 +51,7 @@
     .empty{color:#64748b;background:#fff;border:1px dashed var(--border);padding:14px;border-radius:12px}
     footer{text-align:center;color:#94a3b8;font-size:.95em;padding:6px 0 20px}
     @media (max-width:640px){.title{font-size:19px}.btn{padding:10px 12px}}
-  .ckey{font-weight:700;margin-right:.25em}
+    .ckey{font-weight:700;margin-right:.25em}
   </style>
 </head>
 <body>
@@ -129,53 +134,53 @@
     render(items);
   }
 
-  // ====== 表示（画像付き選択肢対応） ======
+  // ====== 表示（画像付き選択肢・本文画像対応） ======
   function escapeHTML(s) {
-  var str = s == null ? '' : String(s);
-  return str.replace(/[&<>"']/g, function(m){
-    switch (m) {
-      case '&': return '&amp;';
-      case '<': return '&lt;';
-      case '>': return '&gt;';
-      case '"': return '&quot;';
-      case "'": return '&#39;';
-      default: return m;
-    }
-  });
-}
-
-function choiceText(c) {
-  if (typeof c === 'string') return c;
-  return (c && (c.text ?? c.label ?? c.caption ?? c.hint ?? c.desc)) || '';
-}
-
-function choiceId(c, idx) {
-  if (typeof c === 'string') return c;
-  if (c && c.key != null) return String(c.key);
-  if (c && c.id  != null) return String(c.id);
-  return String(idx);
-}
-
-function choiceHTML(c, idx) {
-  if (typeof c === 'string') {
-    return '<div class="ctext">' + escapeHTML(c) + '</div>';
+    var str = s == null ? '' : String(s);
+    return str.replace(/[&<>"']/g, function(m){
+      switch (m) {
+        case '&': return '&amp;';
+        case '<': return '&lt;';
+        case '>': return '&gt;';
+        case '"': return '&quot;';
+        case "'": return '&#39;';
+        default: return m;
+      }
+    });
   }
-  var key = c && c.key != null ? String(c.key) : '';
-  var label = escapeHTML(choiceText(c));
-  var img = c && (c.img || c.image || c.src);
-  var alt = escapeHTML((c && (c.alt || choiceText(c))) || ('選択肢' + (idx+1)));
-  var keyHTML = key ? '<span class="ckey">' + escapeHTML(key) + '：</span>' : '';
-  var imgHTML = img ? '<div class="cimg"><img src="' + img + '" alt="' + alt + '"></div>' : '';
-  return '<div class="ctext">' + keyHTML + label + '</div>' + imgHTML;
-}
 
-function isCorrectChoice(item, idx){
-  var answers = new Set(item.answers || []);
-  var c = item.choices ? item.choices[idx] : undefined;
-  var candidates = [ String(idx), String.fromCharCode(0x30A2 + idx), choiceText(c), choiceId(c, idx) ].filter(Boolean);
-  for (var i=0;i<candidates.length;i++){ if (answers.has(candidates[i])) return true; }
-  return false;
-}
+  function choiceText(c) {
+    if (typeof c === 'string') return c;
+    return (c && (c.text ?? c.label ?? c.caption ?? c.hint ?? c.desc)) || '';
+  }
+
+  function choiceId(c, idx) {
+    if (typeof c === 'string') return c;
+    if (c && c.key != null) return String(c.key);
+    if (c && c.id  != null) return String(c.id);
+    return String(idx);
+  }
+
+  function choiceHTML(c, idx) {
+    if (typeof c === 'string') {
+      return '<div class="ctext">' + escapeHTML(c) + '</div>';
+    }
+    var key = c && c.key != null ? String(c.key) : '';
+    var label = escapeHTML(choiceText(c));
+    var img = c && (c.img || c.image || c.src);
+    var alt = escapeHTML((c && (c.alt || choiceText(c))) || ('選択肢' + (idx+1)));
+    var keyHTML = key ? '<span class="ckey">' + escapeHTML(key) + '：</span>' : '';
+    var imgHTML = img ? '<div class="cimg"><img src="' + img + '" alt="' + alt + '"></div>' : '';
+    return '<div class="ctext">' + keyHTML + label + '</div>' + imgHTML;
+  }
+
+  function isCorrectChoice(item, idx){
+    var answers = new Set(item.answers || []);
+    var c = item.choices ? item.choices[idx] : undefined;
+    var candidates = [ String(idx), String.fromCharCode(0x30A2 + idx), choiceText(c), choiceId(c, idx) ].filter(Boolean);
+    for (var i=0;i<candidates.length;i++){ if (answers.has(candidates[i])) return true; }
+    return false;
+  }
 
   function render(items){
     els.list.innerHTML = '';
@@ -206,6 +211,29 @@ function isCorrectChoice(item, idx){
       const choicesWrap = document.createElement('div');
       choicesWrap.className = 'choices';
 
+      // --- カードの組み立て ---
+      card.appendChild(qtop);
+      card.appendChild(qtext);
+
+      // 本文レベルの図（新仕様 figure）
+      if (it.figure && (it.figure.src || it.figure.image || it.figure.img)) {
+        const src = it.figure.src || it.figure.image || it.figure.img;
+        const alt = escapeHTML(it.figure.alt || it.q || '図');
+        const fig = document.createElement('figure');
+        fig.className = 'qimg';
+        fig.innerHTML = `<img src="${src}" alt="${alt}">` +
+                        (it.figure.caption ? `<figcaption>${escapeHTML(it.figure.caption)}</figcaption>` : '');
+        card.appendChild(fig);
+      }
+      // 旧仕様 it.img も後方互換で表示
+      if (it.img) {
+        const qimg = document.createElement('figure');
+        qimg.className = 'qimg';
+        const alt = escapeHTML(it.alt || it.q || '図');
+        qimg.innerHTML = `<img src="${it.img}" alt="${alt}">`;
+        card.appendChild(qimg);
+      }
+
       if (choices.length){
         const grp = document.createElement('div');
         grp.className = 'choiceRow';
@@ -220,10 +248,9 @@ function isCorrectChoice(item, idx){
       }
 
       const result = document.createElement('div');
-result.className = 'result';
-const ansDisp = (answers && answers.length) ? answers.join(' / ') : '';
-result.innerHTML = `<div>こたえ：<strong>${escapeHTML(ansDisp)}</strong></div>${it.note ? `<div class="note">${it.note}</div>` : ''}`;
-
+      result.className = 'result';
+      const ansDisp = (answers && answers.length) ? answers.join(' / ') : '';
+      result.innerHTML = `<div>こたえ：<strong>${escapeHTML(ansDisp)}</strong></div>${it.note ? `<div class="note">${it.note}</div>` : ''}`;
 
       const actions = document.createElement('div');
       actions.className = 'actions';
@@ -239,16 +266,6 @@ result.innerHTML = `<div>こたえ：<strong>${escapeHTML(ansDisp)}</strong></di
       actions.querySelector('[data-a="ok"]').addEventListener('click', ()=>mark(card,'correct'));
       actions.querySelector('[data-a="ng"]').addEventListener('click', ()=>mark(card,'wrong'));
 
-      card.appendChild(qtop);
-      card.appendChild(qtext);
-// 問題本文レベルの画像（item.img）を表示
-if (it.img) {
-  const qimg = document.createElement('figure');
-  qimg.className = 'qimg';
-  const alt = escapeHTML(it.alt || it.q || '図');
-  qimg.innerHTML = `<img src="${it.img}" alt="${alt}">`;
-  card.appendChild(qimg);
-}
       card.appendChild(choicesWrap);
       card.appendChild(actions);
       card.appendChild(result);
@@ -298,11 +315,11 @@ if (it.img) {
       if(i<parts.length-1) await new Promise(r=>setTimeout(r,600));
     }
   }
- async function speakAnswer(it){
-  const list = Array.isArray(it.answers) ? it.answers.filter(Boolean) : [];
-  const ans = list.length ? list.join('、') : '';
-  if(ans){ await speakSentenceAsync('こたえ。'); await speakSentenceAsync(ans); }
-}
+  async function speakAnswer(it){
+    const list = Array.isArray(it.answers) ? it.answers.filter(Boolean) : [];
+    const ans = list.length ? list.join('、') : '';
+    if(ans){ await speakSentenceAsync('こたえ。'); await speakSentenceAsync(ans); }
+  }
   async function speakFeedback(ok){ await speakSentenceAsync(ok ? 'せいかい！' : 'ちがうよ'); }
 
   // ====== 一括読み（多重起動ガード・1問目二重対策） ======
