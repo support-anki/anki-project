@@ -5,7 +5,6 @@
 <link rel="icon" href="/anki-project/assets/img/favicon.png" type="image/png">
 <link rel="stylesheet" href="../../assets/css/style.css">
 </head>
-<a class="home-btn" href="/anki-project/" aria-label="トップページへ">🏠 トップ</a>
 <body>
 <header class="site"><h1>📝 国語教材 一覧</h1></header>
 <main class="grid" id="list"></main>
@@ -23,7 +22,10 @@
     });
   }catch(e){ list.innerHTML=`<div class="card">manifest読込エラー：<code>${url}</code> ${e}</div>` }
 })();
-</script></body></html>
+</script>
+<a class="home-btn" href="/anki-project/" aria-label="トップページへ">🏠 トップ</a>
+</body></html>
+
 
 
 
