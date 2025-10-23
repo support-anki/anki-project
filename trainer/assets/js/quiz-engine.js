@@ -3,6 +3,8 @@ const QuizEngine = (() => {
   // ミックス対象にしたいJSONをここへ（恒久設定）
   const DEFAULT_SOURCES = [
     "/anki-project/assets/data/math/noimg/ma4-08-unit-v2.json"
+    "/anki-project/assets/data/math/noimg/ma4-09-circle.json",
+  "/anki-project/assets/data/geo/noimg/ge7-kyushu.json"
   ];
 
   // URLで ?src=... が渡されていればそれを優先（任意機能）
