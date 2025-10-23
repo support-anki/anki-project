@@ -1,0 +1,110 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>単元横断ミックス出題</title>
+<style>
+  :root{--bg:#f7f7fb;--ink:#1f2937;--muted:#667085;--card:#fff;--border:#e5e7eb;--brand:#3b4675;}
+  html,body{margin:0;background:var(--bg);color:var(--ink);font-family:system-ui,-apple-system,Segoe UI,Roboto,Noto Sans JP,sans-serif}
+  .wrap{max-width:960px;margin:28px auto;padding:16px}
+  .card{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:18px;margin:14px 0;box-shadow:0 2px 8px rgba(0,0,0,.04)}
+  .row{display:flex;gap:12px;flex-wrap:wrap;align-items:center}
+  .btn{padding:10px 14px;border-radius:10px;border:1px solid #d1d5db;background:#fff;cursor:pointer}
+  .btn.primary{background:var(--brand);color:#fff;border:none}
+  .muted{color:var(--muted)}
+  .pill{display:inline-block;padding:.25em .6em;border-radius:999px;background:#eef2ff;color:#3730a3;font-size:.8rem;margin-right:6px}
+  img.fig{max-width:100%;border:1px solid var(--border);border-radius:10px}
+  .tags{display:flex;flex-wrap:wrap;gap:8px}
+  .tagbox{display:flex;align-items:center;gap:6px;border:1px solid var(--border);border-radius:999px;padding:6px 10px;background:#fff}
+  .tagbox input{accent-color:#3b4675}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h1>単元横断ミックス出題</h1>
+  <div id="controls" class="card">
+    <div class="row">
+      <input id="limitInput" class="btn" type="number" min="1" max="100" value="10" style="width:110px">
+      <label><input id="shuffleInput" type="checkbox" checked> シャッフル</label>
+      <label><input id="needReview" type="checkbox"> 復習優先</label>
+      <label><input id="onlyLow" type="checkbox"> 苦手だけ</label>
+      <label><input id="withImages" type="checkbox" checked> 図を表示</label>
+      <button id="startBtn" class="btn primary">出題開始</button>
+    </div>
+
+    <div class="muted" style="margin:10px 0">タグを選んでください（複数選択可）</div>
+    <div class="tags" id="tagArea"></div>
+    <div class="row" style="margin-top:8px">
+      <button id="allBtn" class="btn">すべて選択</button>
+      <button id="noneBtn" class="btn">選択解除</button>
+      <button id="invertBtn" class="btn">反転</button>
+    </div>
+
+    <div class="muted" id="sourceMeta" style="margin-top:10px"></div>
+  </div>
+
+  <div id="quizArea"></div>
+</div>
+
+<script src="/anki-project/trainer/assets/js/quiz-engine.js?v=1" defer></script>
+
+<script>
+  const LS_TAGS = "anki-mix:last-tags";
+  const q = new URLSearchParams(location.search);
+
+  // タグUIを構築
+  (async () => {
+    const info = await QuizEngine.discoverTags(); // {tags:[{name,count}], sources:[]}
+    const tagArea = document.getElementById("tagArea");
+    const preset = (q.get("tags") ? q.get("tags").split(",").filter(Boolean)
+                    : JSON.parse(localStorage.getItem(LS_TAGS)||"[]"));
+    const set = new Set(preset);
+
+    info.tags.sort((a,b)=> b.count-a.count || a.name.localeCompare(b.name,"ja"));
+    for (const t of info.tags) {
+      const id = "t_"+t.name;
+      const w = document.createElement("label");
+      w.className = "tagbox";
+      w.innerHTML = `<input type="checkbox" id="${id}" value="${t.name}" ${set.has(t.name)?"checked":""}>
+                     <span>${t.name}</span><span class="muted">(${t.count})</span>`;
+      tagArea.appendChild(w);
+    }
+    document.getElementById("sourceMeta").textContent = `読み込み候補：${info.sources.length}ファイル / タグ数：${info.tags.length}`;
+  })();
+
+  // 便利ボタン
+  const checks = () => [...document.querySelectorAll("#tagArea input[type=checkbox]")];
+  document.getElementById("allBtn").onclick = ()=>checks().forEach(c=>c.checked=true);
+  document.getElementById("noneBtn").onclick = ()=>checks().forEach(c=>c.checked=false);
+  document.getElementById("invertBtn").onclick = ()=>checks().forEach(c=>c.checked=!c.checked);
+
+  // 出題開始
+  async function start(){
+    const tags = checks().filter(c=>c.checked).map(c=>c.value);
+    localStorage.setItem(LS_TAGS, JSON.stringify(tags));
+    const limit = +document.getElementById("limitInput").value;
+    const shuffle = document.getElementById("shuffleInput").checked;
+    const needReview = document.getElementById("needReview").checked;
+    const onlyLow = document.getElementById("onlyLow").checked;
+    const withImages = document.getElementById("withImages").checked;
+
+    const {count, used} = await QuizEngine.mount({
+      container: "#quizArea",
+      tags, limit, shuffle, needReview, onlyLow, withImages
+    });
+    document.getElementById("sourceMeta").textContent = `使用：${used.length}ファイル / 出題：${count}問 / 選択タグ：${tags.join(",")||"（なし）"}`;
+  }
+  document.getElementById("startBtn").onclick = start;
+
+  // クエリに limit 等があれば反映
+  if(q.get("limit")) document.getElementById("limitInput").value = q.get("limit");
+  if(q.get("shuffle")==="false") document.getElementById("shuffleInput").checked = false;
+  if(q.get("need_review")==="true") document.getElementById("needReview").checked = true;
+  if(q.get("only_low")==="true") document.getElementById("onlyLow").checked = true;
+
+  // 自動開始（クエリに auto=1 がある場合）
+  if(q.get("auto")==="1") start();
+</script>
+</body>
+</html>
