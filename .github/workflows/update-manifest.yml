@@ -37,3 +37,18 @@ jobs:
           git add assets/data/manifest.json || true
           git diff --quiet && echo "No changes" || git commit -m "chore: auto-update manifest"
           git push
+      - name: Debug: show repo tree
+        run: |
+          echo "PWD=$(pwd)"
+          ls -la
+          echo "---- search manifest ----"
+          find . -type f -name "manifest.json" -maxdepth 4 -print
+
+      - name: Commit & push changes
+        run: |
+          git config user.name "github-actions"
+          git config user.email "actions@github.com"
+          git add **/manifest.json || true
+          git status
+          git diff --quiet && echo "No changes" || git commit -m "chore: auto-update manifest"
+          git push
