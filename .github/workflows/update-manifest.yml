@@ -1,0 +1,36 @@
+name: Update sci manifest
+
+on:
+  push:
+    paths:
+      - 'modules/sci/*.html'
+      - 'assets/img/thumb/**'
+      - 'scripts/update_manifest.js'
+      - 'assets/data/sci/manifest.json'
+  workflow_dispatch: {}
+
+jobs:
+  update:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Set Asia/Tokyo date env
+        run: echo "MANIFEST_UPDATED_DATE=$(TZ=Asia/Tokyo date +'%Y-%m-%d')" >> $GITHUB_ENV
+
+      - name: Run update script
+        run: node scripts/update_manifest.js
+        env:
+          MANIFEST_UPDATED_DATE: ${{ env.MANIFEST_UPDATED_DATE }}
+
+      - name: Commit & push if changed
+        uses: stefanzweifel/git-auto-commit-action@v5
+        with:
+          commit_message: "chore: auto-update sci manifest"
+          commit_user_name: "bot"
+          commit_user_email: "bot@example.com"
+          branch: ${{ github.ref }}
