@@ -1,9 +1,10 @@
-name: Update sci manifest
+name: Update manifest (sci)
+
 on:
   push:
     paths:
-      - 'assets/data/**/marker/**.json'
-      - 'modules/**.html'
+      - 'anki-project/assets/data/sci/marker/**.json'
+      - 'anki-project/modules/sci/**.html'
       - 'scripts/update_manifest.js'
   workflow_dispatch:
 
@@ -14,41 +15,23 @@ jobs:
   update:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
+      - uses: actions/checkout@v4
+        with: { fetch-depth: 0 }
+      - uses: actions/setup-node@v4
+        with: { node-version: '20' }
 
-      - name: Setup Node
-        uses: actions/setup-node@v4
-        with:
-          node-version: '20'
-
-      - name: Install deps
-        run: npm ci || npm i
-
-      - name: Update manifest
+      - name: Build manifest
         run: node scripts/update_manifest.js
 
-      - name: Commit & push changes
+      - name: Debug: find manifest
         run: |
-          git config user.name "github-actions"
-          git config user.email "actions@github.com"
-          git add assets/data/manifest.json || true
-          git diff --quiet && echo "No changes" || git commit -m "chore: auto-update manifest"
-          git push
-      - name: Debug: show repo tree
-        run: |
-          echo "PWD=$(pwd)"
-          ls -la
-          echo "---- search manifest ----"
-          find . -type f -name "manifest.json" -maxdepth 4 -print
+          echo "search manifest.json..."
+          find . -type f -name "manifest.json" -maxdepth 5 -print
 
-      - name: Commit & push changes
+      - name: Commit & push
         run: |
           git config user.name "github-actions"
           git config user.email "actions@github.com"
-          git add **/manifest.json || true
-          git status
+          git add anki-project/assets/data/manifest.json || true
           git diff --quiet && echo "No changes" || git commit -m "chore: auto-update manifest"
           git push
