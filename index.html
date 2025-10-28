@@ -7,38 +7,118 @@
 <title>♥学習ポータル♥</title>
 <link rel="icon" href="/anki-project/assets/img/favicon.png" type="image/png">
 <link rel="stylesheet" href="assets/css/style.css"/>
+<style>
+  /* 最低限の補助スタイル（既存の style.css が優先） */
+  .auto-title{margin:28px 16px 6px;font:700 18px/1.4 system-ui}
+  .auto-wrap{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:12px;margin:0 16px 28px}
+  .auto-card{background:#fff;border:1px solid #e5e7eb;border-radius:14px;padding:14px}
+  .auto-card h3{margin:0 0 6px;font:600 16px/1.4 system-ui}
+  .auto-card .type{color:#6b7280;font:12px/1.6 system-ui;margin-bottom:6px}
+  .auto-tags{display:flex;flex-wrap:wrap;gap:6px;margin:8px 0}
+  .auto-tag{border:1px solid #e5e7eb;border-radius:999px;padding:2px 8px;font:12px/1.8 system-ui}
+  .auto-actions{margin-top:10px}
+  .auto-link{color:#2563eb;text-decoration:none}
+  .muted{color:#6b7280;font:12px/1.8 system-ui;margin:8px 16px}
+</style>
 </head>
 <body>
 <header class="site">
-<h1>♥学習ポータル♥</h1>
-<p class="sub">穴埋めや選択問題！必要時 <code>?edit=1</code> で座標をピン追加。</p>
+  <h1>♥学習ポータル♥</h1>
+  <p class="sub">穴埋めや選択問題！必要時 <code>?edit=1</code> で座標をピン追加。</p>
 </header>
+
 <main class="grid">
-<a class="card" href="modules/geo/index.html">
-  <h2>🌏 地理教材 一覧</h2>
-  <p>用語、地図など</p>
-</a>
-<a class="card" href="modules/sci/index.html">
-  <h2>🔬 理科教材 一覧</h2><p>穴埋め、選択問題など</p>
-</a>
-<a class="card" href="modules/jp/index.html">
-  <h2>📝 国語教材 一覧</h2><p>漢字・語彙</p>
-</a>
-  <!-- 🔢 算数教材 一覧 -->
-<a class="card" href="modules/math/index.html">
-  <h2>🔢 算数教材 一覧</h2>
-  <p>図なし・図あり・例題／類題など</p>
-</a>
-<!-- 🧮 単元横断ミックス出題 -->
-<a class="card" href="trainer/mix.html">
-  <h2>🧮 単元横断ミックス出題</h2>
-  <p>複数単元を横断してランダム出題（タグ選択対応）</p>
-</a>
+  <!-- 既存の静的カード（そのまま） -->
+  <a class="card" href="modules/geo/index.html">
+    <h2>🌏 地理教材 一覧</h2>
+    <p>用語、地図など</p>
+  </a>
+  <a class="card" href="modules/sci/index.html">
+    <h2>🔬 理科教材 一覧</h2><p>穴埋め、選択問題など</p>
+  </a>
+  <a class="card" href="modules/jp/index.html">
+    <h2>📝 国語教材 一覧</h2><p>漢字・語彙</p>
+  </a>
+  <a class="card" href="modules/math/index.html">
+    <h2>🔢 算数教材 一覧</h2>
+    <p>図なし・図あり・例題／類題など</p>
+  </a>
+  <a class="card" href="trainer/mix.html">
+    <h2>🧮 単元横断ミックス出題</h2>
+    <p>複数単元を横断してランダム出題（タグ選択対応）</p>
+  </a>
 </main>
+
+<!-- ここから自動一覧（manifest結合） -->
+<h2 class="auto-title">📚 教材一覧（自動）</h2>
+<p class="muted" id="auto-note">各科目の manifest.json を結合して表示します。</p>
+<section id="auto-list" class="auto-wrap" aria-live="polite"></section>
+
 <footer class="site"><small>※ noindex（検索除外）</small></footer>
+
+<script>
+(async ()=>{
+  const root = document.getElementById('auto-list');
+  const note = document.getElementById('auto-note');
+
+  // 科目ごとの manifest（存在しないものはスキップ）
+  const sources = [
+    '/anki-project/assets/data/sci/manifest.json',
+    '/anki-project/assets/data/geo/manifest.json',
+    '/anki-project/assets/data/jpn/manifest.json',
+    '/anki-project/assets/data/math/manifest.json'
+  ];
+
+  async function fetchMaybe(u){
+    try{
+      const r = await fetch(u + '?t=' + Date.now());
+      return r.ok ? await r.json() : [];
+    }catch(_){ return []; }
+  }
+
+  // 取得 & 結合
+  const lists = await Promise.all(sources.map(fetchMaybe));
+  let items = lists.flat();
+
+  // 重複排除（path or data をキーに）
+  const seen = new Set();
+  items = items.filter(x=>{
+    const key = (x.path || x.data || JSON.stringify(x));
+    if(seen.has(key)) return false;
+    seen.add(key);
+    return true;
+  });
+
+  // 並び順（更新日があれば新しい順）
+  items.sort((a,b)=>{
+    const ta = Date.parse(a.updated||'')||0;
+    const tb = Date.parse(b.updated||'')||0;
+    return tb - ta;
+  });
+
+  // 描画
+  if(!items.length){
+    note.textContent = '（まだ表示できる教材エントリが見つかりません。各科目の manifest.json を確認してください）';
+    return;
+  }
+
+  const html = items.map(x=>{
+    const url = (x.path && x.path.startsWith('http')) ? x.path : (location.origin + (x.path||''));
+    const tags = (x.tags||[]).map(t=>`<span class="auto-tag">${t}</span>`).join('');
+    const type = x.type || (url.includes('modules/marker.html') ? 'marker' : 'html');
+    const title = x.title || '(無題)';
+    return `
+      <article class="auto-card">
+        <h3>${title}</h3>
+        <div class="type">${type}</div>
+        <div class="auto-tags">${tags}</div>
+        <div class="auto-actions"><a class="auto-link" href="${url}" target="_blank" rel="noopener">▶ 開く</a></div>
+      </article>
+    `;
+  }).join('');
+
+  root.innerHTML = html;
+})();
+</script>
 </body>
-
 </html>
-
-
-
