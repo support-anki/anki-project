@@ -1,0 +1,278 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>marker｜プリント型穴埋めビュー</title>
+<style>
+  :root{
+    --bg:#f7f7fb;--ink:#1f2937;--muted:#64748b;--brand:#3b4675;
+    --mask:#ffd54a88; --peek:#ffffff; --ans:#111; --border:#e5e7eb;
+    --red:#ef4444aa; --yellow:#f59e0baa; --green:#22c55eaa; --none:#ffd54a88;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--ink);font-family:system-ui,-apple-system,Segoe UI,Roboto,Ubuntu,'Hiragino Sans','Noto Sans JP','Yu Gothic',sans-serif}
+  header{position:sticky;top:0;z-index:20;background:#fff;border-bottom:1px solid var(--border);padding:10px 12px;display:flex;gap:12px;align-items:center;flex-wrap:wrap}
+  header h1{font-size:18px;margin:0;flex:1 1 auto}
+  header .toolbar{display:flex;gap:8px;flex-wrap:wrap}
+  button{border:1px solid var(--border);background:#fff;border-radius:10px;padding:8px 10px;cursor:pointer}
+  button:hover{background:#f3f4f6}
+  .pill{font-size:12px;color:#fff;border:none}
+  .pill.red{background:#ef4444}
+  .pill.yellow{background:#f59e0b}
+  .pill.green{background:#22c55e}
+  main{max-width:1000px;margin:12px auto;padding:0 12px}
+  .stage{position:relative;width:100%;}
+  .stage img{width:100%;height:auto;display:block;border:1px solid var(--border);border-radius:12px;background:#fff}
+  .overlay{position:absolute;left:0;top:0;width:100%;height:100%;pointer-events:none}
+  .mask{position:absolute;border-radius:6px;border:1px dashed #0003;background:var(--mask);backdrop-filter:blur(0.5px);pointer-events:auto;display:flex;align-items:center;justify-content:center}
+  .mask .ans{display:none;background:#fff;padding:2px 6px;border-radius:6px;border:1px solid var(--border);font-weight:600;color:var(--ans);box-shadow:0 2px 6px #0001}
+  .mask.revealed{background:transparent;border-color:#0002}
+  .mask.revealed .ans{display:block}
+  .mask.peek .ans{display:block;opacity:0.95}
+  .legend{display:flex;gap:6px;align-items:center}
+  .legend i{display:inline-block;width:14px;height:14px;border-radius:3px;border:1px solid #0002;margin-right:4px}
+  .legend .i-red{background:var(--red)}
+  .legend .i-yellow{background:var(--yellow)}
+  .legend .i-green{background:var(--green)}
+  .legend .i-none{background:var(--none)}
+  footer{max-width:1000px;margin:18px auto;padding:0 12px;color:var(--muted);font-size:12px}
+  .status-dot{position:absolute;right:4px;top:4px;width:10px;height:10px;border-radius:50%;border:1px solid #0003;background:var(--none)}
+  .mask.status-red{background:var(--red)}
+  .mask.status-yellow{background:var(--yellow)}
+  .mask.status-green{background:var(--green)}
+  .mask.status-red.revealed,.mask.status-yellow.revealed,.mask.status-green.revealed{background:transparent}
+  .floating{position:fixed;right:12px;bottom:12px;display:flex;flex-direction:column;gap:8px;z-index:25}
+  .floating button{box-shadow:0 4px 12px #0002}
+  .hint{font-size:12px;color:var(--muted)}
+</style>
+</head>
+<body>
+<header>
+  <h1 id="title">marker｜プリント型穴埋めビュー</h1>
+  <div class="toolbar">
+    <button id="btnShowAll">全表示</button>
+    <button id="btnHideAll">全隠し</button>
+    <button id="btnReview">復習フィルタ OFF</button>
+    <button id="btnReset">履歴リセット</button>
+    <div class="legend hint">
+      <span class="legend"><i class="i-red"></i>要復習</span>
+      <span class="legend"><i class="i-yellow"></i>注意</span>
+      <span class="legend"><i class="i-green"></i>OK</span>
+      <span class="legend"><i class="i-none"></i>未設定</span>
+    </div>
+  </div>
+</header>
+<main>
+  <div class="stage">
+    <img id="sheet" alt="sheet">
+    <div class="overlay" id="overlay"></div>
+  </div>
+</main>
+<footer>
+  <p>操作：クリック=表示/非表示、右クリック=色を <b>未→赤→黄→緑→未</b> の順で切替。長押し=チラ見（0.8秒）。</p>
+</footer>
+<div class="floating">
+  <button class="pill red" id="btnAllRed">全て赤</button>
+  <button class="pill yellow" id="btnAllYellow">全て黄</button>
+  <button class="pill green" id="btnAllGreen">全て緑</button>
+</div>
+
+<script>
+(function(){
+  const qs = new URLSearchParams(location.search);
+  const dataUrl = qs.get('data');
+  const pageTitle = qs.get('title');
+  if(pageTitle) document.getElementById('title').textContent = pageTitle;
+  if(!dataUrl){ alert('data= JSON のURLが必要です'); return; }
+
+  const storeKey = (suffix)=> `anki-marker:${dataUrl}:${suffix}`;
+  const sheet = document.getElementById('sheet');
+  const overlay = document.getElementById('overlay');
+
+  const state = {
+    revealed: {},   // id: boolean
+    status: {},     // id: 'none'|'red'|'yellow'|'green'
+    reviewOnly: false
+  };
+
+  const statusOrder = ['none','red','yellow','green'];
+  const nextStatus = (s)=> statusOrder[(statusOrder.indexOf(s)+1)%statusOrder.length];
+
+  function save(){
+    localStorage.setItem(storeKey('revealed'), JSON.stringify(state.revealed));
+    localStorage.setItem(storeKey('status'), JSON.stringify(state.status));
+    localStorage.setItem(storeKey('reviewOnly'), JSON.stringify(state.reviewOnly));
+  }
+  function load(){
+    try{
+      Object.assign(state.revealed, JSON.parse(localStorage.getItem(storeKey('revealed'))||'{}'));
+      Object.assign(state.status, JSON.parse(localStorage.getItem(storeKey('status'))||'{}'));
+      const ro = JSON.parse(localStorage.getItem(storeKey('reviewOnly'))||'false');
+      state.reviewOnly = !!ro;
+    }catch(e){}
+    updateReviewBtn();
+  }
+
+  async function init(){
+    const resp = await fetch(dataUrl, {cache:'no-store'});
+    if(!resp.ok){ alert('JSON取得に失敗: '+resp.status); return; }
+    const data = await resp.json();
+    if(data.title) document.getElementById('title').textContent = data.title;
+    sheet.src = data.image?.src || '';
+    sheet.decoding = 'async';
+    sheet.addEventListener('load', ()=>{
+      sheet.naturalW = data.image.width || sheet.naturalWidth;
+      sheet.naturalH = data.image.height || sheet.naturalHeight;
+      buildMasks(data.masks||[]);
+      layout();
+    }, {once:true});
+    window.addEventListener('resize', layout);
+    load();
+    bindUI();
+  }
+
+  function buildMasks(masks){
+    overlay.innerHTML='';
+    masks.forEach(m=>{
+      const d = document.createElement('div');
+      d.className='mask';
+      d.dataset.id = m.id;
+      d.dataset.x = m.x; d.dataset.y = m.y; d.dataset.w = m.w; d.dataset.h = m.h;
+      d.dataset.answer = m.answer || '';
+      const ans = document.createElement('div'); ans.className='ans'; ans.textContent = m.answer||'';
+      const dot = document.createElement('div'); dot.className='status-dot';
+      d.appendChild(ans); d.appendChild(dot);
+      overlay.appendChild(d);
+
+      // apply persisted state
+      const rid = String(m.id);
+      if(state.revealed[rid]) d.classList.add('revealed');
+      const st = state.status[rid] || 'none';
+      applyStatusClass(d, st);
+
+      setupInteractions(d);
+    });
+    applyReviewFilter();
+  }
+
+  function scale(){ return sheet.clientWidth / (sheet.naturalW || 1); }
+
+  function layout(){
+    const s = scale();
+    overlay.style.width = sheet.clientWidth+'px';
+    overlay.style.height = sheet.clientHeight+'px';
+    overlay.style.left = sheet.offsetLeft+'px';
+    overlay.style.top = sheet.offsetTop+'px';
+    overlay.querySelectorAll('.mask').forEach(d=>{
+      const x = +d.dataset.x, y = +d.dataset.y, w = +d.dataset.w, h = +d.dataset.h;
+      d.style.left = (x*s)+'px';
+      d.style.top  = (y*s)+'px';
+      d.style.width  = (w*s)+'px';
+      d.style.height = (h*s)+'px';
+    });
+  }
+
+  function setupInteractions(el){
+    let pressTimer=null, peeking=false;
+    function startPeek(e){
+      if(pressTimer) clearTimeout(pressTimer);
+      pressTimer = setTimeout(()=>{
+        peeking=true; el.classList.add('peek');
+        setTimeout(()=>{ el.classList.remove('peek'); peeking=false; }, 800);
+      }, 420);
+    }
+    function cancelPeek(){
+      if(pressTimer) clearTimeout(pressTimer);
+    }
+    el.addEventListener('mousedown', startPeek);
+    el.addEventListener('touchstart', startPeek, {passive:true});
+    ['mouseup','mouseleave','touchend','touchcancel'].forEach(ev=> el.addEventListener(ev, cancelPeek));
+
+    el.addEventListener('click', (e)=>{
+      if(peeking) return; // peek優先
+      const id = el.dataset.id;
+      const on = !el.classList.contains('revealed');
+      el.classList.toggle('revealed', on);
+      state.revealed[id] = on;
+      save();
+    });
+
+    el.addEventListener('contextmenu', (e)=>{
+      e.preventDefault();
+      const id = el.dataset.id;
+      const cur = state.status[id] || 'none';
+      const nxt = nextStatus(cur);
+      state.status[id] = nxt;
+      applyStatusClass(el, nxt);
+      save();
+    });
+  }
+
+  function applyStatusClass(el, st){
+    el.classList.remove('status-red','status-yellow','status-green');
+    if(st==='red') el.classList.add('status-red');
+    if(st==='yellow') el.classList.add('status-yellow');
+    if(st==='green') el.classList.add('status-green');
+  }
+
+  function bindUI(){
+    document.getElementById('btnShowAll').onclick = ()=>{
+      overlay.querySelectorAll('.mask').forEach(el=>{
+        el.classList.add('revealed');
+        state.revealed[el.dataset.id]=true;
+      });
+      save();
+    };
+    document.getElementById('btnHideAll').onclick = ()=>{
+      overlay.querySelectorAll('.mask').forEach(el=>{
+        el.classList.remove('revealed');
+        state.revealed[el.dataset.id]=false;
+      });
+      save();
+    };
+    document.getElementById('btnReset').onclick = ()=>{
+      if(!confirm('この教材の履歴（表示状態・色）を削除します。よろしいですか？')) return;
+      state.revealed = {}; state.status = {}; save();
+      overlay.querySelectorAll('.mask').forEach(el=>{
+        el.classList.remove('revealed','status-red','status-yellow','status-green');
+      });
+      applyReviewFilter();
+    };
+    document.getElementById('btnReview').onclick = ()=>{
+      state.reviewOnly = !state.reviewOnly;
+      save(); updateReviewBtn(); applyReviewFilter();
+    };
+    document.getElementById('btnAllRed').onclick = ()=> bulkStatus('red');
+    document.getElementById('btnAllYellow').onclick = ()=> bulkStatus('yellow');
+    document.getElementById('btnAllGreen').onclick = ()=> bulkStatus('green');
+  }
+
+  function updateReviewBtn(){
+    const b = document.getElementById('btnReview');
+    b.textContent = state.reviewOnly ? '復習フィルタ ON（赤・黄のみ）' : '復習フィルタ OFF';
+  }
+
+  function applyReviewFilter(){
+    overlay.querySelectorAll('.mask').forEach(el=>{
+      if(!state.reviewOnly){ el.style.visibility='visible'; return; }
+      const id = el.dataset.id;
+      const st = state.status[id] || 'none';
+      el.style.visibility = (st==='red' || st==='yellow') ? 'visible' : 'hidden';
+    });
+  }
+
+  function bulkStatus(color){
+    overlay.querySelectorAll('.mask').forEach(el=>{
+      const id = el.dataset.id;
+      state.status[id] = color;
+      applyStatusClass(el, color);
+    });
+    save(); applyReviewFilter();
+  }
+
+  init();
+})();
+</script>
+</body>
+</html>
