@@ -1,11 +1,12 @@
-name: Update manifest (sci)
+name: Update subject manifests
 
 on:
   push:
     paths:
-      - 'anki-project/assets/data/sci/marker/**.json'
-      - 'anki-project/modules/sci/**.html'
-      - 'scripts/update_manifest.js'
+      - 'anki-project/assets/data/**/marker/**.json'
+      - 'anki-project/assets/data/**/noimg/**.json'
+      - 'anki-project/modules/**/**.html'
+      - 'scripts/update_subject_manifests.js'
   workflow_dispatch:
 
 permissions:
@@ -20,18 +21,13 @@ jobs:
       - uses: actions/setup-node@v4
         with: { node-version: '20' }
 
-      - name: Build manifest
-        run: node scripts/update_manifest.js
-
-      - name: Debug: find manifest
-        run: |
-          echo "search manifest.json..."
-          find . -type f -name "manifest.json" -maxdepth 5 -print
+      - name: Build subject manifests
+        run: node scripts/update_subject_manifests.js
 
       - name: Commit & push
         run: |
           git config user.name "github-actions"
           git config user.email "actions@github.com"
-          git add anki-project/assets/data/manifest.json || true
-          git diff --quiet && echo "No changes" || git commit -m "chore: auto-update manifest"
+          git add anki-project/assets/data/**/manifest.json || true
+          git diff --quiet && echo "No changes" || git commit -m "chore: auto-update subject manifests"
           git push
