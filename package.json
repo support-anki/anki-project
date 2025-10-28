@@ -1,0 +1,8 @@
+{
+  "name": "anki-project-automation",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "update:manifest": "node scripts/update_manifest.js"
+  }
+}
