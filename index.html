@@ -58,67 +58,43 @@
 
 <script>
 (async ()=>{
-  const root = document.getElementById('auto-list');
+  const root = document.getElementById('auto-list') || document.body;
   const note = document.getElementById('auto-note');
-
-  // 科目ごとの manifest（存在しないものはスキップ）
+  // ← 科目ごとの manifest を読む（存在しなくてもOK）
   const sources = [
     '/anki-project/assets/data/sci/manifest.json',
     '/anki-project/assets/data/geo/manifest.json',
     '/anki-project/assets/data/jpn/manifest.json',
     '/anki-project/assets/data/math/manifest.json'
   ];
-
   async function fetchMaybe(u){
-    try{
-      const r = await fetch(u + '?t=' + Date.now());
-      return r.ok ? await r.json() : [];
-    }catch(_){ return []; }
+    try{ const r = await fetch(u+'?t='+Date.now()); return r.ok? r.json():[]; }
+    catch{ return []; }
   }
-
-  // 取得 & 結合
   const lists = await Promise.all(sources.map(fetchMaybe));
   let items = lists.flat();
 
-  // 重複排除（path or data をキーに）
+  // 重複除去 & 新しい順
   const seen = new Set();
-  items = items.filter(x=>{
-    const key = (x.path || x.data || JSON.stringify(x));
-    if(seen.has(key)) return false;
-    seen.add(key);
-    return true;
-  });
+  items = items.filter(x=>{ const k=(x.path||x.data||JSON.stringify(x)); if(seen.has(k)) return false; seen.add(k); return true; })
+               .sort((a,b)=>(Date.parse(b.updated||'')||0)-(Date.parse(a.updated||'')||0));
 
-  // 並び順（更新日があれば新しい順）
-  items.sort((a,b)=>{
-    const ta = Date.parse(a.updated||'')||0;
-    const tb = Date.parse(b.updated||'')||0;
-    return tb - ta;
-  });
-
-  // 描画
-  if(!items.length){
-    note.textContent = '（まだ表示できる教材エントリが見つかりません。各科目の manifest.json を確認してください）';
-    return;
-  }
+  if(!items.length){ note.textContent='（科目別 manifest.json が見つかりません）'; return; }
 
   const html = items.map(x=>{
-    const url = (x.path && x.path.startsWith('http')) ? x.path : (location.origin + (x.path||''));
+    const url = x.path?.startsWith('http') ? x.path : (location.origin + (x.path||''));
     const tags = (x.tags||[]).map(t=>`<span class="auto-tag">${t}</span>`).join('');
-    const type = x.type || (url.includes('modules/marker.html') ? 'marker' : 'html');
-    const title = x.title || '(無題)';
-    return `
-      <article class="auto-card">
-        <h3>${title}</h3>
-        <div class="type">${type}</div>
-        <div class="auto-tags">${tags}</div>
-        <div class="auto-actions"><a class="auto-link" href="${url}" target="_blank" rel="noopener">▶ 開く</a></div>
-      </article>
-    `;
+    return `<article class="auto-card">
+      <h3>${x.title||'(無題)'}</h3>
+      <div class="type">${x.type||''}</div>
+      <div class="auto-tags">${tags}</div>
+      <div class="auto-actions"><a class="auto-link" href="${url}" target="_blank" rel="noopener">▶ 開く</a></div>
+    </article>`;
   }).join('');
-
   root.innerHTML = html;
 })();
 </script>
+
 </body>
 </html>
+
