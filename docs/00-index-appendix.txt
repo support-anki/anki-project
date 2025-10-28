@@ -1,3 +1,5 @@
 ## 📎 追加ドキュメント
 - project-brief.md（新チャット用・前提まとめプロンプト）
 - site-spec-v1.1.md（現行サイト仕様まとめ v1.1）
+- project-brief.md（新チャット用・前提まとめプロンプト）
+- site-spec-v1.1.md（現行サイト仕様まとめ v1.1）
