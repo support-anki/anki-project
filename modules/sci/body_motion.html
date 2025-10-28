@@ -1,0 +1,391 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>小4理科「人の体のつくりと運動」— 単元まとめ（図なし・マーカー式） v3</title>
+<style>
+  :root{
+    --bg:#f7f7fb; --card:#fff; --ink:#111827; --muted:#6b7280; --brand:#3b4675;
+    --ok:#16a34a; --warn:#f59e0b; --ng:#ef4444; --mask:#9ca3af; --border:#e5e7eb;
+  }
+  html[data-theme="dark"]{
+    --bg:#0b1020; --card:#0f172a; --ink:#e5e7eb; --muted:#94a3b8; --brand:#9db1ff;
+    --ok:#22c55e; --warn:#f59e0b; --ng:#ef4444; --mask:#475569; --border:#243044;
+  }
+  html,body{margin:0;background:var(--bg);color:var(--ink);font-family:system-ui,-apple-system,Segoe UI,Roboto,emoji;}
+  header{padding:12px 16px;background:var(--card);border-bottom:1px solid var(--border);position:sticky;top:0;z-index:10}
+  header h1{margin:0;font-size:18px;color:var(--brand)}
+  main{max-width:980px;margin:20px auto;padding:0 12px 60px}
+  .toolbar{display:flex;gap:8px;flex-wrap:wrap;margin:10px 0 16px}
+  button,.btn{
+    appearance:none;border:1px solid var(--border);background:var(--card);border-radius:999px;
+    padding:6px 12px;cursor:pointer;font-size:14px;color:var(--ink)
+  }
+  button:hover,.btn:hover{box-shadow:0 1px 0 rgba(0,0,0,.08)}
+  .legend{margin-left:auto;display:flex;gap:8px;align-items:center}
+  .dot{width:10px;height:10px;border-radius:999px;display:inline-block;border:1px solid var(--border)}
+  .dot.ok{background:var(--ok)} .dot.warn{background:var(--warn)} .dot.ng{background:var(--ng)}
+  .card{background:var(--card);border:1px solid var(--border);border-radius:16px;padding:16px;margin:14px 0}
+  .qtitle{font-weight:700;margin:0 0 8px}
+  .qbody{line-height:1.9;font-size:16px}
+  .qactions{display:flex;gap:8px;margin-top:10px;flex-wrap:wrap}
+  .qactions button{font-size:12px;padding:6px 10px}
+  .qmeta{color:var(--muted);font-size:12px;margin-top:6px}
+  .note{font-size:12px;color:var(--muted)}
+  .kbd{font:12px monospace;padding:2px 6px;border:1px solid var(--border);border-radius:6px;background:var(--card);color:var(--ink)}
+  /* マスク（マーカー） */
+  .mask{--mask-bg: var(--mask);display:inline-block;min-width:2.2em;color:transparent;background:linear-gradient(0deg,var(--mask-bg),var(--mask-bg));border-radius:6px;padding:0 .4em;cursor:pointer;position:relative;transition:filter .15s ease;user-select:none}
+  .mask:after{content:"　"}
+  .mask:hover{filter:brightness(0.95)}
+  .mask.revealed{color:var(--ink);background:transparent;border-bottom:1px dashed #64748b}
+  .mask[data-level="ok"]{box-shadow:inset 0 0 0 2px var(--ok)}
+  .mask[data-level="warn"]{box-shadow:inset 0 0 0 2px var(--warn)}
+  .mask[data-level="ng"]{box-shadow:inset 0 0 0 2px var(--ng)}
+  .qcard{border:2px solid transparent;border-radius:14px;padding:10px}
+  .qcard[data-level="ok"]{border-color:var(--ok)}
+  .qcard[data-level="warn"]{border-color:var(--warn)}
+  .qcard[data-level="ng"]{border-color:var(--ng)}
+  .imgmask{position:relative;max-width:720px;margin:8px 0}
+  .imgmask img{width:100%;height:auto;border-radius:12px;border:1px solid var(--border)}
+  .mask.abs{position:absolute;display:flex;align-items:center;justify-content:center}
+  .imgmask{position:relative;max-width:720px;margin:8px 0}
+  .imgmask img{width:100%;height:auto;border-radius:12px;border:1px solid var(--border)}
+  .mask.abs{position:absolute;display:flex;align-items:center;justify-content:center}
+</style>
+</head>
+<body>
+<header>
+  <h1>小4理科「人の体のつくりと運動」— 単元まとめ（図なし・マーカー式） v3</h1>
+</header>
+<main>
+  <section class="toolbar" aria-label="操作パネル">
+    <button class="btn" id="toggle-theme" title="ライト/ダーク切替">🌓 テーマ</button>
+    <button class="btn" id="filter-ng" title="要復習のみ">🔴 要復習だけ</button>
+    <button class="btn" id="queue-ng" title="要復習を順番出題">🎯 赤キュー</button>
+    <button class="btn" id="reset-all" title="すべてリセット">♻️ 全リセット</button>
+    <button class="btn" id="export" title="学習状態を書き出し">⬇️ 状態エクスポート</button>
+    <label class="btn" for="import-file">⬆️ 状態インポート</label>
+    <input type="file" id="import-file" accept="application/json" style="display:none">
+    <div class="legend" aria-label="凡例">
+      <span class="dot ng" title="要復習"></span>赤
+      <span class="dot warn" title="あやしい"></span>黄
+      <span class="dot ok" title="できた"></span>緑
+    </div>
+  </section>
+
+  <!-- ① 基本用語（ほね・関節・きん肉） -->
+  <div class="card qcard" data-qid="q1">
+    <p class="qtitle">① 体のつくり（基本用語）</p>
+    <div class="qbody">
+      体をさわると、かたい部分とやわらかい部分があります。かたい部分を
+      <span class="mask" data-id="q1-a1" data-answer="ほね"></span>
+      といい、かたいところどうしのつなぎ目で体を曲げられるところを
+      <span class="mask" data-id="q1-a2" data-answer="関節"></span>
+      といいます。やわらかい部分で、力を入れるとかたさが変わる部分を
+      <span class="mask" data-id="q1-a3" data-answer="きん肉"></span>
+      といいます。
+    </div>
+    <div class="qactions">
+      <button data-level="ok">✅ できた</button>
+      <button data-level="warn">△ あやしい</button>
+      <button data-level="ng">❌ 要復習</button>
+      <button data-reset>表示をリセット</button>
+    </div>
+    <div class="qmeta">出典：ステップ1／2-1</div>
+  </div>
+
+  <!-- ② 関節名（肩・ひじ・ひざ） -->
+  <div class="card qcard" data-qid="q2">
+    <p class="qtitle">② 関節の名前</p>
+    <div class="qbody">
+      （　　　）の関節：<span class="mask" data-id="q2-a1" data-answer="かた"></span><br>
+      （　　　）の関節：<span class="mask" data-id="q2-a2" data-answer="ひじ"></span><br>
+      （　　　）の関節：<span class="mask" data-id="q2-a3" data-answer="ひざ"></span>
+    </div>
+    <div class="qactions">
+      <button data-level="ok">✅ できた</button>
+      <button data-level="warn">△ あやしい</button>
+      <button data-level="ng">❌ 要復習</button>
+      <button data-reset>表示をリセット</button>
+    </div>
+    <div class="qmeta">出典：ステップ1／2-1</div>
+  </div>
+
+  <!-- ③ 筋肉のはたらき（拮抗） -->
+  <div class="card qcard" data-qid="q3">
+    <p class="qtitle">③ きん肉のはたらき（拮抗の関係）</p>
+    <div class="qbody">
+      うでのきん肉は、ほねをはさんで
+      <span class="mask" data-id="q3-a1" data-answer="反対の"></span>
+      動きをするきん肉と組み合わさっています。きん肉のはしは
+      <span class="mask" data-id="q3-a2" data-answer="ほね"></span>
+      についています。うでを曲げると、内がわのきん肉が
+      <span class="mask" data-id="q3-a3" data-answer="ちぢむ"></span>
+      、外がわのきん肉が
+      <span class="mask" data-id="q3-a4" data-answer="ゆるむ"></span>
+      。うでをのばすときは、これが反対になります。
+    </div>
+    <div class="qactions">
+      <button data-level="ok">✅ できた</button>
+      <button data-level="warn">△ あやしい</button>
+      <button data-level="ng">❌ 要復習</button>
+      <button data-reset>表示をリセット</button>
+    </div>
+    <div class="qmeta">出典：ステップ2</div>
+  </div>
+
+  <!-- ④ 力を入れたときのかたさ -->
+  <div class="card qcard" data-qid="q4">
+    <p class="qtitle">④ 力を入れたときのかたさ</p>
+    <div class="qbody">
+      ア（きん肉）は、力を入れているときの方が
+      <span class="mask" data-id="q4-a1" data-answer="かたい"></span>
+      。 イ（ほね）のかたさは、力の有無で
+      <span class="mask" data-id="q4-a2" data-answer="同じ"></span>
+      。
+    </div>
+    <div class="qactions">
+      <button data-level="ok">✅ できた</button>
+      <button data-level="warn">△ あやしい</button>
+      <button data-level="ng">❌ 要復習</button>
+      <button data-reset>表示をリセット</button>
+    </div>
+    <div class="qmeta">出典：2-2／2-3</div>
+  </div>
+
+  <!-- ⑤ 正誤（○×） -->
+  <div class="card qcard" data-qid="q5">
+    <p class="qtitle">⑤ ほね・きん肉のはたらき（○×）</p>
+    <div class="qbody">
+      顔のきん肉のはたらきで、さまざまな表情をつくることができる →
+      <span class="mask" data-id="q5-a1" data-answer="○"></span><br>
+      ほねは、体をささえたり動かしたりすることに関係しない →
+      <span class="mask" data-id="q5-a2" data-answer="×"></span><br>
+      むねのほねは、内側の肺や心臓を守っている →
+      <span class="mask" data-id="q5-a3" data-answer="○"></span><br>
+      じゅんび運動をすると、きん肉がゆるんだりちぢんだりする →
+      <span class="mask" data-id="q5-a4" data-answer="○"></span>
+    </div>
+    <div class="qactions">
+      <button data-level="ok">✅ できた</button>
+      <button data-level="warn">△ あやしい</button>
+      <button data-level="ng">❌ 要復習</button>
+      <button data-reset>表示をリセット</button>
+    </div>
+    <div class="qmeta">出典：ステップ3</div>
+  </div>
+
+  <!-- ⑥ ほねの役目（2つ） -->
+  <div class="card qcard" data-qid="q6">
+    <p class="qtitle">⑥ ほねの役目（2つ）</p>
+    <div class="qbody">
+      ほねは、（1）
+      <span class="mask" data-id="q6-a1" data-answer="体の内がわを守る"></span>
+      、（2）
+      <span class="mask" data-id="q6-a2" data-answer="体をささえる"></span>
+      の役目がある。
+    </div>
+    <div class="qactions">
+      <button data-level="ok">✅ できた</button>
+      <button data-level="warn">△ あやしい</button>
+      <button data-level="ng">❌ 要復習</button>
+      <button data-reset>表示をリセット</button>
+    </div>
+    <div class="qmeta">出典：ステップ3</div>
+  </div>
+
+  <!-- ⑦ 人以外の動物にも…（共通点） -->
+  <div class="card qcard" data-qid="q7">
+    <p class="qtitle">⑦ 動物の体のつくり（人との共通点）</p>
+    <div class="qbody">
+      ウサギなどの人以外の動物にも、人と同じように
+      <span class="mask" data-id="q7-a1" data-answer="ほね"></span>、
+      <span class="mask" data-id="q7-a2" data-answer="きん肉"></span>、
+      <span class="mask" data-id="q7-a3" data-answer="関節"></span>
+      があり、それらのはたらきによって体をささえたり動かしたりしている。
+    </div>
+    <div class="qactions">
+      <button data-level="ok">✅ できた</button>
+      <button data-level="warn">△ あやしい</button>
+      <button data-level="ng">❌ 要復習</button>
+      <button data-reset>表示をリセット</button>
+    </div>
+    <div class="qmeta">出典：2-2／2-3／ステップ4</div>
+  </div>
+
+  <!-- ⑧ きん肉のかたさ／確かめ方 -->
+  <div class="card qcard" data-qid="q8">
+    <p class="qtitle">⑧ ちぢんだきん肉のかたさと確かめ方</p>
+    <div class="qbody">
+      ちぢんだきん肉のかたさ：
+      <span class="mask" data-id="q8-a1" data-answer="かたくなっている"></span><br>
+      確かめる方法（例）：
+      <span class="mask" data-id="q8-a2" data-answer="ひじを曲げたとき、上側のちぢんだきん肉をさわって、曲げる前と比べる"></span>
+    </div>
+    <div class="qactions">
+      <button data-level="ok">✅ できた</button>
+      <button data-level="warn">△ あやしい</button>
+      <button data-level="ng">❌ 要復習</button>
+      <button data-reset>表示をリセット</button>
+    </div>
+    <div class="qmeta">出典：ステップ4</div>
+  </div>
+
+  <div class="card">
+    <details>
+      <summary>ショートカット / 操作ヒント</summary>
+      <ul>
+        <li>マスク：タップで表示。<b>長押し</b>（0.7秒）でチラ見（離すと戻る）。</li>
+        <li>マスクを<b>右クリック</b> or <b>二本指タップ</b>で復習色（緑→黄→赤→無）を循環。</li>
+        <li><span class="kbd">H</span>：ヒント表示／<span class="kbd">R</span>：全リセット。</li>
+        <li>🌓：ダーク/ライト、🔴：赤のみ表示、🎯：赤順出題（Enterで次、Esc終了）。</li>
+        <li>⬇️/⬆️：学習状態のエクスポート・インポート。</li>
+      </ul>
+    </details>
+  </div>
+  
+  <!-- ②.5 図あり：関節の名前（画像マスク統合） -->
+  <div class="card qcard" data-qid="q2z">
+    <p class="qtitle">② 図を見て答えよう（関節の名前）</p>
+    <div class="qbody">
+      <div class="imgmask">
+        <img src="/anki-project/assets/img/sci/4rika_body_all.webp" alt="人の体のつくりと運動 図" />
+        <!-- 画像上にマスク（%指定でレスポンシブ） ※元画像1440×2200を基準に換算 -->
+        <span class="mask abs" data-id="z-a1" data-answer="かた" style="left:11.2%; top:12.8%; width:17.4%; height:2.7%;"></span>
+        <span class="mask abs" data-id="z-a2" data-answer="ひじ" style="left:64.0%; top:19.2%; width:18.1%; height:2.7%;"></span>
+        <span class="mask abs" data-id="z-a3" data-answer="ひざ" style="left:68.1%; top:27.4%; width:18.1%; height:2.7%;"></span>
+        <!-- ア・イの図（下部） -->
+        <span class="mask abs" data-id="z-a4" data-answer="きん肉" style="left:51.4%; top:60.0%; width:12.5%; height:2.4%;"></span>
+        <span class="mask abs" data-id="z-a5" data-answer="ほね" style="left:29.2%; top:64.5%; width:10.4%; height:2.4%;"></span>
+      </div>
+      <p class="note">ヒント：肩・ひじ・ひざ／ア=きん肉、イ=ほね。</p>
+    </div>
+    <div class="qactions">
+      <button data-level="ok">✅ できた</button>
+      <button data-level="warn">△ あやしい</button>
+      <button data-level="ng">❌ 要復習</button>
+      <button data-reset>表示をリセット</button>
+    </div>
+    <div class="qmeta">図版：4rika_body_all.webp（%座標でレスポンシブ対応）</div>
+  </div>
+
+  
+  <!-- ②.5 図あり：関節の名前（画像マスク統合） -->
+  <div class="card qcard" data-qid="q2z">
+    <p class="qtitle">② 図を見て答えよう（関節の名前）</p>
+    <div class="qbody">
+      <div class="imgmask">
+        <img src="/anki-project/assets/img/sci/4rika_body_all.webp" alt="人の体のつくりと運動 図" />
+        <!-- 画像上にマスク（%指定でレスポンシブ） ※元画像1440×2200を基準に換算 -->
+        <span class="mask abs" data-id="z-a1" data-answer="かた" style="left:11.2%; top:12.8%; width:17.4%; height:2.7%;"></span>
+        <span class="mask abs" data-id="z-a2" data-answer="ひじ" style="left:64.0%; top:19.2%; width:18.1%; height:2.7%;"></span>
+        <span class="mask abs" data-id="z-a3" data-answer="ひざ" style="left:68.1%; top:27.4%; width:18.1%; height:2.7%;"></span>
+        <!-- ア・イの図（下部） -->
+        <span class="mask abs" data-id="z-a4" data-answer="きん肉" style="left:51.4%; top:60.0%; width:12.5%; height:2.4%;"></span>
+        <span class="mask abs" data-id="z-a5" data-answer="ほね" style="left:29.2%; top:64.5%; width:10.4%; height:2.4%;"></span>
+      </div>
+      <p class="note">ヒント：肩・ひじ・ひざ／ア=きん肉、イ=ほね。</p>
+    </div>
+    <div class="qactions">
+      <button data-level="ok">✅ できた</button>
+      <button data-level="warn">△ あやしい</button>
+      <button data-level="ng">❌ 要復習</button>
+      <button data-reset>表示をリセット</button>
+    </div>
+    <div class="qmeta">図版：4rika_body_all.webp（%座標でレスポンシブ対応）</div>
+  </div>
+
+</main>
+<script>
+  // -------- Utilities --------
+  const LS = { get:k=>{try{return JSON.parse(localStorage.getItem(k))}catch{return null}}, set:(k,v)=>localStorage.setItem(k,JSON.stringify(v)), del:k=>localStorage.removeItem(k) };
+  const KM = id=>`mask:${id}`, KQ = qid=>`qlevel:${qid}`, KT='pref:theme';
+
+  // Theme
+  const themeBtn=document.getElementById('toggle-theme');
+  const savedTheme=LS.get(KT); if(savedTheme){ document.documentElement.setAttribute('data-theme', savedTheme); }
+  themeBtn.addEventListener('click',()=>{ const cur=document.documentElement.getAttribute('data-theme')||'light'; const next=(cur==='dark')?'light':'dark'; document.documentElement.setAttribute('data-theme',next); LS.set(KT,next); });
+
+  // Mask helpers
+  function reveal(el,text){ el.classList.add('revealed'); el.textContent=text; }
+  function conceal(el){ el.classList.remove('revealed'); el.textContent='　'; }
+  function applySavedState(el){ const s=LS.get(KM(el.dataset.id)); if(!s)return; if(s.ans)reveal(el,s.ans); if(s.level)el.setAttribute('data-level',s.level); }
+  function saveMask(el){ const obj=LS.get(KM(el.dataset.id))||{}; if(el.classList.contains('revealed')) obj.ans=el.textContent; LS.set(KM(el.dataset.id),obj); }
+  function hintOne(el){ if(el.classList.contains('revealed'))return; const h=el.dataset.hint; if(h) el.textContent=h; }
+  function cycleLevel(el){ const order=[null,'ok','warn','ng',null]; const cur=el.getAttribute('data-level')||null; const next=order[order.indexOf(cur)+1]; if(next) el.setAttribute('data-level',next); else el.removeAttribute('data-level'); const obj=LS.get(KM(el.dataset.id))||{}; obj.level=next||undefined; LS.set(KM(el.dataset.id),obj); }
+  function addLongPressPeek(el){ let t=null; const down=(e)=>{ if(e.button===2) return; t=setTimeout(()=>{ el.dataset._peek='1'; reveal(el, el.dataset.answer); },700); }; const up=()=>{ clearTimeout(t); if(el.dataset._peek==='1'){ el.dataset._peek=''; const saved=LS.get(KM(el.dataset.id)); if(!saved||!saved.ans) conceal(el); } }; el.addEventListener('mousedown',down); el.addEventListener('touchstart',down,{passive:true}); ['mouseup','mouseleave','touchend','touchcancel'].forEach(ev=>el.addEventListener(ev,up)); }
+
+  // Init masks
+  document.querySelectorAll('.mask').forEach(el=>{
+    applySavedState(el);
+    addLongPressPeek(el);
+    el.addEventListener('click',()=>{ reveal(el,el.dataset.answer); saveMask(el); });
+    el.addEventListener('contextmenu',(e)=>{ e.preventDefault(); cycleLevel(el); });
+    let touches=0,timer=null;
+    el.addEventListener('touchstart',e=>{ touches=e.touches.length; clearTimeout(timer); timer=setTimeout(()=>{ if(touches>=2) cycleLevel(el); },120); },{passive:true});
+  });
+
+  // Cards
+  document.querySelectorAll('.qcard').forEach(card=>{
+    const qid=card.dataset.qid;
+    const saved=LS.get(KQ(qid)); if(saved) card.setAttribute('data-level', saved);
+    card.querySelectorAll('.qactions button[data-level]').forEach(btn=>{
+      btn.addEventListener('click',()=>{ const lvl=btn.dataset.level; card.setAttribute('data-level',lvl); LS.set(KQ(qid),lvl); });
+    });
+    card.querySelector('.qactions button[data-reset]')?.addEventListener('click',()=>{
+      card.querySelectorAll('.mask').forEach(el=>{ conceal(el); LS.del(KM(el.dataset.id)); el.removeAttribute('data-level'); });
+      card.removeAttribute('data-level'); LS.del(KQ(qid));
+    });
+  });
+
+  // Global buttons
+  document.getElementById('reset-all').addEventListener('click',()=>{
+    if(!confirm('全ての表示・復習状態をリセットします。よろしいですか？')) return;
+    Object.keys(localStorage).filter(k=>k.startsWith('mask:')||k.startsWith('qlevel:')).forEach(k=>localStorage.removeItem(k));
+    location.reload();
+  });
+
+  let filterNG=false;
+  document.getElementById('filter-ng').addEventListener('click',()=>{
+    filterNG=!filterNG;
+    document.querySelectorAll('.qcard').forEach(card=>{
+      if(!filterNG){ card.style.display=''; return; }
+      const hasNGMask=!!card.querySelector('.mask[data-level="ng"]');
+      const cardNG=card.getAttribute('data-level')==='ng';
+      card.style.display=(hasNGMask||cardNG)?'':'none';
+    });
+  });
+
+  document.getElementById('queue-ng').addEventListener('click',()=>{
+    const masks=Array.from(document.querySelectorAll('.mask[data-level="ng"]'));
+    if(!masks.length){ alert('要復習（赤）の空欄がありません。'); return; }
+    let i=0; const hilite=(el)=>{ el.scrollIntoView({behavior:'smooth',block:'center'}); el.style.outline='2px solid var(--ng)'; setTimeout(()=>el.style.outline='',1200); };
+    hilite(masks[i]);
+    const next=()=>{ i=(i+1)%masks.length; hilite(masks[i]); };
+    document.addEventListener('keydown',function onk(e){ if(e.key==='Enter'){ next(); } if(e.key==='Escape'){ document.removeEventListener('keydown',onk); } });
+    alert('赤の空欄を順番に出題します。Enterで次へ、Escで終了。');
+  });
+
+  // Export / Import
+  document.getElementById('export').addEventListener('click',()=>{
+    const data={theme:document.documentElement.getAttribute('data-theme')||'light'};
+    for(const [k,v] of Object.entries(localStorage)){ if(k.startsWith('mask:')||k.startsWith('qlevel:')) data[k]=v; }
+    const blob=new Blob([JSON.stringify(data,null,2)],{type:'application/json'});
+    const a=document.createElement('a'); a.href=URL.createObjectURL(blob); a.download='body_motion_state.json'; a.click();
+    setTimeout(()=>URL.revokeObjectURL(a.href),1000);
+  });
+  document.getElementById('import-file').addEventListener('change',(e)=>{
+    const f=e.target.files[0]; if(!f) return; const r=new FileReader();
+    r.onload=()=>{ try{ const data=JSON.parse(r.result); Object.keys(data).forEach(k=>{ if(k.startsWith('mask:')||k.startsWith('qlevel:')) localStorage.setItem(k,data[k]); }); if(data.theme){ document.documentElement.setAttribute('data-theme', data.theme); LS.set('pref:theme', data.theme); } alert('インポート完了。再読み込みします。'); location.reload(); }catch(err){ alert('JSONの読み込みに失敗しました。'); } };
+    r.readAsText(f,'utf-8');
+  });
+
+  // Shortcuts
+  document.addEventListener('keydown',(e)=>{
+    if(e.key==='h' || e.key==='H'){ document.querySelectorAll('.mask').forEach(el=>{ if(!el.classList.contains('revealed')){ const h=el.dataset.hint; if(h) el.textContent=h; }}); }
+    if(e.key==='r' || e.key==='R'){ document.getElementById('reset-all').click(); }
+  });
+</script>
+</body>
+</html>
