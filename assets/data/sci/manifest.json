@@ -52,6 +52,15 @@
   "category": "理科（小4）",
   "tags": ["季節と生物", "夏", "植物", "動物", "気温", "図あり"],
   "updated": "2025-10-21"
+    },
+    {
+  "title": "小4理科｜水のすがたと温度（単元まとめ・図なし）",
+  "path": "water_state_unit_combined_v3.html",
+  "thumbnail": "../assets/img/thumb/sci-water-state.png",
+  "category": "理科（小4）",
+  "tags": ["水の三態","沸騰","0℃","冷却曲線","凝固","用語確認","図なし"],
+  "updated": "2025-10-28"
 }
   ]
+
 }
