@@ -1,12 +1,12 @@
 name: Update subject manifests
 
 on:
-  workflow_dispatch:  # ← 手動実行ボタンを出す
+  workflow_dispatch:    # 手動実行ボタンを出す
   push:
     paths:
-      - 'anki-project/assets/data/**/marker/**.json'
-      - 'anki-project/assets/data/**/noimg/**.json'
-      - 'anki-project/modules/**/**.html'
+      - 'assets/data/**/marker/**.json'
+      - 'assets/data/**/noimg/**.json'
+      - 'modules/**/**.html'
       - 'scripts/**.js'
       - 'anki-project/scripts/**.js'
 
@@ -17,17 +17,27 @@ jobs:
   update:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - name: Checkout
+        uses: actions/checkout@v4
         with: { fetch-depth: 0 }
 
-      - uses: actions/setup-node@v4
+      - name: Setup Node
+        uses: actions/setup-node@v4
         with: { node-version: '20' }
 
-      # どの場所・名前でも本体を自動検出して実行
-      - name: Build subject manifests (auto-detect)
+      # どの配置/ファイル名でも本体を検出して実行（ESM/JS共通）
+      - name: Build subject manifests
+        shell: bash
         run: |
           set -e
+          echo "[pwd] $(pwd)"
+          echo "[ls]"; ls -la
+          echo "[ls scripts]"; ls -la scripts || true
+          echo "[ls anki-project/scripts]"; ls -la anki-project/scripts || true
+
           CANDIDATES=(
+            "scripts/update_manifest.cjs"
+            "anki-project/scripts/update_manifest.cjs"
             "scripts/update_manifest.js"
             "anki-project/scripts/update_manifest.js"
             "scripts/update_subject_manifests.js"
@@ -38,31 +48,30 @@ jobs:
             if [ -f "$f" ]; then TARGET="$f"; break; fi
           done
           if [ -z "$TARGET" ]; then
-            echo "::error::update_manifest.js が見つかりません（scripts/ または anki-project/scripts/ を確認）"
+            echo "::error::manifest builder not found in scripts/ or anki-project/scripts/"
             exit 1
           fi
           echo "[run] node $TARGET"
           node "$TARGET"
 
-     - name: Commit & push (robust)
-  run: |
-    set -e
-    git config user.name  "github-actions"
-    git config user.email "actions@github.com"
+      # 生成された manifest を確実にコミット（新規ディレクトリも含める）
+      - name: Commit & push
+        shell: bash
+        run: |
+          set -e
+          git config user.name  "github-actions"
+          git config user.email "actions@github.com"
 
-    # 1) 生成物の場所：assets/data/**/manifest.json （存在確認してから add）
-    if compgen -G "assets/data/**/manifest.json" > /dev/null; then
-      git add -A assets/data         # 新規ディレクトリ(jpnなど)も含めて丸ごと
-    else
-      echo "[info] assets/data/**/manifest.json が見つかりません（生成されなかった可能性）"
-    fi
+          if compgen -G "assets/data/**/manifest.json" > /dev/null; then
+            git add -A assets/data
+          else
+            echo "[info] no manifests found under assets/data/**/manifest.json"
+          fi
 
-    git status
-
-    # 2) ステージング済みの差分があるかで commit 実行可否を判定
-    if git diff --cached --quiet; then
-      echo "No changes"
-    else
-      git commit -m "chore: auto-update subject manifests"
-      git push
-    fi
+          git status
+          if git diff --cached --quiet; then
+            echo "No changes"
+          else
+            git commit -m "chore: auto-update subject manifests"
+            git push
+          fi
