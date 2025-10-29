@@ -158,14 +158,35 @@ const QuizEngine = (() => {
     `;
     document.querySelector(container).appendChild(el);
 
-    // こたえ表示
-    document.getElementById(`reveal${idx}`).onclick = ()=>{
-      const box = document.getElementById(`ans${idx}`);
-      const ans = (item.answers||[]).join(" ／ ");
-      const note = item.note ? `\n— 解説：${item.note}` : "";
-      box.textContent = `答え：${ans}${note}`;
-      box.style.display = "block";
-    };
+// こたえ表示（トグル） — appendChild(el) の直後に置く
+{
+  const btn = document.getElementById(`reveal${idx}`);
+  const box = document.getElementById(`ans${idx}`);
+  if (!btn || !box) return; // 念のため
+
+  // 事前レンダ：答え＋解説
+  const ans = (item.answers || []).join(" ／ ") || "(未設定)";
+  const note = item.note ? `\n— 解説：${item.note}` : "";
+
+  // ① 改行が効くように
+  box.style.whiteSpace = "pre-line";
+  // ② 中身セット
+  box.textContent = `答え：${ans}${note}`;
+
+  let shown = false;
+  const updateUI = ()=>{
+    // display切替は hidden だとCSS衝突が少ない
+    box.hidden = !shown;
+    btn.textContent = shown ? "こたえを隠す" : "こたえを表示";
+    btn.setAttribute("aria-pressed", shown ? "true" : "false");
+  };
+  updateUI();
+
+  btn.addEventListener("click", ()=>{
+    shown = !shown;
+    updateUI();
+  });
+}
 
     // 評価ボタン
     const btnIds = ["c0_","c1_","c2_","c3_"].map(p=>p+idx);
