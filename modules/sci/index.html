@@ -1,24 +1,55 @@
-<!doctype html><html lang="ja"><head>
-<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<title>理科教材 一覧</title> 
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>理科教材 一覧</title>
 <link rel="icon" href="/anki-project/assets/img/favicon.png" type="image/png">
-<link rel="stylesheet" href="../../assets/css/style.css">
-</head><body>
+<link rel="stylesheet" href="/anki-project/assets/css/style.css">
+</head>
+<body>
 <header class="site"><h1>🔬 理科教材 一覧</h1></header>
 <main class="grid" id="list"></main>
-<script>
-(async()=>{
-  const url=new URL('../../assets/data/sci/manifest.json',location.href);
-  const list=document.getElementById('list');
-  try{
-    const r=await fetch(url,{cache:'no-store'}); if(!r.ok) throw new Error(r.status);
-    const d=await r.json();
-    (d.modules||[]).forEach(m=>{
-      const a=document.createElement('a'); a.className='card'; a.href=m.path;
-      a.innerHTML=`<h2>${m.title}</h2><p>${m.desc||'タップで表示／復習機能あり'}</p>`;
-      list.appendChild(a);
-    });
-  }catch(e){ list.innerHTML=`<div class="card">manifest読込エラー：<code>${url}</code> ${e}</div>` }
-})();
-</script></body></html>
 
+<script>
+(async ()=>{
+  const list = document.getElementById('list');
+  const manifestURL = '/anki-project/assets/data/sci/manifest.json?t=' + Date.now();
+
+  try {
+    const res = await fetch(manifestURL, {cache: 'no-store'});
+    if (!res.ok) throw new Error('HTTP ' + res.status);
+    const data = await res.json();
+
+    // manifest が配列であることを保証
+    const items = Array.isArray(data) ? data : (data.modules || []);
+    if (!items.length) {
+      list.innerHTML = `<div class="card">教材データがありません。<br><code>${manifestURL}</code></div>`;
+      return;
+    }
+
+    // path / url / data のどれでも対応
+    const resolveLink = it => {
+      const raw = it.path || it.url || it.data || '#';
+      return raw.startsWith('http') ? raw : '/anki-project' + raw;
+    };
+
+    // 1件ずつカード化
+    for (const m of items) {
+      const a = document.createElement('a');
+      a.className = 'card';
+      a.href = resolveLink(m);
+      const desc = m.desc || (m.type === 'marker' ? '図つき穴埋め・マーカー式' :
+                              m.type === 'noimg' ? '図なし・文章穴埋め' :
+                              '教材ページを開く');
+      a.innerHTML = `<h2>${m.title || '(無題)'}</h2><p>${desc}</p>`;
+      list.appendChild(a);
+    }
+
+  } catch (e) {
+    list.innerHTML = `<div class="card">manifest読込エラー：<br><code>${manifestURL}</code><br>${e}</div>`;
+  }
+})();
+</script>
+</body>
+</html>
