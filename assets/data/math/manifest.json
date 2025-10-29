@@ -1,16 +1,5 @@
 [
   {
-    "type": "html",
-    "title": "算数教材 一覧",
-    "path": "/anki-project/modules/math/index.html",
-    "tags": [
-      "html",
-      "算数",
-      "4年"
-    ],
-    "updated": "2025-10-29T05:02:27.899Z"
-  },
-  {
     "type": "noimg",
     "title": "小4算数 多角形の性質",
     "data": "/anki-project/assets/data/math/noimg/ma4-08-unit-noimg-fig.json",
@@ -20,6 +9,17 @@
       "算数",
       "4年"
     ],
-    "updated": "2025-10-29T05:02:27.898Z"
+    "updated": "2025-10-29T05:12:00.536Z"
+  },
+  {
+    "type": "html",
+    "title": "算数教材 一覧",
+    "path": "/anki-project/modules/math/index.html",
+    "tags": [
+      "html",
+      "算数",
+      "4年"
+    ],
+    "updated": "2025-10-29T05:12:00.536Z"
   }
 ]
