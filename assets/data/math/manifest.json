@@ -1,20 +1,25 @@
-{
-  "modules": [
-    {
-      "title": "第8回 多角形の性質（図なし＋図つき統合版）",
-      "path": "../../modules/noimg.html?data=/anki-project/assets/data/math/noimg/ma4-08-unit-noimg-fig.json&title=小4算数 第8回 多角形の性質",
-      "desc": "内角・外角・対角線などを図つきで学ぶ",
-      "category": "算数",
-      "tags": ["多角形","図形","角度","小4"],
-      "updated": "2025-10-23"
-    },
-    {
-      "title": "単元横断ミックス出題",
-      "path": "../../trainer/mix.html",
-      "desc": "複数単元をタグ選択してランダム出題（復習対応）",
-      "category": "算数",
-      "tags": ["総合","タグ出題","復習","小4"],
-      "updated": "2025-10-23"
-    }
-  ]
-}
+[
+  {
+    "type": "noimg",
+    "title": "小4算数 多角形の性質",
+    "data": "/anki-project/assets/data/math/noimg/ma4-08-unit-noimg-fig.json",
+    "path": "/anki-project/modules/noimg.html?data=/anki-project/assets/data/math/noimg/ma4-08-unit-noimg-fig.json&title=%E5%B0%8F4%E7%AE%97%E6%95%B0%20%E5%A4%9A%E8%A7%92%E5%BD%A2%E3%81%AE%E6%80%A7%E8%B3%AA",
+    "tags": [
+      "noimg",
+      "算数",
+      "4年"
+    ],
+    "updated": "2025-10-29T04:19:53.754Z"
+  },
+  {
+    "type": "html",
+    "title": "算数教材 一覧",
+    "path": "/anki-project/modules/math/index.html",
+    "tags": [
+      "html",
+      "算数",
+      "4年"
+    ],
+    "updated": "2025-10-29T04:19:53.754Z"
+  }
+]

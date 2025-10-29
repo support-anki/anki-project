@@ -1,55 +1,48 @@
-{
-  "title": "地理教材 一覧",
-  "modules": [
-    {
-      "title": "第7回 九州地方（図なし・復習付き）",
-      "path": "../noimg.html?data=/anki-project/assets/data/geo/noimg/ge7-kyushu.json&title=小4社会 第7回 九州地方（図なし・復習付き）"
-    },
-    {
-      "title": "第8回 気候と各地のくらし（図なし・復習付き）",
-      "path": "../noimg.html?data=/anki-project/assets/data/geo/noimg/ge8-kikou.json&title=小4社会 第8回 気候と各地のくらし（図なし・復習付き）"
-    },
-    {
-      "title": "九州地方の地図",
-      "path": "../img.html?data=../assets/data/geo/mapdata/ge-kyushu.json&title=九州地方の地図",
-      "thumbnail": "../assets/img/thumb/kyushu.png",
-      "category": "社会・地理（図あり）",
-      "tags": ["地図", "九州", "都道府県", "産業", "地形"],
-      "updated": "2025-10-16"
-    },
-{
-  "title": "日本の主な川・湖（番号→名称）",
-  "path": "../img.html?data=/anki-project/assets/data/geo/mapdata/geo-rivers-lakes.json&title=日本の主な川・湖（番号→名称）",
-  "thumbnail": "../assets/img/thumb/japan-rivers-lakes.png",
-  "category": "社会・地理（図あり）",
-  "tags": ["川","湖","日本地図","図あり"],
-  "updated": "2025-10-22"
-},
-    {
-      "title": "都道府県を覚えよう（図あり）",
-      "path": "../img.html?data=../assets/data/geo/mapdata/japan-todofuken.json&title=都道府県を覚えよう",
-      "thumbnail": "../assets/img/thumb/japan.png",
-      "category": "社会・地理（図あり）",
-      "tags": ["地図", "都道府県", "日本", "暗記"],
-      "updated": "2025-10-16"
-    },
-
-    {
-      "title": "県名と異なる県庁所在地（番号→県庁所在地）",
-      "path": "../img.html?data=../assets/data/geo/mapdata/geo-kencho.json&title=県名と異なる県庁所在地（番号→県庁所在地）",
-      "thumbnail": "../assets/img/thumb/japan-kencho.png",
-      "category": "社会・地理（図あり）",
-      "tags": ["都道府県","県庁所在地","日本地図","図あり"],
-      "updated": "2025-10-17"
-    },
-{
-  "title": "日本の主な山地・山脈・高地（クリックで答え）",
-  "path": "../img.html?data=/anki-project/assets/data/geo/mapdata/ge-mountains.json&title=日本の主な山地・山脈・高地（クリックで答え）",
-  "thumbnail": "../assets/img/thumb/japan-mountains.png",
-  "category": "社会・地理（図あり）",
-  "tags": ["日本地理","山脈","山地","高地","地図"],
-  "updated": "2025-10-21"
-}
-
-  ]
-}
+[
+  {
+    "type": "html",
+    "title": "九州地方 地図学習",
+    "path": "/anki-project/modules/geo/geo-kyushu.html",
+    "tags": [
+      "html",
+      "地理",
+      "4年"
+    ],
+    "updated": "2025-10-29T04:19:53.754Z"
+  },
+  {
+    "type": "html",
+    "title": "地理教材 一覧",
+    "path": "/anki-project/modules/geo/index.html",
+    "tags": [
+      "html",
+      "地理",
+      "4年"
+    ],
+    "updated": "2025-10-29T04:19:53.754Z"
+  },
+  {
+    "type": "noimg",
+    "title": "小4社会 第7回 九州地方（図なし）",
+    "data": "/anki-project/assets/data/geo/noimg/ge7-kyushu.json",
+    "path": "/anki-project/modules/noimg.html?data=/anki-project/assets/data/geo/noimg/ge7-kyushu.json&title=%E5%B0%8F4%E7%A4%BE%E4%BC%9A%20%E7%AC%AC7%E5%9B%9E%20%E4%B9%9D%E5%B7%9E%E5%9C%B0%E6%96%B9%EF%BC%88%E5%9B%B3%E3%81%AA%E3%81%97%EF%BC%89",
+    "tags": [
+      "noimg",
+      "地理",
+      "4年"
+    ],
+    "updated": "2025-10-29T04:19:53.753Z"
+  },
+  {
+    "type": "noimg",
+    "title": "小4社会 第8回 気候と各地のくらし（図なし・復習付き）",
+    "data": "/anki-project/assets/data/geo/noimg/ge8-kikou.json",
+    "path": "/anki-project/modules/noimg.html?data=/anki-project/assets/data/geo/noimg/ge8-kikou.json&title=%E5%B0%8F4%E7%A4%BE%E4%BC%9A%20%E7%AC%AC8%E5%9B%9E%20%E6%B0%97%E5%80%99%E3%81%A8%E5%90%84%E5%9C%B0%E3%81%AE%E3%81%8F%E3%82%89%E3%81%97%EF%BC%88%E5%9B%B3%E3%81%AA%E3%81%97%E3%83%BB%E5%BE%A9%E7%BF%92%E4%BB%98%E3%81%8D%EF%BC%89",
+    "tags": [
+      "noimg",
+      "地理",
+      "4年"
+    ],
+    "updated": "2025-10-29T04:19:53.753Z"
+  }
+]
