@@ -6,7 +6,7 @@ on:
       - 'anki-project/assets/data/**/marker/**.json'
       - 'anki-project/assets/data/**/noimg/**.json'
       - 'anki-project/modules/**/**.html'
-      - 'scripts/update_subject_manifests.js'
+      - 'scripts/update_manifest.js' 
   workflow_dispatch:
 
 permissions:
@@ -22,7 +22,7 @@ jobs:
         with: { node-version: '20' }
 
       - name: Build subject manifests
-        run: node scripts/update_subject_manifests.js
+        run: node scripts/update_manifests.js
 
       - name: Commit & push
         run: |
