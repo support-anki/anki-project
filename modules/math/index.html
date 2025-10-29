@@ -3,42 +3,49 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>算数教材 一覧</title>
+<title>🔢 算数教材 一覧</title>
 <link rel="icon" href="/anki-project/assets/img/favicon.png" type="image/png">
-<link rel="stylesheet" href="../../assets/css/style.css">
+<link rel="stylesheet" href="/anki-project/assets/css/style.css">
+<style>
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:12px;margin:20px 0}
+.card{border:1px solid #8884;border-radius:14px;padding:12px;text-decoration:none;color:inherit;background:#fff1}
+</style>
 </head>
-<a class="home-btn" href="/anki-project/" aria-label="トップページへ">🏠 トップ</a>
 <body>
-<header class="site">
-  <h1>🔢 算数教材 一覧</h1>
-  <p class="sub">図なし・図つき問題、単元横断ミックス出題を収録</p>
-</header>
-
-<main class="grid" id="list"></main>
+<header class="site"><h1>🔢 算数教材 一覧</h1></header>
+<main id="list" class="grid"></main>
+<a class="home-btn" href="/anki-project/" aria-label="トップページへ">🏠 トップ</a>
 
 <script>
+const subject='math';
+const MANIFEST=`/anki-project/assets/data/${subject}/manifest.json`;
+const BASE=`/anki-project/modules/${subject}/`;
+
+const fix=(p)=>{
+  if(!p)return'#';
+  if(p.startsWith('/'))return p;
+  if(p.startsWith('../'))return BASE+p.replace(/^\.\.\//,'');
+  if(p.startsWith('./'))return BASE+p.replace(/^\.\//,'');
+  return BASE+p;
+};
+
 (async()=>{
-  const url = new URL('../../assets/data/math/manifest.json', location.href);
-  const list = document.getElementById('list');
-  try {
-    const r = await fetch(url, {cache:'no-store'});
-    if (!r.ok) throw new Error(r.status);
-    const d = await r.json();
-    (d.modules || []).forEach(m => {
-      const a = document.createElement('a');
-      a.className = 'card';
-      a.href = m.path;
-      a.innerHTML = `
-        <h2>${m.title}</h2>
-        <p>${m.desc || 'タップで問題を開く／復習・音声機能あり'}</p>
-      `;
-      list.appendChild(a);
+  const list=document.getElementById('list');
+  try{
+    const r=await fetch(MANIFEST,{cache:'no-store'});
+    if(!r.ok)throw new Error(r.statusText);
+    const j=await r.json();
+    const arr=Array.isArray(j)?j:(j.items||j.entries||[]);
+    if(!arr.length){list.innerHTML='<div class="card">manifest.json が空です。</div>';return;}
+    arr.forEach(m=>{
+      const a=document.createElement('a');
+      a.className='card';
+      a.href=fix(m.path||m.url);
+      a.innerHTML=`<h2>${m.title||'(無題)'}</h2><p>${m.note||m.desc||'タップで問題を開く／復習機能あり'}</p>`;
+      list.append(a);
     });
-  } catch(e) {
-    list.innerHTML = `
-      <div class="card">
-        manifest読込エラー：<code>${url}</code><br>${e}
-      </div>`;
+  }catch(e){
+    list.innerHTML=`<div class="card">manifest読込エラー：<code>${MANIFEST}</code><br>${e}</div>`;
   }
 })();
 </script>
