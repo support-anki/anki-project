@@ -147,7 +147,7 @@ const QuizEngine = (() => {
       ${tags ? `<div style="margin-top:6px">${tags}</div>` : ""}
       ${hintBlock}
       <button class="btn" id="reveal${idx}" style="margin-top:10px" type="button">こたえを表示</button>
-      <div id="ans${idx}" class="answer" style="display:none;margin-top:10px;"></div>
+      <div id="ans${idx}" class="answer" hidden style="margin-top:10px;"></div>
       <div class="row rate-bar" style="margin-top:10px">
         <button class="btn" id="c0_${idx}" type="button">🔁 もう一度</button>
         <button class="btn" id="c1_${idx}" type="button">△ むずかしい</button>
