@@ -4,8 +4,10 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>図あり教材（共通テンプレート・正誤記録対応）</title>
+  <!-- ルート固定：相対URLは /anki-project/ 基準で解決 -->
+  <base href="/anki-project/">
   <!-- Leaflet（SRIなしで確実ロード） -->
-   <link rel="icon" href="/anki-project/assets/img/favicon.png" type="image/png">
+  <link rel="icon" href="/anki-project/assets/img/favicon.png" type="image/png">
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
   <style>
     :root{
@@ -121,6 +123,16 @@
   function saveResults(){ localStorage.setItem(storeKey('results'), JSON.stringify(state.results)); }
   function resetProgress(){ state.revealed.clear(); state.results = {}; saveRevealed(); saveResults(); renderList(); refreshMarkersVisibility(); }
 
+  // --- ルート絶対化ユーティリティ（/anki-project/ 基準） ---
+  const ABS_ROOT = '/anki-project/';
+  const cleanURL = (s)=> String(s||'').replace(/[\u200B\u200E\uFEFF]/g,'').trim(); // ZWSP/BOM除去
+  const toAbs = (s)=>{
+    const t = cleanURL(s);
+    if (!t) return '';
+    if (t.startsWith('/')) return t;            // すでに絶対
+    return ABS_ROOT + t.replace(/^\.?\/*/, ''); // 先頭の ./ や / を除去して結合
+  };
+
   // --- Leaflet 初期化 ---
   const map = L.map('map', { crs: L.CRS.Simple, minZoom: -4, zoomSnap: 0.1 });
   state.map = map;
@@ -138,8 +150,7 @@
     .then(r => { if (!r.ok) throw new Error(`HTTP ${r.status}`); return r.json(); })
     .then(json => {
       state.data = json;
-      state.data = json;
-      window.currentMapData = json; // ← これを追加！
+      window.currentMapData = json; // デバッグ/エクスポート用に参照可
       if (json.title) document.getElementById('pageTitle').textContent = json.title;
       setupImages(json.images);
       setupMarkers(json.points);
@@ -154,9 +165,10 @@
     if (!Array.isArray(images) || images.length === 0) throw new Error('images が空です。');
     els.tabs.innerHTML = '';
     images.forEach((img, idx) => {
+      const srcAbs = toAbs(img.src);
       const bounds = [[0,0], [img.height, img.width]];
-      const layer = L.imageOverlay(img.src, bounds, { opacity: 1, interactive: false });
-      state.imageLayers[img.id] = { layer, bounds, meta: img };
+      const layer = L.imageOverlay(srcAbs, bounds, { opacity: 1, interactive: false });
+      state.imageLayers[img.id] = { layer, bounds, meta: { ...img, src: srcAbs } };
       const t = document.createElement('button');
       t.className = 'tab' + (idx===0 ? ' active' : '');
       t.textContent = img.label || img.id || `画像${idx+1}`;
@@ -325,6 +337,6 @@
     }
   }
   </script>
-<a class="home-btn" href="/anki-project/" aria-label="トップページへ">🏠 トップ</a>
+  <a class="home-btn" href="/anki-project/" aria-label="トップページへ">🏠 トップ</a>
 </body>
 </html>
