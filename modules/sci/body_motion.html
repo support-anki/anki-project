@@ -358,6 +358,81 @@
     if(e.key==='h' || e.key==='H'){ document.querySelectorAll('.mask').forEach(el=>{ if(!el.classList.contains('revealed')){ const h=el.dataset.hint; if(h) el.textContent=h; }}); }
     if(e.key==='r' || e.key==='R'){ document.getElementById('reset-all').click(); }
   });
+// --- Mask Dev Mode ----------------------------------------------------
+// ?dev=1 で起動 or Alt+D でトグル。クリックで対象選択、矢印で微調整。
+// ←→↑↓: 0.1% / Shift+矢印: 1px / Alt+S: 現在値をconsole出力
+(function(){
+  const params=new URLSearchParams(location.search);
+  let DEV=params.get('dev')==='1';
+  let cur=null, hud=null;
+
+  function px2pct(px, base){ return (px/base*100); }
+  function pct2num(s){ return parseFloat(String(s).replace('%','')); }
+
+  function ensureHUD(){
+    if(hud) return;
+    hud=document.createElement('div');
+    Object.assign(hud.style,{
+      position:'fixed', right:'10px', bottom:'10px', zIndex:99,
+      padding:'8px 10px', background:'rgba(0,0,0,.6)', color:'#fff',
+      font:'12px/1.4 system-ui,Segoe UI', borderRadius:'8px'
+    });
+    document.body.appendChild(hud);
+  }
+
+  function setHUD(txt){ ensureHUD(); hud.textContent='[Mask Dev] '+txt; }
+
+  function select(el){
+    if(cur) cur.style.outline='';
+    cur=el; if(!cur) return;
+    cur.style.outline='2px dashed #ef4444';
+    setHUD(`id=${cur.dataset.id}  left=${cur.style.left} top=${cur.style.top}  w=${cur.style.width} h=${cur.style.height}`);
+  }
+
+  function move(deltaPctX, deltaPctY){
+    if(!cur) return;
+    const l=pct2num(cur.style.left||'0%') + deltaPctX;
+    const t=pct2num(cur.style.top ||'0%') + deltaPctY;
+    cur.style.left=`${l}%`; cur.style.top=`${t}%`;
+    setHUD(`id=${cur.dataset.id}  left=${cur.style.left} top=${cur.style.top}  w=${cur.style.width} h=${cur.style.height}`);
+  }
+
+  function movePx(dx,dy){
+    if(!cur) return;
+    const box=cur.parentElement.getBoundingClientRect();
+    move(px2pct(dx, box.width), px2pct(dy, box.height));
+  }
+
+  function toggleDev(){
+    DEV=!DEV;
+    if(!DEV){ if(hud){ hud.remove(); hud=null; } if(cur){ cur.style.outline=''; cur=null; } return; }
+    setHUD('ON クリックで対象選択 / 矢印=0.1%  Shift+矢印=1px  Alt+S=ログ');
+  }
+
+  document.addEventListener('keydown',(e)=>{
+    if(e.altKey && e.key.toLowerCase()==='d'){ toggleDev(); }
+    if(!DEV || !cur) return;
+    const s=0.1; // %
+    if(e.key==='ArrowLeft'){ e.preventDefault(); e.shiftKey ? movePx(-1,0) : move(-s,0); }
+    if(e.key==='ArrowRight'){ e.preventDefault(); e.shiftKey ? movePx(1,0) : move(s,0); }
+    if(e.key==='ArrowUp'){ e.preventDefault(); e.shiftKey ? movePx(0,-1) : move(0,-s); }
+    if(e.key==='ArrowDown'){ e.preventDefault(); e.shiftKey ? movePx(0,1) : move(0,s); }
+    if(e.altKey && e.key.toLowerCase()==='s'){
+      console.log(`[${cur.dataset.id}] left:${cur.style.left}; top:${cur.style.top}; width:${cur.style.width}; height:${cur.style.height};`);
+      setHUD('現在値を console に出力しました');
+    }
+  });
+
+  document.addEventListener('click',(e)=>{
+    if(!DEV) return;
+    const m=e.target.closest('.mask.abs'); if(!m) return;
+    e.preventDefault(); select(m);
+  });
+
+  // URLで ?dev=1 のとき自動ON
+  if(DEV) toggleDev();
+})();
 </script>
 </body>
 </html>
+
