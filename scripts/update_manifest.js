@@ -1,5 +1,5 @@
 // anki-project/scripts/update_manifest.js (ESM)
-// 各科目の manifest.json を生成（marker / noimg / HTML）
+// 各科目の manifest.json を生成（marker / mapdata / noimg / html）
 import fs from 'node:fs';
 import path from 'node:path';
 
@@ -57,6 +57,19 @@ function buildMarkerItems(subj){
   });
 }
 
+function buildMapdataItems(subj){
+  // assets/data/<subj>/mapdata/*.json → modules/img.html?data=...
+  const dir = path.join(FS_ASSETS_BASE, 'data', subj.key, 'mapdata');
+  return listFiles(dir, ['.json']).map(fp=>{
+    const rel = fp.replace(/\\/g,'/');
+    let title = path.basename(fp);
+    try { title = readJSON(fp).title || title; } catch {}
+    const dataURL = toPublicURL(rel);
+    const url = `${PUBLIC_BASE}/modules/img.html?data=${dataURL}&title=${encodeURIComponent(title)}`;
+    return { type:'img', title, data:dataURL, path:url, tags:['img', subj.tag, subj.grade], updated:new Date().toISOString() };
+  });
+}
+
 function buildNoimgItems(subj){
   const dir = path.join(FS_ASSETS_BASE, 'data', subj.key, 'noimg'); // assets/data/<subj>/noimg
   return listFiles(dir, ['.json']).map(fp=>{
@@ -82,16 +95,18 @@ function buildHtmlItems(subj){
 
 function main(){
   for(const subj of SUBJECTS){
-    const marker = buildMarkerItems(subj);
-    const noimg  = buildNoimgItems(subj);
-    const htmls  = buildHtmlItems(subj);
-    const all = uniqByKey([...marker, ...noimg, ...htmls])
+    const marker  = buildMarkerItems(subj);
+    const mapdata = buildMapdataItems(subj); // ★ 新規追加
+    const noimg   = buildNoimgItems(subj);
+    const htmls   = buildHtmlItems(subj);
+
+    const all = uniqByKey([...marker, ...mapdata, ...noimg, ...htmls])
       .sort((a,b)=>(Date.parse(b.updated||'')||0)-(Date.parse(a.updated||'')||0));
 
     const out = path.join(FS_ASSETS_BASE, 'data', subj.key, 'manifest.json'); // assets/data/<subj>/manifest.json
     fs.mkdirSync(path.dirname(out), { recursive:true });
     fs.writeFileSync(out, JSON.stringify(all, null, 2), 'utf-8');
-    console.log(`[OK] ${subj.key}: marker=${marker.length}, noimg=${noimg.length}, html=${htmls.length} -> ${out} (items=${all.length})`);
+    console.log(`[OK] ${subj.key}: marker=${marker.length}, mapdata=${mapdata.length}, noimg=${noimg.length}, html=${htmls.length} -> ${out} (items=${all.length})`);
   }
 }
 main();
