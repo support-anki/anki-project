@@ -9,7 +9,19 @@
       "算数",
       "4年"
     ],
-    "updated": "2025-10-29T10:39:26.221Z"
+    "updated": "2025-10-29T12:20:56.097Z"
+  },
+  {
+    "type": "noimg",
+    "title": "小4下第9回 円とおうぎ形",
+    "data": "/anki-project/assets/data/math/noimg/ma4-09-en-ougigata-unit-noimg-fig.json",
+    "path": "/anki-project/modules/noimg.html?data=/anki-project/assets/data/math/noimg/ma4-09-en-ougigata-unit-noimg-fig.json&title=%E5%B0%8F4%E4%B8%8B%E7%AC%AC9%E5%9B%9E%20%E5%86%86%E3%81%A8%E3%81%8A%E3%81%86%E3%81%8E%E5%BD%A2",
+    "tags": [
+      "noimg",
+      "算数",
+      "4年"
+    ],
+    "updated": "2025-10-29T12:20:56.097Z"
   },
   {
     "type": "html",
@@ -20,6 +32,6 @@
       "算数",
       "4年"
     ],
-    "updated": "2025-10-29T10:39:26.221Z"
+    "updated": "2025-10-29T12:20:56.097Z"
   }
 ]

@@ -1,86 +1,5 @@
 [
   {
-    "type": "html",
-    "title": "小4理科「人の体のつくりと運動」— 基本まとめ（マーカー式） v3",
-    "path": "/anki-project/modules/sci/body_motion.html",
-    "tags": [
-      "html",
-      "理科",
-      "4年"
-    ],
-    "updated": "2025-10-29T10:39:26.215Z"
-  },
-  {
-    "type": "html",
-    "title": "理科教材 一覧",
-    "path": "/anki-project/modules/sci/index.html",
-    "tags": [
-      "html",
-      "理科",
-      "4年"
-    ],
-    "updated": "2025-10-29T10:39:26.215Z"
-  },
-  {
-    "type": "html",
-    "title": "小4理科「水のすがたと温度」— 単元まとめ（図なし・マーカー式） v3",
-    "path": "/anki-project/modules/sci/water_state_unit_combined_v3.html",
-    "tags": [
-      "html",
-      "理科",
-      "4年"
-    ],
-    "updated": "2025-10-29T10:39:26.215Z"
-  },
-  {
-    "type": "noimg",
-    "title": "小4理科｜あたたかさと生き物（春）［啓林館対応］",
-    "data": "/anki-project/assets/data/sci/noimg/sci4-u1-atatakasa-spring.json",
-    "path": "/anki-project/modules/noimg.html?data=/anki-project/assets/data/sci/noimg/sci4-u1-atatakasa-spring.json&title=%E5%B0%8F4%E7%90%86%E7%A7%91%EF%BD%9C%E3%81%82%E3%81%9F%E3%81%9F%E3%81%8B%E3%81%95%E3%81%A8%E7%94%9F%E3%81%8D%E7%89%A9%EF%BC%88%E6%98%A5%EF%BC%89%EF%BC%BB%E5%95%93%E6%9E%97%E9%A4%A8%E5%AF%BE%E5%BF%9C%EF%BC%BD",
-    "tags": [
-      "noimg",
-      "理科",
-      "4年"
-    ],
-    "updated": "2025-10-29T10:39:26.214Z"
-  },
-  {
-    "type": "noimg",
-    "title": "小4理科｜天気と1日の気温［啓林館対応｜混在形式］",
-    "data": "/anki-project/assets/data/sci/noimg/sci4-u2-tenki-kion.json",
-    "path": "/anki-project/modules/noimg.html?data=/anki-project/assets/data/sci/noimg/sci4-u2-tenki-kion.json&title=%E5%B0%8F4%E7%90%86%E7%A7%91%EF%BD%9C%E5%A4%A9%E6%B0%97%E3%81%A81%E6%97%A5%E3%81%AE%E6%B0%97%E6%B8%A9%EF%BC%BB%E5%95%93%E6%9E%97%E9%A4%A8%E5%AF%BE%E5%BF%9C%EF%BD%9C%E6%B7%B7%E5%9C%A8%E5%BD%A2%E5%BC%8F%EF%BC%BD",
-    "tags": [
-      "noimg",
-      "理科",
-      "4年"
-    ],
-    "updated": "2025-10-29T10:39:26.214Z"
-  },
-  {
-    "type": "noimg",
-    "title": "小4理科｜雨の降り方と水のゆくえ［啓林館対応｜図付き版］",
-    "data": "/anki-project/assets/data/sci/noimg/sci4-u3-ame-mizu.json",
-    "path": "/anki-project/modules/noimg.html?data=/anki-project/assets/data/sci/noimg/sci4-u3-ame-mizu.json&title=%E5%B0%8F4%E7%90%86%E7%A7%91%EF%BD%9C%E9%9B%A8%E3%81%AE%E9%99%8D%E3%82%8A%E6%96%B9%E3%81%A8%E6%B0%B4%E3%81%AE%E3%82%86%E3%81%8F%E3%81%88%EF%BC%BB%E5%95%93%E6%9E%97%E9%A4%A8%E5%AF%BE%E5%BF%9C%EF%BD%9C%E5%9B%B3%E4%BB%98%E3%81%8D%E7%89%88%EF%BC%BD",
-    "tags": [
-      "noimg",
-      "理科",
-      "4年"
-    ],
-    "updated": "2025-10-29T10:39:26.214Z"
-  },
-  {
-    "type": "noimg",
-    "title": "小4理科｜夏の生き物（混在：図あり＋図なし）［啓林館対応］",
-    "data": "/anki-project/assets/data/sci/noimg/sci4-u3-natsu-mixed.json",
-    "path": "/anki-project/modules/noimg.html?data=/anki-project/assets/data/sci/noimg/sci4-u3-natsu-mixed.json&title=%E5%B0%8F4%E7%90%86%E7%A7%91%EF%BD%9C%E5%A4%8F%E3%81%AE%E7%94%9F%E3%81%8D%E7%89%A9%EF%BC%88%E6%B7%B7%E5%9C%A8%EF%BC%9A%E5%9B%B3%E3%81%82%E3%82%8A%EF%BC%8B%E5%9B%B3%E3%81%AA%E3%81%97%EF%BC%89%EF%BC%BB%E5%95%93%E6%9E%97%E9%A4%A8%E5%AF%BE%E5%BF%9C%EF%BC%BD",
-    "tags": [
-      "noimg",
-      "理科",
-      "4年"
-    ],
-    "updated": "2025-10-29T10:39:26.214Z"
-  },
-  {
     "type": "noimg",
     "title": "小4理科｜電気のはたらき（乾電池と回路）［啓林館対応｜混在形式］",
     "data": "/anki-project/assets/data/sci/noimg/sci4-u4-denki.json",
@@ -90,7 +9,7 @@
       "理科",
       "4年"
     ],
-    "updated": "2025-10-29T10:39:26.214Z"
+    "updated": "2025-10-29T12:20:56.090Z"
   },
   {
     "type": "noimg",
@@ -102,7 +21,40 @@
       "理科",
       "4年"
     ],
-    "updated": "2025-10-29T10:39:26.214Z"
+    "updated": "2025-10-29T12:20:56.090Z"
+  },
+  {
+    "type": "html",
+    "title": "小4理科「人の体のつくりと運動」— 基本まとめ（マーカー式） v3",
+    "path": "/anki-project/modules/sci/body_motion.html",
+    "tags": [
+      "html",
+      "理科",
+      "4年"
+    ],
+    "updated": "2025-10-29T12:20:56.090Z"
+  },
+  {
+    "type": "html",
+    "title": "理科教材 一覧",
+    "path": "/anki-project/modules/sci/index.html",
+    "tags": [
+      "html",
+      "理科",
+      "4年"
+    ],
+    "updated": "2025-10-29T12:20:56.090Z"
+  },
+  {
+    "type": "html",
+    "title": "小4理科「水のすがたと温度」— 単元まとめ（図なし・マーカー式） v3",
+    "path": "/anki-project/modules/sci/water_state_unit_combined_v3.html",
+    "tags": [
+      "html",
+      "理科",
+      "4年"
+    ],
+    "updated": "2025-10-29T12:20:56.090Z"
   },
   {
     "type": "noimg",
@@ -114,6 +66,54 @@
       "理科",
       "4年"
     ],
-    "updated": "2025-10-29T10:39:26.213Z"
+    "updated": "2025-10-29T12:20:56.089Z"
+  },
+  {
+    "type": "noimg",
+    "title": "小4理科｜あたたかさと生き物（春）［啓林館対応］",
+    "data": "/anki-project/assets/data/sci/noimg/sci4-u1-atatakasa-spring.json",
+    "path": "/anki-project/modules/noimg.html?data=/anki-project/assets/data/sci/noimg/sci4-u1-atatakasa-spring.json&title=%E5%B0%8F4%E7%90%86%E7%A7%91%EF%BD%9C%E3%81%82%E3%81%9F%E3%81%9F%E3%81%8B%E3%81%95%E3%81%A8%E7%94%9F%E3%81%8D%E7%89%A9%EF%BC%88%E6%98%A5%EF%BC%89%EF%BC%BB%E5%95%93%E6%9E%97%E9%A4%A8%E5%AF%BE%E5%BF%9C%EF%BC%BD",
+    "tags": [
+      "noimg",
+      "理科",
+      "4年"
+    ],
+    "updated": "2025-10-29T12:20:56.089Z"
+  },
+  {
+    "type": "noimg",
+    "title": "小4理科｜天気と1日の気温［啓林館対応｜混在形式］",
+    "data": "/anki-project/assets/data/sci/noimg/sci4-u2-tenki-kion.json",
+    "path": "/anki-project/modules/noimg.html?data=/anki-project/assets/data/sci/noimg/sci4-u2-tenki-kion.json&title=%E5%B0%8F4%E7%90%86%E7%A7%91%EF%BD%9C%E5%A4%A9%E6%B0%97%E3%81%A81%E6%97%A5%E3%81%AE%E6%B0%97%E6%B8%A9%EF%BC%BB%E5%95%93%E6%9E%97%E9%A4%A8%E5%AF%BE%E5%BF%9C%EF%BD%9C%E6%B7%B7%E5%9C%A8%E5%BD%A2%E5%BC%8F%EF%BC%BD",
+    "tags": [
+      "noimg",
+      "理科",
+      "4年"
+    ],
+    "updated": "2025-10-29T12:20:56.089Z"
+  },
+  {
+    "type": "noimg",
+    "title": "小4理科｜雨の降り方と水のゆくえ［啓林館対応｜図付き版］",
+    "data": "/anki-project/assets/data/sci/noimg/sci4-u3-ame-mizu.json",
+    "path": "/anki-project/modules/noimg.html?data=/anki-project/assets/data/sci/noimg/sci4-u3-ame-mizu.json&title=%E5%B0%8F4%E7%90%86%E7%A7%91%EF%BD%9C%E9%9B%A8%E3%81%AE%E9%99%8D%E3%82%8A%E6%96%B9%E3%81%A8%E6%B0%B4%E3%81%AE%E3%82%86%E3%81%8F%E3%81%88%EF%BC%BB%E5%95%93%E6%9E%97%E9%A4%A8%E5%AF%BE%E5%BF%9C%EF%BD%9C%E5%9B%B3%E4%BB%98%E3%81%8D%E7%89%88%EF%BC%BD",
+    "tags": [
+      "noimg",
+      "理科",
+      "4年"
+    ],
+    "updated": "2025-10-29T12:20:56.089Z"
+  },
+  {
+    "type": "noimg",
+    "title": "小4理科｜夏の生き物（混在：図あり＋図なし）［啓林館対応］",
+    "data": "/anki-project/assets/data/sci/noimg/sci4-u3-natsu-mixed.json",
+    "path": "/anki-project/modules/noimg.html?data=/anki-project/assets/data/sci/noimg/sci4-u3-natsu-mixed.json&title=%E5%B0%8F4%E7%90%86%E7%A7%91%EF%BD%9C%E5%A4%8F%E3%81%AE%E7%94%9F%E3%81%8D%E7%89%A9%EF%BC%88%E6%B7%B7%E5%9C%A8%EF%BC%9A%E5%9B%B3%E3%81%82%E3%82%8A%EF%BC%8B%E5%9B%B3%E3%81%AA%E3%81%97%EF%BC%89%EF%BC%BB%E5%95%93%E6%9E%97%E9%A4%A8%E5%AF%BE%E5%BF%9C%EF%BC%BD",
+    "tags": [
+      "noimg",
+      "理科",
+      "4年"
+    ],
+    "updated": "2025-10-29T12:20:56.089Z"
   }
 ]

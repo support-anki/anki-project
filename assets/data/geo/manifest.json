@@ -8,7 +8,7 @@
       "地理",
       "4年"
     ],
-    "updated": "2025-10-29T10:39:26.220Z"
+    "updated": "2025-10-29T12:20:56.096Z"
   },
   {
     "type": "html",
@@ -19,55 +19,7 @@
       "地理",
       "4年"
     ],
-    "updated": "2025-10-29T10:39:26.220Z"
-  },
-  {
-    "type": "img",
-    "title": "九州地方（地図あり・2枚タブ）",
-    "data": "/anki-project/assets/data/geo/mapdata/ge-kyushu.json",
-    "path": "/anki-project/modules/img.html?data=/anki-project/assets/data/geo/mapdata/ge-kyushu.json&title=%E4%B9%9D%E5%B7%9E%E5%9C%B0%E6%96%B9%EF%BC%88%E5%9C%B0%E5%9B%B3%E3%81%82%E3%82%8A%E3%83%BB2%E6%9E%9A%E3%82%BF%E3%83%96%EF%BC%89",
-    "tags": [
-      "img",
-      "地理",
-      "4年"
-    ],
-    "updated": "2025-10-29T10:39:26.219Z"
-  },
-  {
-    "type": "img",
-    "title": "日本の主な山地・山脈・高地（クリックで答え）",
-    "data": "/anki-project/assets/data/geo/mapdata/ge-mountains.json",
-    "path": "/anki-project/modules/img.html?data=/anki-project/assets/data/geo/mapdata/ge-mountains.json&title=%E6%97%A5%E6%9C%AC%E3%81%AE%E4%B8%BB%E3%81%AA%E5%B1%B1%E5%9C%B0%E3%83%BB%E5%B1%B1%E8%84%88%E3%83%BB%E9%AB%98%E5%9C%B0%EF%BC%88%E3%82%AF%E3%83%AA%E3%83%83%E3%82%AF%E3%81%A7%E7%AD%94%E3%81%88%EF%BC%89",
-    "tags": [
-      "img",
-      "地理",
-      "4年"
-    ],
-    "updated": "2025-10-29T10:39:26.219Z"
-  },
-  {
-    "type": "img",
-    "title": "県名と異なる県庁所在地（番号→県庁所在地）",
-    "data": "/anki-project/assets/data/geo/mapdata/geo-kencho.json",
-    "path": "/anki-project/modules/img.html?data=/anki-project/assets/data/geo/mapdata/geo-kencho.json&title=%E7%9C%8C%E5%90%8D%E3%81%A8%E7%95%B0%E3%81%AA%E3%82%8B%E7%9C%8C%E5%BA%81%E6%89%80%E5%9C%A8%E5%9C%B0%EF%BC%88%E7%95%AA%E5%8F%B7%E2%86%92%E7%9C%8C%E5%BA%81%E6%89%80%E5%9C%A8%E5%9C%B0%EF%BC%89",
-    "tags": [
-      "img",
-      "地理",
-      "4年"
-    ],
-    "updated": "2025-10-29T10:39:26.219Z"
-  },
-  {
-    "type": "img",
-    "title": "地図記号を覚えよう（番号→地図記号名）",
-    "data": "/anki-project/assets/data/geo/mapdata/geo-map-symbols.json",
-    "path": "/anki-project/modules/img.html?data=/anki-project/assets/data/geo/mapdata/geo-map-symbols.json&title=%E5%9C%B0%E5%9B%B3%E8%A8%98%E5%8F%B7%E3%82%92%E8%A6%9A%E3%81%88%E3%82%88%E3%81%86%EF%BC%88%E7%95%AA%E5%8F%B7%E2%86%92%E5%9C%B0%E5%9B%B3%E8%A8%98%E5%8F%B7%E5%90%8D%EF%BC%89",
-    "tags": [
-      "img",
-      "地理",
-      "4年"
-    ],
-    "updated": "2025-10-29T10:39:26.219Z"
+    "updated": "2025-10-29T12:20:56.096Z"
   },
   {
     "type": "img",
@@ -79,7 +31,7 @@
       "地理",
       "4年"
     ],
-    "updated": "2025-10-29T10:39:26.219Z"
+    "updated": "2025-10-29T12:20:56.095Z"
   },
   {
     "type": "img",
@@ -91,7 +43,7 @@
       "地理",
       "4年"
     ],
-    "updated": "2025-10-29T10:39:26.219Z"
+    "updated": "2025-10-29T12:20:56.095Z"
   },
   {
     "type": "noimg",
@@ -103,7 +55,7 @@
       "地理",
       "4年"
     ],
-    "updated": "2025-10-29T10:39:26.219Z"
+    "updated": "2025-10-29T12:20:56.095Z"
   },
   {
     "type": "noimg",
@@ -115,7 +67,7 @@
       "地理",
       "4年"
     ],
-    "updated": "2025-10-29T10:39:26.219Z"
+    "updated": "2025-10-29T12:20:56.095Z"
   },
   {
     "type": "noimg",
@@ -127,6 +79,54 @@
       "地理",
       "4年"
     ],
-    "updated": "2025-10-29T10:39:26.219Z"
+    "updated": "2025-10-29T12:20:56.095Z"
+  },
+  {
+    "type": "img",
+    "title": "九州地方（地図あり・2枚タブ）",
+    "data": "/anki-project/assets/data/geo/mapdata/ge-kyushu.json",
+    "path": "/anki-project/modules/img.html?data=/anki-project/assets/data/geo/mapdata/ge-kyushu.json&title=%E4%B9%9D%E5%B7%9E%E5%9C%B0%E6%96%B9%EF%BC%88%E5%9C%B0%E5%9B%B3%E3%81%82%E3%82%8A%E3%83%BB2%E6%9E%9A%E3%82%BF%E3%83%96%EF%BC%89",
+    "tags": [
+      "img",
+      "地理",
+      "4年"
+    ],
+    "updated": "2025-10-29T12:20:56.094Z"
+  },
+  {
+    "type": "img",
+    "title": "日本の主な山地・山脈・高地（クリックで答え）",
+    "data": "/anki-project/assets/data/geo/mapdata/ge-mountains.json",
+    "path": "/anki-project/modules/img.html?data=/anki-project/assets/data/geo/mapdata/ge-mountains.json&title=%E6%97%A5%E6%9C%AC%E3%81%AE%E4%B8%BB%E3%81%AA%E5%B1%B1%E5%9C%B0%E3%83%BB%E5%B1%B1%E8%84%88%E3%83%BB%E9%AB%98%E5%9C%B0%EF%BC%88%E3%82%AF%E3%83%AA%E3%83%83%E3%82%AF%E3%81%A7%E7%AD%94%E3%81%88%EF%BC%89",
+    "tags": [
+      "img",
+      "地理",
+      "4年"
+    ],
+    "updated": "2025-10-29T12:20:56.094Z"
+  },
+  {
+    "type": "img",
+    "title": "県名と異なる県庁所在地（番号→県庁所在地）",
+    "data": "/anki-project/assets/data/geo/mapdata/geo-kencho.json",
+    "path": "/anki-project/modules/img.html?data=/anki-project/assets/data/geo/mapdata/geo-kencho.json&title=%E7%9C%8C%E5%90%8D%E3%81%A8%E7%95%B0%E3%81%AA%E3%82%8B%E7%9C%8C%E5%BA%81%E6%89%80%E5%9C%A8%E5%9C%B0%EF%BC%88%E7%95%AA%E5%8F%B7%E2%86%92%E7%9C%8C%E5%BA%81%E6%89%80%E5%9C%A8%E5%9C%B0%EF%BC%89",
+    "tags": [
+      "img",
+      "地理",
+      "4年"
+    ],
+    "updated": "2025-10-29T12:20:56.094Z"
+  },
+  {
+    "type": "img",
+    "title": "地図記号を覚えよう（番号→地図記号名）",
+    "data": "/anki-project/assets/data/geo/mapdata/geo-map-symbols.json",
+    "path": "/anki-project/modules/img.html?data=/anki-project/assets/data/geo/mapdata/geo-map-symbols.json&title=%E5%9C%B0%E5%9B%B3%E8%A8%98%E5%8F%B7%E3%82%92%E8%A6%9A%E3%81%88%E3%82%88%E3%81%86%EF%BC%88%E7%95%AA%E5%8F%B7%E2%86%92%E5%9C%B0%E5%9B%B3%E8%A8%98%E5%8F%B7%E5%90%8D%EF%BC%89",
+    "tags": [
+      "img",
+      "地理",
+      "4年"
+    ],
+    "updated": "2025-10-29T12:20:56.094Z"
   }
 ]
