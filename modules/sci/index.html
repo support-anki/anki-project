@@ -21,27 +21,28 @@
     if (!res.ok) throw new Error('HTTP ' + res.status);
     const data = await res.json();
 
-    // manifest が配列であることを保証
     const items = Array.isArray(data) ? data : (data.modules || []);
     if (!items.length) {
       list.innerHTML = `<div class="card">教材データがありません。<br><code>${manifestURL}</code></div>`;
       return;
     }
 
-    // path / url / data のどれでも対応
-    const resolveLink = it => {
+    // ✅ 修正版：すでに絶対URL or 先頭「/」なら、そのまま使う
+    const resolveLink = (it) => {
       const raw = it.path || it.url || it.data || '#';
-      return raw.startsWith('http') ? raw : '/anki-project' + raw;
+      if (!raw) return '#';
+      if (/^https?:\/\//.test(raw)) return raw;  // 絶対URL
+      if (raw.startsWith('/')) return raw;       // 先頭スラッシュ = サイト内の絶対パス
+      return '/anki-project/' + raw.replace(/^\.?\//, ''); // 相対 → /anki-project/ を付与
     };
 
-    // 1件ずつカード化
     for (const m of items) {
       const a = document.createElement('a');
       a.className = 'card';
       a.href = resolveLink(m);
-      const desc = m.desc || (m.type === 'marker' ? '図つき穴埋め・マーカー式' :
-                              m.type === 'noimg' ? '図なし・文章穴埋め' :
-                              '教材ページを開く');
+      const desc = m.desc || (m.type === 'marker' ? '図つき穴埋め・マーカー式'
+                        : m.type === 'noimg' ? '図なし・文章穴埋め'
+                        : '教材ページを開く');
       a.innerHTML = `<h2>${m.title || '(無題)'}</h2><p>${desc}</p>`;
       list.appendChild(a);
     }
@@ -53,3 +54,4 @@
 </script>
 </body>
 </html>
+
