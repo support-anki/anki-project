@@ -1,50 +1,54 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="ja">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <meta name="robots" content="noindex,nofollow" />
-  <title>地理教材 一覧</title>
-  <link rel="icon" href="/anki-project/assets/img/favicon.png" type="image/png">
-  <link rel="stylesheet" href="../../assets/css/style.css" />
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="robots" content="noindex,nofollow">
+<title>🌏 地理教材 一覧</title>
+<link rel="icon" href="/anki-project/assets/img/favicon.png" type="image/png">
+<link rel="stylesheet" href="/anki-project/assets/css/style.css">
+<style>
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:12px;margin:20px 0}
+.card{border:1px solid #8884;border-radius:14px;padding:12px;text-decoration:none;color:inherit;background:#fff1}
+</style>
 </head>
 <body>
 <header class="site"><h1>🌏 地理教材 一覧</h1></header>
-<main class="grid" id="list"></main>
+<main id="list" class="grid"></main>
+<a class="home-btn" href="/anki-project/" aria-label="トップページへ">🏠 トップ</a>
 
 <script>
-(async () => {
-  // ✅ location.hrefを基準に相対パスでmanifestを取得
-  const manifestUrl = new URL('../../assets/data/geo/manifest.json', location.href);
-  const list = document.getElementById('list');
+const subject = 'geo';
+const MANIFEST = `/anki-project/assets/data/${subject}/manifest.json`;
+const BASE = `/anki-project/modules/${subject}/`;
 
-  try {
-    const res = await fetch(manifestUrl, { cache: 'no-store' });
-    if (!res.ok) throw new Error(`HTTP ${res.status}`);
-    const data = await res.json();
+const fix = (p)=>{
+  if(!p)return'#';
+  if(p.startsWith('/'))return p;
+  if(p.startsWith('../'))return BASE + p.replace(/^\.\.\//,'');
+  if(p.startsWith('./'))return BASE + p.replace(/^\.\//,'');
+  return BASE + p;
+};
 
-    if (!data.modules?.length) {
-      list.innerHTML = '<div class="card">manifest.json に modules がありません。</div>';
-      return;
-    }
-
-    data.modules.forEach(m => {
-      const a = document.createElement('a');
-      a.className = 'card';
-      a.href = m.path;
-      a.innerHTML = `<h2>${m.title}</h2><p>タップで表示／復習機能あり</p>`;
-      list.appendChild(a);
+(async()=>{
+  const list=document.getElementById('list');
+  try{
+    const r=await fetch(MANIFEST,{cache:'no-store'});
+    if(!r.ok)throw new Error(r.statusText);
+    const j=await r.json();
+    const arr=Array.isArray(j)?j:(j.items||j.entries||[]);
+    if(!arr.length){list.innerHTML='<div class="card">manifest.json が空です。</div>';return;}
+    arr.forEach(m=>{
+      const a=document.createElement('a');
+      a.className='card';
+      a.href=fix(m.path||m.url);
+      a.innerHTML=`<h2>${m.title||'(無題)'}</h2><p>${m.note||m.desc||'タップで表示／復習機能あり'}</p>`;
+      list.append(a);
     });
-  } catch (e) {
-    list.innerHTML = `<div class="card">manifest.json を読めませんでした：<br><code>${manifestUrl}</code><br><small>${String(e)}</small></div>`;
+  }catch(e){
+    list.innerHTML=`<div class="card">manifest読込エラー：<code>${MANIFEST}</code><br>${e}</div>`;
   }
 })();
 </script>
-<a class="home-btn" href="/anki-project/" aria-label="トップページへ">🏠 トップ</a>
 </body>
 </html>
-
-
-
-
-
