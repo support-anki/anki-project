@@ -1,17 +1,5 @@
 [
   {
-    "type": "noimg",
-    "title": "小4理科 第8回 流水と地形（完全版・穴埋め中心）",
-    "data": "/anki-project/assets/data/sci/noimg/sci8-ryusui.json",
-    "path": "/anki-project/modules/noimg.html?data=/anki-project/assets/data/sci/noimg/sci8-ryusui.json&title=%E5%B0%8F4%E7%90%86%E7%A7%91%20%E7%AC%AC8%E5%9B%9E%20%E6%B5%81%E6%B0%B4%E3%81%A8%E5%9C%B0%E5%BD%A2%EF%BC%88%E5%AE%8C%E5%85%A8%E7%89%88%E3%83%BB%E7%A9%B4%E5%9F%8B%E3%82%81%E4%B8%AD%E5%BF%83%EF%BC%89",
-    "tags": [
-      "noimg",
-      "理科",
-      "4年"
-    ],
-    "updated": "2025-10-29T05:45:45.415Z"
-  },
-  {
     "type": "html",
     "title": "小4理科「人の体のつくりと運動」— 基本まとめ（マーカー式） v3",
     "path": "/anki-project/modules/sci/body_motion.html",
@@ -20,7 +8,7 @@
       "理科",
       "4年"
     ],
-    "updated": "2025-10-29T05:45:45.415Z"
+    "updated": "2025-10-29T05:53:49.332Z"
   },
   {
     "type": "html",
@@ -31,7 +19,7 @@
       "理科",
       "4年"
     ],
-    "updated": "2025-10-29T05:45:45.415Z"
+    "updated": "2025-10-29T05:53:49.332Z"
   },
   {
     "type": "html",
@@ -42,19 +30,7 @@
       "理科",
       "4年"
     ],
-    "updated": "2025-10-29T05:45:45.415Z"
-  },
-  {
-    "type": "noimg",
-    "title": "小4理科 第7回 もののとけ方（2）",
-    "data": "/anki-project/assets/data/sci/noimg/ge7-tokekata2.json",
-    "path": "/anki-project/modules/noimg.html?data=/anki-project/assets/data/sci/noimg/ge7-tokekata2.json&title=%E5%B0%8F4%E7%90%86%E7%A7%91%20%E7%AC%AC7%E5%9B%9E%20%E3%82%82%E3%81%AE%E3%81%AE%E3%81%A8%E3%81%91%E6%96%B9%EF%BC%882%EF%BC%89",
-    "tags": [
-      "noimg",
-      "理科",
-      "4年"
-    ],
-    "updated": "2025-10-29T05:45:45.414Z"
+    "updated": "2025-10-29T05:53:49.332Z"
   },
   {
     "type": "noimg",
@@ -66,7 +42,7 @@
       "理科",
       "4年"
     ],
-    "updated": "2025-10-29T05:45:45.414Z"
+    "updated": "2025-10-29T05:53:49.331Z"
   },
   {
     "type": "noimg",
@@ -78,7 +54,7 @@
       "理科",
       "4年"
     ],
-    "updated": "2025-10-29T05:45:45.414Z"
+    "updated": "2025-10-29T05:53:49.331Z"
   },
   {
     "type": "noimg",
@@ -90,7 +66,7 @@
       "理科",
       "4年"
     ],
-    "updated": "2025-10-29T05:45:45.414Z"
+    "updated": "2025-10-29T05:53:49.331Z"
   },
   {
     "type": "noimg",
@@ -102,7 +78,7 @@
       "理科",
       "4年"
     ],
-    "updated": "2025-10-29T05:45:45.414Z"
+    "updated": "2025-10-29T05:53:49.331Z"
   },
   {
     "type": "noimg",
@@ -114,6 +90,30 @@
       "理科",
       "4年"
     ],
-    "updated": "2025-10-29T05:45:45.414Z"
+    "updated": "2025-10-29T05:53:49.331Z"
+  },
+  {
+    "type": "noimg",
+    "title": "小4理科 第8回 流水と地形（完全版・穴埋め中心）",
+    "data": "/anki-project/assets/data/sci/noimg/sci8-ryusui.json",
+    "path": "/anki-project/modules/noimg.html?data=/anki-project/assets/data/sci/noimg/sci8-ryusui.json&title=%E5%B0%8F4%E7%90%86%E7%A7%91%20%E7%AC%AC8%E5%9B%9E%20%E6%B5%81%E6%B0%B4%E3%81%A8%E5%9C%B0%E5%BD%A2%EF%BC%88%E5%AE%8C%E5%85%A8%E7%89%88%E3%83%BB%E7%A9%B4%E5%9F%8B%E3%82%81%E4%B8%AD%E5%BF%83%EF%BC%89",
+    "tags": [
+      "noimg",
+      "理科",
+      "4年"
+    ],
+    "updated": "2025-10-29T05:53:49.331Z"
+  },
+  {
+    "type": "noimg",
+    "title": "小4理科 第7回 もののとけ方（2）",
+    "data": "/anki-project/assets/data/sci/noimg/ge7-tokekata2.json",
+    "path": "/anki-project/modules/noimg.html?data=/anki-project/assets/data/sci/noimg/ge7-tokekata2.json&title=%E5%B0%8F4%E7%90%86%E7%A7%91%20%E7%AC%AC7%E5%9B%9E%20%E3%82%82%E3%81%AE%E3%81%AE%E3%81%A8%E3%81%91%E6%96%B9%EF%BC%882%EF%BC%89",
+    "tags": [
+      "noimg",
+      "理科",
+      "4年"
+    ],
+    "updated": "2025-10-29T05:53:49.330Z"
   }
 ]
