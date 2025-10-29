@@ -22,7 +22,7 @@ jobs:
         with: { node-version: '20' }
 
       - name: Build subject manifests
-        run: node scripts/update_manifests.js
+        run: node scripts/update_manifest.js
 
       - name: Commit & push
         run: |
