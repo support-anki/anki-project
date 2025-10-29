@@ -1,16 +1,14 @@
-name: Update subject manifests (robust)
+name: Update subject manifests
 
 on:
+  workflow_dispatch:  # ← 手動実行ボタンを出す
   push:
     paths:
-      # 教材データの変更で起動
       - 'anki-project/assets/data/**/marker/**.json'
       - 'anki-project/assets/data/**/noimg/**.json'
       - 'anki-project/modules/**/**.html'
-      # スクリプト変更で起動（どの場所・どの名前でも拾う）
       - 'scripts/**.js'
       - 'anki-project/scripts/**.js'
-  workflow_dispatch:
 
 permissions:
   contents: write
@@ -19,23 +17,14 @@ jobs:
   update:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout
-        uses: actions/checkout@v4
+      - uses: actions/checkout@v4
         with: { fetch-depth: 0 }
 
-      - name: Setup Node
-        uses: actions/setup-node@v4
+      - uses: actions/setup-node@v4
         with: { node-version: '20' }
 
-      - name: Debug: show tree
-        run: |
-          echo "[pwd] $(pwd)"
-          echo "[ls .]"; ls -la
-          echo "[ls scripts]"; ls -la scripts || true
-          echo "[ls anki-project/scripts]"; ls -la anki-project/scripts || true
-
-      # ★ ここがポイント：どの配置/ファイル名でも自動検出して実行
-      - name: Build subject manifests (auto-detect path)
+      # どの場所・名前でも本体を自動検出して実行
+      - name: Build subject manifests (auto-detect)
         run: |
           set -e
           CANDIDATES=(
@@ -49,22 +38,16 @@ jobs:
             if [ -f "$f" ]; then TARGET="$f"; break; fi
           done
           if [ -z "$TARGET" ]; then
-            echo "::error::update_manifest.js が見つかりません（scripts/ または anki-project/scripts/ を確認してください）。"
+            echo "::error::update_manifest.js が見つかりません（scripts/ または anki-project/scripts/ を確認）"
             exit 1
           fi
           echo "[run] node $TARGET"
           node "$TARGET"
-
-      - name: Debug: list written manifests
-        run: |
-          echo "---- manifests written ----"
-          find anki-project/assets/data -type f -name manifest.json -maxdepth 6 -print || true
 
       - name: Commit & push
         run: |
           git config user.name  "github-actions"
           git config user.email "actions@github.com"
           git add anki-project/assets/data/**/manifest.json || true
-          git status
           git diff --quiet && echo "No changes" || git commit -m "chore: auto-update subject manifests"
           git push
