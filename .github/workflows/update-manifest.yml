@@ -44,10 +44,25 @@ jobs:
           echo "[run] node $TARGET"
           node "$TARGET"
 
-      - name: Commit & push
-        run: |
-          git config user.name  "github-actions"
-          git config user.email "actions@github.com"
-          git add anki-project/assets/data/**/manifest.json || true
-          git diff --quiet && echo "No changes" || git commit -m "chore: auto-update subject manifests"
-          git push
+     - name: Commit & push (robust)
+  run: |
+    set -e
+    git config user.name  "github-actions"
+    git config user.email "actions@github.com"
+
+    # 1) 生成物の場所：assets/data/**/manifest.json （存在確認してから add）
+    if compgen -G "assets/data/**/manifest.json" > /dev/null; then
+      git add -A assets/data         # 新規ディレクトリ(jpnなど)も含めて丸ごと
+    else
+      echo "[info] assets/data/**/manifest.json が見つかりません（生成されなかった可能性）"
+    fi
+
+    git status
+
+    # 2) ステージング済みの差分があるかで commit 実行可否を判定
+    if git diff --cached --quiet; then
+      echo "No changes"
+    else
+      git commit -m "chore: auto-update subject manifests"
+      git push
+    fi
