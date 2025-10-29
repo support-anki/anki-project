@@ -110,6 +110,9 @@
   if(q.get("shuffle")==="false") document.getElementById("shuffleInput").checked = false;
   if(q.get("need_review")==="true") document.getElementById("needReview").checked = true;
   if(q.get("only_low")==="true") document.getElementById("onlyLow").checked = true;
+  <!-- ファイル末尾：JSの読み込みクエリを更新（キャッシュ無効化のため） -->
+<script src="/anki-project/trainer/assets/js/quiz-engine.js?v=2"></script>
+
 
   // 自動開始（auto=1）
   if(q.get("auto")==="1") start();
