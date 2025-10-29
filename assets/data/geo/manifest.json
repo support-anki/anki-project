@@ -1,5 +1,27 @@
 [
   {
+    "type": "html",
+    "title": "九州地方 地図学習",
+    "path": "/anki-project/modules/geo/geo-kyushu.html",
+    "tags": [
+      "html",
+      "地理",
+      "4年"
+    ],
+    "updated": "2025-10-29T08:28:33.993Z"
+  },
+  {
+    "type": "html",
+    "title": "🌏 地理教材 一覧",
+    "path": "/anki-project/modules/geo/index.html",
+    "tags": [
+      "html",
+      "地理",
+      "4年"
+    ],
+    "updated": "2025-10-29T08:28:33.993Z"
+  },
+  {
     "type": "noimg",
     "title": "小4社会 第7回 九州地方（図なし）",
     "data": "/anki-project/assets/data/geo/noimg/ge7-kyushu.json",
@@ -9,7 +31,7 @@
       "地理",
       "4年"
     ],
-    "updated": "2025-10-29T07:56:33.848Z"
+    "updated": "2025-10-29T08:28:33.992Z"
   },
   {
     "type": "noimg",
@@ -21,28 +43,6 @@
       "地理",
       "4年"
     ],
-    "updated": "2025-10-29T07:56:33.848Z"
-  },
-  {
-    "type": "html",
-    "title": "九州地方 地図学習",
-    "path": "/anki-project/modules/geo/geo-kyushu.html",
-    "tags": [
-      "html",
-      "地理",
-      "4年"
-    ],
-    "updated": "2025-10-29T07:56:33.848Z"
-  },
-  {
-    "type": "html",
-    "title": "🌏 地理教材 一覧",
-    "path": "/anki-project/modules/geo/index.html",
-    "tags": [
-      "html",
-      "地理",
-      "4年"
-    ],
-    "updated": "2025-10-29T07:56:33.848Z"
+    "updated": "2025-10-29T08:28:33.992Z"
   }
 ]
