@@ -49,6 +49,8 @@
   .imgmask{position:relative;max-width:720px;margin:8px 0}
   .imgmask img{width:100%;height:auto;border-radius:12px;border:1px solid var(--border)}
   .mask.abs{position:absolute;display:flex;align-items:center;justify-content:center}
+  .mask.abs.dragging{opacity:.9;outline:2px dashed #ef4444}
+  .hud{position:fixed;right:10px;bottom:10px;z-index:99;padding:8px 10px;background:rgba(0,0,0,.6);color:#fff;font:12px/1.4 system-ui,Segoe UI;border-radius:8px}
 </style>
 </head>
 <body>
@@ -246,16 +248,15 @@
   <div class="card qcard" data-qid="q2z">
     <p class="qtitle">② 図を見て答えよう（関節の名前）</p>
     <div class="qbody">
-      <div class="imgmask">
+      <div class="imgmask" id="imgmask">
         <img src="/anki-project/assets/img/sci/4rika_body_all.webp" alt="人の体のつくりと運動 図" />
-        <!-- 画像上にマスク（%指定でレスポンシブ） ※元画像1440×2200を基準に換算 -->
-        <!-- ★ 座標を精密補正（5点） -->
-        <span class="mask abs" data-id="z-a1" data-answer="かた" style="left:11.0%; top:13.0%; width:17.6%; height:2.7%;"></span>
-        <span class="mask abs" data-id="z-a2" data-answer="ひじ" style="left:63.6%; top:19.1%; width:18.3%; height:2.7%;"></span>
-        <span class="mask abs" data-id="z-a3" data-answer="ひざ" style="left:67.8%; top:27.6%; width:18.3%; height:2.7%;"></span>
+        <!-- 画像上にマスク（%指定でレスポンシブ）。下記は初期値。必要なら開発モードで調整 -->
+        <span class="mask abs" data-id="z-a1" data-answer="かた" style="left:12.2%; top:12.7%; width:16.8%; height:2.7%;"></span>
+        <span class="mask abs" data-id="z-a2" data-answer="ひじ" style="left:65.1%; top:18.9%; width:17.8%; height:2.7%;"></span>
+        <span class="mask abs" data-id="z-a3" data-answer="ひざ" style="left:68.7%; top:27.1%; width:17.8%; height:2.7%;"></span>
         <!-- ア・イの図（下部） -->
-        <span class="mask abs" data-id="z-a4" data-answer="きん肉" style="left:51.0%; top:60.2%; width:12.6%; height:2.4%;"></span>
-        <span class="mask abs" data-id="z-a5" data-answer="ほね" style="left:28.8%; top:64.6%; width:10.6%; height:2.4%;"></span>
+        <span class="mask abs" data-id="z-a4" data-answer="きん肉" style="left:50.7%; top:59.9%; width:12.8%; height:2.4%;"></span>
+        <span class="mask abs" data-id="z-a5" data-answer="ほね" style="left:29.1%; top:64.0%; width:10.8%; height:2.4%;"></span>
       </div>
       <p class="note">ヒント：肩・ひじ・ひざ／ア=きん肉、イ=ほね。</p>
     </div>
@@ -355,85 +356,111 @@
 
   // Shortcuts
   document.addEventListener('keydown',(e)=>{
+    // Devモードのキーが優先されるのでここではH/Rのみ
     if(e.key==='h' || e.key==='H'){ document.querySelectorAll('.mask').forEach(el=>{ if(!el.classList.contains('revealed')){ const h=el.dataset.hint; if(h) el.textContent=h; }}); }
     if(e.key==='r' || e.key==='R'){ document.getElementById('reset-all').click(); }
   });
-// --- Mask Dev Mode ----------------------------------------------------
-// ?dev=1 で起動 or Alt+D でトグル。クリックで対象選択、矢印で微調整。
-// ←→↑↓: 0.1% / Shift+矢印: 1px / Alt+S: 現在値をconsole出力
-(function(){
-  const params=new URLSearchParams(location.search);
-  let DEV=params.get('dev')==='1';
-  let cur=null, hud=null;
 
-  function px2pct(px, base){ return (px/base*100); }
-  function pct2num(s){ return parseFloat(String(s).replace('%','')); }
+  // --- Mask Dev Mode ----------------------------------------------------
+  // ?dev=1 でON or Alt+D でトグル。
+  // クリックで選択、ドラッグ移動OK。Alt+矢印=0.1% / Shift+Alt+矢印=1px
+  // Alt+S: 選択の現在値をconsole出力、Alt+C: 全マスクの現在値をクリップボード
+  (function(){
+    const params=new URLSearchParams(location.search);
+    let DEV=params.get('dev')==='1';
+    let cur=null, hud=null, dragging=false, start={x:0,y:0,l:0,t:0}, box=null;
 
-  function ensureHUD(){
-    if(hud) return;
-    hud=document.createElement('div');
-    Object.assign(hud.style,{
-      position:'fixed', right:'10px', bottom:'10px', zIndex:99,
-      padding:'8px 10px', background:'rgba(0,0,0,.6)', color:'#fff',
-      font:'12px/1.4 system-ui,Segoe UI', borderRadius:'8px'
-    });
-    document.body.appendChild(hud);
-  }
+    function pct(v){ return parseFloat(String(v).replace('%',''))||0; }
+    function px2pct(px, base){ return (px/base*100); }
 
-  function setHUD(txt){ ensureHUD(); hud.textContent='[Mask Dev] '+txt; }
-
-  function select(el){
-    if(cur) cur.style.outline='';
-    cur=el; if(!cur) return;
-    cur.style.outline='2px dashed #ef4444';
-    setHUD(`id=${cur.dataset.id}  left=${cur.style.left} top=${cur.style.top}  w=${cur.style.width} h=${cur.style.height}`);
-  }
-
-  function move(deltaPctX, deltaPctY){
-    if(!cur) return;
-    const l=pct2num(cur.style.left||'0%') + deltaPctX;
-    const t=pct2num(cur.style.top ||'0%') + deltaPctY;
-    cur.style.left=`${l}%`; cur.style.top=`${t}%`;
-    setHUD(`id=${cur.dataset.id}  left=${cur.style.left} top=${cur.style.top}  w=${cur.style.width} h=${cur.style.height}`);
-  }
-
-  function movePx(dx,dy){
-    if(!cur) return;
-    const box=cur.parentElement.getBoundingClientRect();
-    move(px2pct(dx, box.width), px2pct(dy, box.height));
-  }
-
-  function toggleDev(){
-    DEV=!DEV;
-    if(!DEV){ if(hud){ hud.remove(); hud=null; } if(cur){ cur.style.outline=''; cur=null; } return; }
-    setHUD('ON クリックで対象選択 / 矢印=0.1%  Shift+矢印=1px  Alt+S=ログ');
-  }
-
-  document.addEventListener('keydown',(e)=>{
-    if(e.altKey && e.key.toLowerCase()==='d'){ toggleDev(); }
-    if(!DEV || !cur) return;
-    const s=0.1; // %
-    if(e.key==='ArrowLeft'){ e.preventDefault(); e.shiftKey ? movePx(-1,0) : move(-s,0); }
-    if(e.key==='ArrowRight'){ e.preventDefault(); e.shiftKey ? movePx(1,0) : move(s,0); }
-    if(e.key==='ArrowUp'){ e.preventDefault(); e.shiftKey ? movePx(0,-1) : move(0,-s); }
-    if(e.key==='ArrowDown'){ e.preventDefault(); e.shiftKey ? movePx(0,1) : move(0,s); }
-    if(e.altKey && e.key.toLowerCase()==='s'){
-      console.log(`[${cur.dataset.id}] left:${cur.style.left}; top:${cur.style.top}; width:${cur.style.width}; height:${cur.style.height};`);
-      setHUD('現在値を console に出力しました');
+    function ensureHUD(){
+      if(hud) return;
+      hud=document.createElement('div');
+      hud.className='hud';
+      hud.innerHTML='[Mask Dev] OFF';
+      document.body.appendChild(hud);
     }
-  });
+    function setHUD(txt){ ensureHUD(); hud.textContent='[Mask Dev] '+txt; }
 
-  document.addEventListener('click',(e)=>{
-    if(!DEV) return;
-    const m=e.target.closest('.mask.abs'); if(!m) return;
-    e.preventDefault(); select(m);
-  });
+    function select(el){
+      if(cur) cur.classList.remove('dragging');
+      cur=el; if(!cur){ setHUD('ON'); return; }
+      cur.classList.add('dragging');
+      setHUD(`ON  id=${cur.dataset.id}  left=${cur.style.left} top=${cur.style.top}  w=${cur.style.width} h=${cur.style.height}  | Alt+矢印=0.1% / Shift+Alt+矢印=1px / Alt+S=ログ / Alt+C=コピー`);
+    }
 
-  // URLで ?dev=1 のとき自動ON
-  if(DEV) toggleDev();
-})();
+    function toggleDev(){
+      DEV=!DEV; ensureHUD();
+      if(!DEV){ if(cur){ cur.classList.remove('dragging'); cur=null; } setHUD('OFF'); }
+      else setHUD('ON クリックで選択＆ドラッグ可');
+    }
+
+    // ドラッグ移動
+    document.addEventListener('pointerdown',(e)=>{
+      if(!DEV) return;
+      const m=e.target.closest('.mask.abs'); if(!m) return;
+      e.preventDefault(); select(m);
+      dragging=true; box=m.parentElement.getBoundingClientRect();
+      start={x:e.clientX,y:e.clientY, l:pct(m.style.left), t:pct(m.style.top)};
+      m.setPointerCapture(e.pointerId);
+    });
+    document.addEventListener('pointermove',(e)=>{
+      if(!DEV || !dragging || !cur) return;
+      const dx=e.clientX-start.x, dy=e.clientY-start.y;
+      cur.style.left=(start.l + px2pct(dx, box.width))+'%';
+      cur.style.top =(start.t + px2pct(dy, box.height))+'%';
+      setHUD(`id=${cur.dataset.id} left=${cur.style.left} top=${cur.style.top} w=${cur.style.width} h=${cur.style.height}`);
+    });
+    document.addEventListener('pointerup',(e)=>{ if(!DEV) return; dragging=false; });
+
+    // キー操作（documentに直接。DevToolsにフォーカスがあっても拾えることが多い）
+    window.addEventListener('keydown',(e)=>{
+      if(e.altKey && e.key.toLowerCase()==='d'){ e.preventDefault(); toggleDev(); return; }
+      if(!DEV || !cur) return;
+
+      // Alt+S: 選択ログ
+      if(e.altKey && e.key.toLowerCase()==='s'){
+        console.log(`[${cur.dataset.id}] left:${cur.style.left}; top:${cur.style.top}; width:${cur.style.width}; height:${cur.style.height};`);
+        setHUD('現在値を console に出力しました');
+        return;
+      }
+      // Alt+C: 全コピー
+      if(e.altKey && e.key.toLowerCase()==='c'){
+        const text=[...document.querySelectorAll('.mask.abs')].map(el=>`[${el.dataset.id}] left:${el.style.left}; top:${el.style.top}; width:${el.style.width}; height:${el.style.height};`).join('\n');
+        if(navigator.clipboard) navigator.clipboard.writeText(text);
+        console.log(text);
+        setHUD('全マスクの値をコピー／ログしました');
+        return;
+      }
+
+      if(!e.altKey) return; // 以降はAlt併用
+
+      const stepPct=0.1;
+      const movePct=(dx,dy)=>{
+        cur.style.left=(pct(cur.style.left)+dx)+'%';
+        cur.style.top =(pct(cur.style.top)+dy)+'%';
+        setHUD(`id=${cur.dataset.id} left=${cur.style.left} top=${cur.style.top} w=${cur.style.width} h=${cur.style.height}`);
+      };
+      const movePx=(dx,dy)=>{
+        const rect=cur.parentElement.getBoundingClientRect();
+        movePct(px2pct(dx,rect.width), px2pct(dy,rect.height));
+      };
+
+      if(e.key==='ArrowLeft'){ e.preventDefault(); e.shiftKey? movePx(-1,0): movePct(-stepPct,0); }
+      if(e.key==='ArrowRight'){ e.preventDefault(); e.shiftKey? movePx(+1,0): movePct(+stepPct,0); }
+      if(e.key==='ArrowUp'){ e.preventDefault(); e.shiftKey? movePx(0,-1): movePct(0,-stepPct); }
+      if(e.key==='ArrowDown'){ e.preventDefault(); e.shiftKey? movePx(0,+1): movePct(0,+stepPct); }
+    }, {capture:true});
+
+    // クリック選択（通常クリックでも選べる）
+    document.addEventListener('click',(e)=>{
+      if(!DEV) return;
+      const m=e.target.closest('.mask.abs'); if(!m) return;
+      e.preventDefault(); select(m);
+    });
+
+    if(DEV) toggleDev(); // URL ?dev=1 で自動ON
+  })();
 </script>
 </body>
 </html>
-
-
