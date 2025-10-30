@@ -40,33 +40,38 @@
 
     {
       "id": "(7)",
-      "q": "!img:/anki-project/assets/img/sci/ri4-ge9-graph.webp<br>グラフから、ばねAの自然長は何cm？",
+      "q": "【グラフあり】下のグラフを見て答えよう。ばねAの自然長は何cm？",
       "answers": ["20"],
-      "tags": ["理科","グラフ読み取り","小4"]
+      "tags": ["理科","グラフ読み取り","小4"],
+      "img": "/anki-project/assets/img/sci/ri4-ge9-graph.webp"
     },
     {
       "id": "(8)",
-      "q": "!img:/anki-project/assets/img/sci/ri4-ge9-graph.webp<br>グラフから、ばねBの自然長は何cm？",
+      "q": "【グラフあり】下のグラフを見て答えよう。ばねBの自然長は何cm？",
       "answers": ["10"],
-      "tags": ["理科","グラフ読み取り","小4"]
+      "tags": ["理科","グラフ読み取り","小4"],
+      "img": "/anki-project/assets/img/sci/ri4-ge9-graph.webp"
     },
     {
       "id": "(9)",
-      "q": "!img:/anki-project/assets/img/sci/ri4-ge9-graph.webp<br>重さ50gのとき、ばねAののびは何cm？",
+      "q": "【グラフあり】重さ50gのとき、ばねAののびは何cm？",
       "answers": ["20"],
-      "tags": ["理科","ばね","グラフ","小4"]
+      "tags": ["理科","ばね","グラフ","小4"],
+      "img": "/anki-project/assets/img/sci/ri4-ge9-graph.webp"
     },
     {
       "id": "(10)",
-      "q": "!img:/anki-project/assets/img/sci/ri4-ge9-graph.webp<br>重さ50gのとき、ばねAの全長は何cm？",
+      "q": "【グラフあり】重さ50gのとき、ばねAの全長は何cm？",
       "answers": ["40"],
-      "tags": ["理科","ばね","全長","小4"]
+      "tags": ["理科","ばね","全長","小4"],
+      "img": "/anki-project/assets/img/sci/ri4-ge9-graph.webp"
     },
     {
       "id": "(11)",
-      "q": "!img:/anki-project/assets/img/sci/ri4-ge9-graph.webp<br>AとBをくらべて、より『強い（かたい）ばね』はどちら？ A / B",
+      "q": "【グラフあり】AとBをくらべて、より『強い（かたい）ばね』はどちら？ A / B",
       "answers": ["Ｂ"],
-      "tags": ["理科","ばねの強さ","小4"]
+      "tags": ["理科","ばねの強さ","小4"],
+      "img": "/anki-project/assets/img/sci/ri4-ge9-graph.webp"
     },
 
     {
