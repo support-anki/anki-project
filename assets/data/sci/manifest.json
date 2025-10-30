@@ -1,16 +1,5 @@
 [
-  {
-    "type": "html",
-    "title": "小4理科「人の体のつくりと運動」— 基本まとめ（マーカー式） v3",
-    "path": "/anki-project/modules/sci/body_motion.html",
-    "tags": [
-      "html",
-      "理科",
-      "4年"
-    ],
-    "updated": "2025-10-30T07:18:17.654Z"
-  },
-  {
+   {
     "type": "html",
     "title": "理科教材 一覧",
     "path": "/anki-project/modules/sci/index.html",
