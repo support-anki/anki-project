@@ -33,7 +33,7 @@
     .chip.bad{background:#fee2e2;border-color:#fca5a5}
 
     .qtext{font-size:1.1em}
-    .note{color:var(--muted);font-size:.95em}
+    .note{color:#667085;font-size:.95em}
 
     .choices{display:grid;gap:8px}
     .choiceRow{display:grid;gap:8px}
@@ -42,10 +42,9 @@
     .choice .cimg{margin-top:6px}
     .choice .cimg img{max-width:100%;height:auto;border-radius:8px;border:1px solid var(--border);display:block}
 
-    /* 本文の図（figure / img）*/
     .qimg{margin:10px 0}
     .qimg img{max-width:100%;height:auto;border:1px solid var(--border);border-radius:10px;display:block}
-    .qimg figcaption{color:var(--muted);font-size:.9rem;margin-top:4px}
+    .qimg figcaption{color:#667085;font-size:.9rem;margin-top:4px}
 
     .result{display:none;border:1px dashed var(--border);background:#f8fafc;border-radius:12px;padding:10px}
 
@@ -114,6 +113,9 @@
   els.voice.checked = voiceQS;
   els.review.checked = reviewQS;
 
+  // ラベル（カタカナ）を安定提供するテーブル
+  const LABELS = ['ア','イ','ウ','エ','オ','カ','キ','ク','ケ','コ','サ','シ','ス','セ','ソ','タ','チ','ツ','テ','ト'];
+
   // ====== データ読み込み ======
   if (!dataUrl){ alert('data= でJSONのURLを指定してください'); }
   fetch(dataUrl, { cache:'no-store' })
@@ -155,68 +157,53 @@
     return (c && (c.text ?? c.label ?? c.caption ?? c.hint ?? c.desc)) || '';
   }
 
-  function choiceId(c, idx) {
-    if (typeof c === 'string') return c;
-    if (c && c.key != null) return String(c.key);
-    if (c && c.id  != null) return String(c.id);
-    return String(idx);
+  function choiceHTMLForRow(c, idx){
+    // 1) 表示用ラベル（ア,イ,ウ,...）
+    const labelFromIndex = LABELS[idx] || String(idx);
+
+    // 2) 本文テキスト部（"ア：〜"みたいに書かれてたら先頭カタカナを除く）
+    let raw = (typeof c === 'string') ? c : choiceText(c);
+    let bodyOnly = raw;
+    if (/^[ァ-ン]：?/.test(raw)) {
+      bodyOnly = raw.replace(/^[ァ-ン]：?/, '');
+    }
+
+    // チョイス内に画像がある可能性も将来的にあるのでそのまま継承
+    const img = (typeof c === 'object' && c) ? (c.img || c.image || c.src) : null;
+    const alt = (typeof c === 'object' && c) ? (c.alt || choiceText(c) || ('選択肢'+(idx+1))) : ('選択肢'+(idx+1));
+    const imgHTML = img
+      ? `<div class="cimg"><img src="${img}" alt="${escapeHTML(alt)}"></div>`
+      : ``;
+
+    return `<input type="radio" name="q_tmp" value="${idx}">
+            <div class="cwrap">
+              <span class="ckey">${escapeHTML(labelFromIndex)}：</span>${escapeHTML(bodyOnly)}
+              ${imgHTML}
+            </div>`;
   }
 
-  function choiceHTML(c, idx) {
-    if (typeof c === 'string') {
-      // "ア：～～" のような文字列を [ラベル部分][本文] に分ける
-      let raw = c;
-      let labelPart = '';
-      let bodyPart = raw;
-      if (/^[ア-エ]/.test(raw)) {
-        labelPart = raw.charAt(0);
-        bodyPart = raw.replace(/^[ア-エ]：?/, '');
-      }
-      return '<div class="ctext"><span class="ckey">'+escapeHTML(labelPart)+'：</span>'+escapeHTML(bodyPart)+'</div>';
-    }
-    // オブジェクト形式（将来の画像選択肢対応）
-    var key = c && c.key != null ? String(c.key) : '';
-    var label = escapeHTML(choiceText(c));
-    var img = c && (c.img || c.image || c.src);
-    var alt = escapeHTML((c && (c.alt || choiceText(c))) || ('選択肢' + (idx+1)));
-    var firstLabel = '';
-    var bodyOnly = label;
-    if (/^[ア-エ]/.test(label)) {
-      firstLabel = label.charAt(0);
-      bodyOnly = label.replace(/^[ア-エ]：?/, '');
-    }
-    var keyHTML = firstLabel ? '<span class="ckey">' + escapeHTML(firstLabel) + '：</span>' : '';
-    var imgHTML = img ? '<div class="cimg"><img src="' + img + '" alt="' + alt + '"></div>' : '';
-    return '<div class="ctext">' + keyHTML + escapeHTML(bodyOnly) + '</div>' + imgHTML;
-  }
-
-  // ====== ★ここが今回の肝：正誤判定ロジック修正済み ======
+  // ====== 正誤判定ロジック（修正版） ======
   function isCorrectChoice(item, idx){
-    // 正解リスト（"ア","イ","ウ","エ"...や"0","1"など）
+    // 正解側（["イ"] など）
     const answers = new Set((item.answers || []).map(String));
 
-    // index→"ア","イ","ウ","エ"...（0x30A2=ア）
-    const labelFromIndex = String.fromCharCode(0x30A2 + idx);
+    // 1) インデックスからの安定ラベル（ア,イ,ウ,...）
+    const labelFromIndex = LABELS[idx] || String(idx);
 
-    // 選択肢実体
+    // 2) 元テキスト先頭のラベルを抽出（"ウ：～～"→"ウ"）
     let raw = item.choices ? item.choices[idx] : '';
     if (typeof raw !== 'string') {
-      // オブジェクトの場合は代表テキストを使う
       raw = choiceText(raw);
     }
-
-    // "ウ：＋極と－極が～" → "ウ"
     let leadingLabel = '';
-    if (typeof raw === 'string' && /^[ア-エ]/.test(raw)) {
+    if (typeof raw === 'string' && /^[ァ-ン]/.test(raw)) {
       leadingLabel = raw.charAt(0);
     }
 
-    // 比較候補：
-    // 1. "ア""イ""ウ" … index由来
-    // 2. leadingLabel … テキスト先頭のラベル
-    // 3. idx（"0","1","2"...）… 念のため従来互換
+    // 3) 念のため idx 文字列も候補に入れる（後方互換）
     const candidates = [labelFromIndex, leadingLabel, String(idx)].filter(Boolean);
 
+    // どれかが answers に含まれていれば正解
     return candidates.some(c => answers.has(c));
   }
 
@@ -291,7 +278,7 @@
       card.appendChild(qtop);
       card.appendChild(qtext);
 
-      // 本文レベルの図（新仕様 figure）
+      // 本文側の図（figure対応）
       if (it.figure && (it.figure.src || it.figure.image || it.figure.img)) {
         const src = it.figure.src || it.figure.image || it.figure.img;
         const alt = escapeHTML(it.figure.alt || it.q || '図');
@@ -301,7 +288,7 @@
                         (it.figure.caption ? `<figcaption>${escapeHTML(it.figure.caption)}</figcaption>` : '');
         card.appendChild(fig);
       }
-      // 旧仕様 it.img
+      // 後方互換 it.img
       if (it.img) {
         const qimg = document.createElement('figure');
         qimg.className = 'qimg';
@@ -310,20 +297,18 @@
         card.appendChild(qimg);
       }
 
+      // 選択肢
       if (choices.length){
         const grp = document.createElement('div');
         grp.className = 'choiceRow';
         choices.forEach((c, idx) => {
           const row = document.createElement('label');
           row.className = 'choice';
-
-          // 各選択肢に data-key="ア" を付ける（将来のデバッグやタップハイライト用）
-          const labelFromIndex = String.fromCharCode(0x30A2 + idx);
-          row.dataset.key = labelFromIndex;
-
-          row.innerHTML =
-            `<input type="radio" name="q_${it.id}" value="${idx}">`+
-            `<div class="cwrap">${choiceHTML(c, idx)}</div>`;
+          row.dataset.key = LABELS[idx] || String(idx);
+          row.innerHTML = choiceHTMLForRow(c, idx);
+          // ラジオボタンのnameは個別化（同じカード内でまとめて排他）
+          const input = row.querySelector('input[type="radio"]');
+          if (input) input.name = `q_${it.id}`;
 
           row.addEventListener('click', ()=>onChoose(it, idx, card));
           grp.appendChild(row);
@@ -334,7 +319,9 @@
       const result = document.createElement('div');
       result.className = 'result';
       const ansDisp = (answers && answers.length) ? answers.join(' / ') : '';
-      result.innerHTML = `<div>こたえ：<strong>${escapeHTML(ansDisp)}</strong></div>${it.note ? `<div class="note">${it.note}</div>` : ''}`;
+      result.innerHTML =
+        `<div>こたえ：<strong>${escapeHTML(ansDisp)}</strong></div>`+
+        (it.note ? `<div class="note">${escapeHTML(it.note)}</div>` : '');
 
       const actions = document.createElement('div');
       actions.className = 'actions';
