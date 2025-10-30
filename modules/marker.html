@@ -1,5 +1,4 @@
 <!doctype html>
-
 <html lang="ja">
 <head>
   <meta charset="utf-8" />
@@ -20,26 +19,27 @@
     .btn{cursor:pointer;padding:6px 10px;border:1px solid var(--border);border-radius:8px;background:#fff;font-size:13px}
     main{max-width:900px;margin:0 auto;padding:20px}
     #imgmask{position:relative;max-width:720px;margin:0 auto 20px;}
-    #imgmask img{width:100%;height:auto;border:1px solid var(--border);border-radius:12px;}.mask.abs{position:absolute;display:flex;align-items:center;justify-content:center;
-  background:linear-gradient(0deg,var(--mask),var(--mask));border-radius:6px;
-  color:transparent;cursor:pointer;user-select:none;}
-.mask.abs.revealed{color:#fff;background:rgba(0,0,0,.6);outline:2px dashed #fff;}
-.mask.inline{--mask-bg:var(--mask);display:inline-block;min-width:2.2em;
-  color:transparent;background:linear-gradient(0deg,var(--mask-bg),var(--mask-bg));
-  border-radius:6px;padding:0 .4em;cursor:pointer;user-select:none;}
-.mask.inline.revealed{color:var(--ink);background:transparent;border-bottom:1px dashed #64748b;}
+    #imgmask img{width:100%;height:auto;border:1px solid var(--border);border-radius:12px;}
 
-.cards-area{display:grid;gap:16px;margin:20px auto;max-width:780px;}
-.qcard{background:var(--card);border:2px solid transparent;border-radius:16px;padding:16px;box-shadow:0 1px 2px rgba(0,0,0,.04)}
-.qcard[data-level="ok"]{border-color:var(--ok)}
-.qcard[data-level="warn"]{border-color:var(--warn)}
-.qcard[data-level="ng"]{border-color:var(--ng)}
-.qtitle{font-weight:700;margin:0 0 8px;font-size:15px;color:var(--brand)}
-.qbody{line-height:1.8;font-size:15px;}
-.qactions{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}
-.qactions button{font-size:12px;padding:6px 10px;border-radius:10px;border:1px solid var(--border);background:var(--card);cursor:pointer;color:var(--ink)}
-.hud{position:fixed;right:10px;bottom:10px;background:#000;color:#0f0;padding:6px 10px;font-size:12px;border-radius:6px;font-family:monospace;z-index:999;}
+    .mask.abs{position:absolute;display:flex;align-items:center;justify-content:center;
+      background:linear-gradient(0deg,var(--mask),var(--mask));border-radius:6px;
+      color:transparent;cursor:pointer;user-select:none;}
+    .mask.abs.revealed{color:#fff;background:rgba(0,0,0,.6);outline:2px dashed #fff;}
+    .mask.inline{--mask-bg:var(--mask);display:inline-block;min-width:2.2em;
+      color:transparent;background:linear-gradient(0deg,var(--mask-bg),var(--mask-bg));
+      border-radius:6px;padding:0 .4em;cursor:pointer;user-select:none;}
+    .mask.inline.revealed{color:var(--ink);background:transparent;border-bottom:1px dashed #64748b;}
 
+    .cards-area{display:grid;gap:16px;margin:20px auto;max-width:780px;}
+    .qcard{background:var(--card);border:2px solid transparent;border-radius:16px;padding:16px;box-shadow:0 1px 2px rgba(0,0,0,.04)}
+    .qcard[data-level="ok"]{border-color:var(--ok)}
+    .qcard[data-level="warn"]{border-color:var(--warn)}
+    .qcard[data-level="ng"]{border-color:var(--ng)}
+    .qtitle{font-weight:700;margin:0 0 8px;font-size:15px;color:var(--brand)}
+    .qbody{line-height:1.8;font-size:15px;}
+    .qactions{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}
+    .qactions button{font-size:12px;padding:6px 10px;border-radius:10px;border:1px solid var(--border);background:var(--card);cursor:pointer;color:var(--ink)}
+    .hud{position:fixed;right:10px;bottom:10px;background:#000;color:#0f0;padding:6px 10px;font-size:12px;border-radius:6px;font-family:monospace;z-index:999;}
   </style>
 </head>
 <body>
@@ -62,19 +62,117 @@
 <script>
 const qs = new URLSearchParams(location.search);
 const dataUrl = qs.get('data');
-const isDev = qs.get('edit') === '1';fetch(dataUrl,{cache:'no-store'}) .then(r=>r.json()) .then(initAll) .catch(e=>alert('JSON読込失敗:'+e));
+const isDev = qs.get('edit') === '1';
 
-function initAll(data){ document.getElementById('pageTitle').textContent = data.title||'教材'; if(data.image) initImageAndMasks(data); if(data.cards) initCards(data); initToolbar(); if(isDev) enableDevMode(); }
+fetch(dataUrl,{cache:'no-store'})
+ .then(r=>r.json())
+ .then(initAll)
+ .catch(e=>alert('JSON読込失敗:'+e));
 
-function initImageAndMasks(data){ const wrap=document.getElementById('imgmask'); const img=document.createElement('img'); img.src=data.image.src;wrap.appendChild(img); wrap.style.position='relative'; (data.masks||[]).forEach(m=>{ const el=document.createElement('span'); el.className='mask abs'; el.dataset.id=m.id;el.dataset.answer=m.answer; el.style.left=m.x+'%';el.style.top=m.y+'%'; el.style.width=m.w+'%';el.style.height=m.h+'%'; attachMaskBehavior(el); wrap.appendChild(el); }); }
+function initAll(data){
+ document.getElementById('pageTitle').textContent = data.title||'教材';
+ if(data.image) initImageAndMasks(data);
+ if(data.cards) initCards(data);
+ initToolbar();
+ if(isDev) enableDevMode();
+}
 
-function initCards(data){ const area=document.getElementById('cardsArea'); (data.cards||[]).forEach(cd=>{ const c=document.createElement('div'); c.className='qcard';c.dataset.qid=cd.id; const t=document.createElement('p');t.className='qtitle';t.textContent=cd.title;c.appendChild(t); const b=document.createElement('div');b.className='qbody'; if(cd.body) cd.body.forEach(p=>{if(p.t)b.appendChild(document.createTextNode(p.t));if(p.m){const s=document.createElement('span');s.className='mask inline';s.dataset.id=p.m.id;s.dataset.answer=p.m.answer;attachMaskBehavior(s);b.appendChild(s);}}); if(cd.items) cd.items.forEach(it=>{const line=document.createElement('div');line.textContent=it.text+' ';const s=document.createElement('span');s.className='mask inline';s.dataset.id=it.mask.id;s.dataset.answer=it.mask.answer;attachMaskBehavior(s);line.appendChild(s);b.appendChild(line);}); c.appendChild(b); const act=document.createElement('div');act.className='qactions';act.innerHTML=<button data-level="ok">✅</button><button data-level="warn">△</button><button data-level="ng">❌</button><button data-reset>リセット</button>; act.querySelectorAll('button[data-level]').forEach(btn=>btn.onclick=()=>{c.dataset.level=btn.dataset.level;localStorage.setItem('marker-card:'+cd.id,btn.dataset.level);}); act.querySelector('button[data-reset]').onclick=()=>{c.removeAttribute('data-level');localStorage.removeItem('marker-card:'+cd.id);c.querySelectorAll('.mask.inline').forEach(e=>clearMask(e));}; c.appendChild(act); area.appendChild(c); }); }
+function initImageAndMasks(data){
+ const wrap=document.getElementById('imgmask');
+ const img=document.createElement('img');
+ img.src=data.image.src;wrap.appendChild(img);
+ wrap.style.position='relative';
+ (data.masks||[]).forEach(m=>{
+   const el=document.createElement('span');
+   el.className='mask abs';
+   el.dataset.id=m.id;el.dataset.answer=m.answer;
+   el.style.left=m.x+'%';el.style.top=m.y+'%';
+   el.style.width=m.w+'%';el.style.height=m.h+'%';
+   attachMaskBehavior(el);
+   wrap.appendChild(el);
+ });
+}
 
-function attachMaskBehavior(el){ el.onclick=()=>{el.classList.toggle('revealed');if(el.classList.contains('revealed'))el.textContent=el.dataset.answer;else el.textContent='　';saveMask(el);}; el.oncontextmenu=e=>{e.preventDefault();cycleLevel(el);}; restoreMask(el); } function saveMask(el){localStorage.setItem('marker-mask:'+el.dataset.id,JSON.stringify({rev:el.classList.contains('revealed'),lvl:el.dataset.level||''}));} function restoreMask(el){const d=localStorage.getItem('marker-mask:'+el.dataset.id);if(!d)return;try{const o=JSON.parse(d);if(o.rev){el.classList.add('revealed');el.textContent=el.dataset.answer;}if(o.lvl)el.dataset.level=o.lvl;}catch(e){} } function clearMask(el){el.classList.remove('revealed');el.removeAttribute('data-level');el.textContent='　';localStorage.removeItem('marker-mask:'+el.dataset.id);} function cycleLevel(el){const seq=[null,'ok','warn','ng'];let i=seq.indexOf(el.dataset.level||null);el.dataset.level=seq[(i+1)%seq.length];saveMask(el);}
+function initCards(data){
+ const area=document.getElementById('cardsArea');
+ (data.cards||[]).forEach(cd=>{
+   const c=document.createElement('div');
+   c.className='qcard';c.dataset.qid=cd.id;
+   const t=document.createElement('p');t.className='qtitle';t.textContent=cd.title;c.appendChild(t);
+   const b=document.createElement('div');b.className='qbody';
+   if(cd.body) cd.body.forEach(p=>{if(p.t)b.appendChild(document.createTextNode(p.t));if(p.m){const s=document.createElement('span');s.className='mask inline';s.dataset.id=p.m.id;s.dataset.answer=p.m.answer;attachMaskBehavior(s);b.appendChild(s);}});
+   if(cd.items) cd.items.forEach(it=>{const line=document.createElement('div');line.textContent=it.text+' ';const s=document.createElement('span');s.className='mask inline';s.dataset.id=it.mask.id;s.dataset.answer=it.mask.answer;attachMaskBehavior(s);line.appendChild(s);b.appendChild(line);});
+   c.appendChild(b);
+   const act=document.createElement('div');act.className='qactions';act.innerHTML=`<button data-level="ok">✅</button><button data-level="warn">△</button><button data-level="ng">❌</button><button data-reset>リセット</button>`;
+   act.querySelectorAll('button[data-level]').forEach(btn=>btn.onclick=()=>{c.dataset.level=btn.dataset.level;localStorage.setItem('marker-card:'+cd.id,btn.dataset.level);});
+   act.querySelector('button[data-reset]').onclick=()=>{c.removeAttribute('data-level');localStorage.removeItem('marker-card:'+cd.id);c.querySelectorAll('.mask.inline').forEach(e=>clearMask(e));};
+   c.appendChild(act);
+   area.appendChild(c);
+ });
+}
 
-function initToolbar(){ document.getElementById('reset-all').onclick=()=>{ if(confirm('全マスク/カード状態を消去しますか？')){ Object.keys(localStorage).forEach(k=>{if(k.startsWith('marker-'))localStorage.removeItem(k);}); location.reload(); } }; // フィルターボタン const btnAll=document.getElementById('filter-all'); const btnWarn=document.getElementById('filter-warn'); const btnNg=document.getElementById('filter-ng'); let currentFilter='all'; const applyFilter=()=>{ // 対象1: 文章カード(qcard) document.querySelectorAll('.qcard').forEach(card=>{ if(currentFilter==='all'){ card.style.display=''; return; } const lvl=card.getAttribute('data-level')||''; card.style.display = (lvl===currentFilter)?'':'none'; }); // 対象2: 画像マスク(.mask.abs) と テキストマスク(.mask.inline) document.querySelectorAll('.mask.abs,.mask.inline').forEach(el=>{ if(currentFilter==='all'){ el.style.opacity=''; return; } const lvl=el.getAttribute('data-level')||''; // マスクは display:none にすると座標がずれることがあるので透明化で対応 el.style.opacity = (lvl===currentFilter)?'1':'0.15'; }); }; btnAll.onclick = ()=>{ currentFilter='all'; applyFilter(); }; btnWarn.onclick= ()=>{ currentFilter='warn';applyFilter(); }; btnNg.onclick  = ()=>{ currentFilter='ng';  applyFilter(); }; }
+function attachMaskBehavior(el){
+ el.onclick=()=>{el.classList.toggle('revealed');if(el.classList.contains('revealed'))el.textContent=el.dataset.answer;else el.textContent='　';saveMask(el);};
+ el.oncontextmenu=e=>{e.preventDefault();cycleLevel(el);};
+ restoreMask(el);
+}
+function saveMask(el){localStorage.setItem('marker-mask:'+el.dataset.id,JSON.stringify({rev:el.classList.contains('revealed'),lvl:el.dataset.level||''}));}
+function restoreMask(el){const d=localStorage.getItem('marker-mask:'+el.dataset.id);if(!d)return;try{const o=JSON.parse(d);if(o.rev){el.classList.add('revealed');el.textContent=el.dataset.answer;}if(o.lvl)el.dataset.level=o.lvl;}catch(e){} }
+function clearMask(el){el.classList.remove('revealed');el.removeAttribute('data-level');el.textContent='　';localStorage.removeItem('marker-mask:'+el.dataset.id);}
+function cycleLevel(el){const seq=[null,'ok','warn','ng'];let i=seq.indexOf(el.dataset.level||null);el.dataset.level=seq[(i+1)%seq.length];saveMask(el);}
 
-// --- Devモード --- function enableDevMode(){ const hud=document.createElement('div');hud.className='hud';hud.textContent='DevMode: ON';document.body.appendChild(hud); let sel=null; document.querySelectorAll('.mask.abs').forEach(m=>{ m.style.outline='1px dashed red';m.draggable=true; m.addEventListener('click',e=>{sel=m;hud.textContent='選択:'+m.dataset.id;}); m.addEventListener('dragstart',e=>{e.dataTransfer.setDragImage(new Image(),0,0);}); m.addEventListener('drag',e=>{if(!sel||!e.offsetX)return;}); m.addEventListener('dragend',e=>{if(!sel)return;const img=document.querySelector('#imgmask img');const r=img.getBoundingClientRect();const x=(e.pageX-r.left)/r.width100;const y=(e.pageY-r.top)/r.height100;sel.style.left=x.toFixed(3)+'%';sel.style.top=y.toFixed(3)+'%';hud.textContent=${sel.dataset.id}: left:${x.toFixed(3)}%; top:${y.toFixed(3)}%;}); }); window.addEventListener('keydown',e=>{ if(e.altKey&&e.code==='KeyC'){ const arr=[];document.querySelectorAll('.mask.abs').forEach(m=>{arr.push([${m.dataset.id}] left:${m.style.left} top:${m.style.top} width:${m.style.width} height:${m.style.height});}); console.log(arr.join('\n')); navigator.clipboard.writeText(arr.join('\n')); hud.textContent='Alt+C: 座標コピー完了'; } }); } </script>
+function initToolbar(){
+ document.getElementById('reset-all').onclick=()=>{
+   if(confirm('全マスク/カード状態を消去しますか？')){
+     Object.keys(localStorage).forEach(k=>{if(k.startsWith('marker-'))localStorage.removeItem(k);});
+     location.reload();
+   }
+ };
+ // フィルターボタン
+ const btnAll=document.getElementById('filter-all');
+ const btnWarn=document.getElementById('filter-warn');
+ const btnNg=document.getElementById('filter-ng');
+ let currentFilter='all';
+ const applyFilter=()=>{
+   // 対象1: 文章カード(qcard)
+   document.querySelectorAll('.qcard').forEach(card=>{
+     if(currentFilter==='all'){ card.style.display=''; return; }
+     const lvl=card.getAttribute('data-level')||'';
+     card.style.display = (lvl===currentFilter)?'':'none';
+   });
+   // 対象2: 画像マスク(.mask.abs) と テキストマスク(.mask.inline)
+   document.querySelectorAll('.mask.abs,.mask.inline').forEach(el=>{
+     if(currentFilter==='all'){ el.style.opacity=''; return; }
+     const lvl=el.getAttribute('data-level')||'';
+     // マスクは display:none にすると座標がずれることがあるので透明化で対応
+     el.style.opacity = (lvl===currentFilter)?'1':'0.15';
+   });
+ };
+ btnAll.onclick = ()=>{ currentFilter='all'; applyFilter(); };
+ btnWarn.onclick= ()=>{ currentFilter='warn';applyFilter(); };
+ btnNg.onclick  = ()=>{ currentFilter='ng';  applyFilter(); };
+}
 
+// --- Devモード ---
+function enableDevMode(){
+ const hud=document.createElement('div');hud.className='hud';hud.textContent='DevMode: ON';document.body.appendChild(hud);
+ let sel=null;
+ document.querySelectorAll('.mask.abs').forEach(m=>{
+   m.style.outline='1px dashed red';m.draggable=true;
+   m.addEventListener('click',e=>{sel=m;hud.textContent='選択:'+m.dataset.id;});
+   m.addEventListener('dragstart',e=>{e.dataTransfer.setDragImage(new Image(),0,0);});
+   m.addEventListener('drag',e=>{if(!sel||!e.offsetX)return;});
+   m.addEventListener('dragend',e=>{if(!sel)return;const img=document.querySelector('#imgmask img');const r=img.getBoundingClientRect();const x=(e.pageX-r.left)/r.width*100;const y=(e.pageY-r.top)/r.height*100;sel.style.left=x.toFixed(3)+'%';sel.style.top=y.toFixed(3)+'%';hud.textContent=`${sel.dataset.id}: left:${x.toFixed(3)}%; top:${y.toFixed(3)}%`;});
+ });
+ window.addEventListener('keydown',e=>{
+   if(e.altKey&&e.code==='KeyC'){
+     const arr=[];document.querySelectorAll('.mask.abs').forEach(m=>{arr.push(`[${m.dataset.id}] left:${m.style.left} top:${m.style.top} width:${m.style.width} height:${m.style.height}`);});
+     console.log(arr.join('\n'));
+     navigator.clipboard.writeText(arr.join('\n'));
+     hud.textContent='Alt+C: 座標コピー完了';
+   }
+ });
+}
+</script>
 </body>
 </html>
