@@ -1,18 +1,6 @@
 [
   {
     "type": "noimg",
-    "title": "小4算数 多角形の性質",
-    "data": "/anki-project/assets/data/math/noimg/ma4-08-unit-noimg-fig.json",
-    "path": "/anki-project/modules/noimg.html?data=/anki-project/assets/data/math/noimg/ma4-08-unit-noimg-fig.json&title=%E5%B0%8F4%E7%AE%97%E6%95%B0%20%E5%A4%9A%E8%A7%92%E5%BD%A2%E3%81%AE%E6%80%A7%E8%B3%AA",
-    "tags": [
-      "noimg",
-      "算数",
-      "4年"
-    ],
-    "updated": "2025-10-30T07:25:30.436Z"
-  },
-  {
-    "type": "noimg",
     "title": "小4下第9回 円とおうぎ形",
     "data": "/anki-project/assets/data/math/noimg/ma4-09-en-ougigata-unit-noimg-fig.json",
     "path": "/anki-project/modules/noimg.html?data=/anki-project/assets/data/math/noimg/ma4-09-en-ougigata-unit-noimg-fig.json&title=%E5%B0%8F4%E4%B8%8B%E7%AC%AC9%E5%9B%9E%20%E5%86%86%E3%81%A8%E3%81%8A%E3%81%86%E3%81%8E%E5%BD%A2",
@@ -21,7 +9,7 @@
       "算数",
       "4年"
     ],
-    "updated": "2025-10-30T07:25:30.436Z"
+    "updated": "2025-10-30T07:27:11.313Z"
   },
   {
     "type": "html",
@@ -32,6 +20,18 @@
       "算数",
       "4年"
     ],
-    "updated": "2025-10-30T07:25:30.436Z"
+    "updated": "2025-10-30T07:27:11.313Z"
+  },
+  {
+    "type": "noimg",
+    "title": "小4算数 多角形の性質",
+    "data": "/anki-project/assets/data/math/noimg/ma4-08-unit-noimg-fig.json",
+    "path": "/anki-project/modules/noimg.html?data=/anki-project/assets/data/math/noimg/ma4-08-unit-noimg-fig.json&title=%E5%B0%8F4%E7%AE%97%E6%95%B0%20%E5%A4%9A%E8%A7%92%E5%BD%A2%E3%81%AE%E6%80%A7%E8%B3%AA",
+    "tags": [
+      "noimg",
+      "算数",
+      "4年"
+    ],
+    "updated": "2025-10-30T07:27:11.312Z"
   }
 ]

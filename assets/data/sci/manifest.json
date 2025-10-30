@@ -1,63 +1,5 @@
 [
   {
-    "type": "html",
-    "title": "理科教材 一覧",
-    "path": "/anki-project/modules/sci/index.html",
-    "tags": [
-      "html",
-      "理科",
-      "4年"
-    ],
-    "updated": "2025-10-30T07:25:30.430Z"
-  },
-  {
-    "type": "html",
-    "title": "小4理科「水のすがたと温度」— 単元まとめ（図なし・マーカー式） v3",
-    "path": "/anki-project/modules/sci/water_state_unit_combined_v3.html",
-    "tags": [
-      "html",
-      "理科",
-      "4年"
-    ],
-    "updated": "2025-10-30T07:25:30.430Z"
-  },
-  {
-    "type": "noimg",
-    "title": "小4理科 第7回 もののとけ方（2）",
-    "data": "/anki-project/assets/data/sci/noimg/ge7-tokekata2.json",
-    "path": "/anki-project/modules/noimg.html?data=/anki-project/assets/data/sci/noimg/ge7-tokekata2.json&title=%E5%B0%8F4%E7%90%86%E7%A7%91%20%E7%AC%AC7%E5%9B%9E%20%E3%82%82%E3%81%AE%E3%81%AE%E3%81%A8%E3%81%91%E6%96%B9%EF%BC%882%EF%BC%89",
-    "tags": [
-      "noimg",
-      "理科",
-      "4年"
-    ],
-    "updated": "2025-10-30T07:25:30.429Z"
-  },
-  {
-    "type": "noimg",
-    "title": "小4理科｜あたたかさと生き物（春）［啓林館対応］",
-    "data": "/anki-project/assets/data/sci/noimg/sci4-u1-atatakasa-spring.json",
-    "path": "/anki-project/modules/noimg.html?data=/anki-project/assets/data/sci/noimg/sci4-u1-atatakasa-spring.json&title=%E5%B0%8F4%E7%90%86%E7%A7%91%EF%BD%9C%E3%81%82%E3%81%9F%E3%81%9F%E3%81%8B%E3%81%95%E3%81%A8%E7%94%9F%E3%81%8D%E7%89%A9%EF%BC%88%E6%98%A5%EF%BC%89%EF%BC%BB%E5%95%93%E6%9E%97%E9%A4%A8%E5%AF%BE%E5%BF%9C%EF%BC%BD",
-    "tags": [
-      "noimg",
-      "理科",
-      "4年"
-    ],
-    "updated": "2025-10-30T07:25:30.429Z"
-  },
-  {
-    "type": "noimg",
-    "title": "小4理科｜天気と1日の気温［啓林館対応｜混在形式］",
-    "data": "/anki-project/assets/data/sci/noimg/sci4-u2-tenki-kion.json",
-    "path": "/anki-project/modules/noimg.html?data=/anki-project/assets/data/sci/noimg/sci4-u2-tenki-kion.json&title=%E5%B0%8F4%E7%90%86%E7%A7%91%EF%BD%9C%E5%A4%A9%E6%B0%97%E3%81%A81%E6%97%A5%E3%81%AE%E6%B0%97%E6%B8%A9%EF%BC%BB%E5%95%93%E6%9E%97%E9%A4%A8%E5%AF%BE%E5%BF%9C%EF%BD%9C%E6%B7%B7%E5%9C%A8%E5%BD%A2%E5%BC%8F%EF%BC%BD",
-    "tags": [
-      "noimg",
-      "理科",
-      "4年"
-    ],
-    "updated": "2025-10-30T07:25:30.429Z"
-  },
-  {
     "type": "noimg",
     "title": "小4理科｜雨の降り方と水のゆくえ［啓林館対応｜図付き版］",
     "data": "/anki-project/assets/data/sci/noimg/sci4-u3-ame-mizu.json",
@@ -67,7 +9,7 @@
       "理科",
       "4年"
     ],
-    "updated": "2025-10-30T07:25:30.429Z"
+    "updated": "2025-10-30T07:27:11.306Z"
   },
   {
     "type": "noimg",
@@ -79,7 +21,7 @@
       "理科",
       "4年"
     ],
-    "updated": "2025-10-30T07:25:30.429Z"
+    "updated": "2025-10-30T07:27:11.306Z"
   },
   {
     "type": "noimg",
@@ -91,7 +33,7 @@
       "理科",
       "4年"
     ],
-    "updated": "2025-10-30T07:25:30.429Z"
+    "updated": "2025-10-30T07:27:11.306Z"
   },
   {
     "type": "noimg",
@@ -103,7 +45,77 @@
       "理科",
       "4年"
     ],
-    "updated": "2025-10-30T07:25:30.429Z"
+    "updated": "2025-10-30T07:27:11.306Z"
+  },
+  {
+    "type": "html",
+    "title": "理科教材 一覧",
+    "path": "/anki-project/modules/sci/index.html",
+    "tags": [
+      "html",
+      "理科",
+      "4年"
+    ],
+    "updated": "2025-10-30T07:27:11.306Z"
+  },
+  {
+    "type": "html",
+    "title": "小4理科「水のすがたと温度」— 単元まとめ（図なし・マーカー式） v3",
+    "path": "/anki-project/modules/sci/water_state_unit_combined_v3.html",
+    "tags": [
+      "html",
+      "理科",
+      "4年"
+    ],
+    "updated": "2025-10-30T07:27:11.306Z"
+  },
+  {
+    "type": "marker",
+    "title": "水のすがたと温度（完全版）",
+    "data": "/anki-project/assets/data/sci/marker/4rika_water_state_all.json",
+    "path": "/anki-project/modules/marker.html?data=/anki-project/assets/data/sci/marker/4rika_water_state_all.json&title=%E6%B0%B4%E3%81%AE%E3%81%99%E3%81%8C%E3%81%9F%E3%81%A8%E6%B8%A9%E5%BA%A6%EF%BC%88%E5%AE%8C%E5%85%A8%E7%89%88%EF%BC%89",
+    "tags": [
+      "marker",
+      "理科",
+      "4年"
+    ],
+    "updated": "2025-10-30T07:27:11.305Z"
+  },
+  {
+    "type": "noimg",
+    "title": "小4理科 第7回 もののとけ方（2）",
+    "data": "/anki-project/assets/data/sci/noimg/ge7-tokekata2.json",
+    "path": "/anki-project/modules/noimg.html?data=/anki-project/assets/data/sci/noimg/ge7-tokekata2.json&title=%E5%B0%8F4%E7%90%86%E7%A7%91%20%E7%AC%AC7%E5%9B%9E%20%E3%82%82%E3%81%AE%E3%81%AE%E3%81%A8%E3%81%91%E6%96%B9%EF%BC%882%EF%BC%89",
+    "tags": [
+      "noimg",
+      "理科",
+      "4年"
+    ],
+    "updated": "2025-10-30T07:27:11.305Z"
+  },
+  {
+    "type": "noimg",
+    "title": "小4理科｜あたたかさと生き物（春）［啓林館対応］",
+    "data": "/anki-project/assets/data/sci/noimg/sci4-u1-atatakasa-spring.json",
+    "path": "/anki-project/modules/noimg.html?data=/anki-project/assets/data/sci/noimg/sci4-u1-atatakasa-spring.json&title=%E5%B0%8F4%E7%90%86%E7%A7%91%EF%BD%9C%E3%81%82%E3%81%9F%E3%81%9F%E3%81%8B%E3%81%95%E3%81%A8%E7%94%9F%E3%81%8D%E7%89%A9%EF%BC%88%E6%98%A5%EF%BC%89%EF%BC%BB%E5%95%93%E6%9E%97%E9%A4%A8%E5%AF%BE%E5%BF%9C%EF%BC%BD",
+    "tags": [
+      "noimg",
+      "理科",
+      "4年"
+    ],
+    "updated": "2025-10-30T07:27:11.305Z"
+  },
+  {
+    "type": "noimg",
+    "title": "小4理科｜天気と1日の気温［啓林館対応｜混在形式］",
+    "data": "/anki-project/assets/data/sci/noimg/sci4-u2-tenki-kion.json",
+    "path": "/anki-project/modules/noimg.html?data=/anki-project/assets/data/sci/noimg/sci4-u2-tenki-kion.json&title=%E5%B0%8F4%E7%90%86%E7%A7%91%EF%BD%9C%E5%A4%A9%E6%B0%97%E3%81%A81%E6%97%A5%E3%81%AE%E6%B0%97%E6%B8%A9%EF%BC%BB%E5%95%93%E6%9E%97%E9%A4%A8%E5%AF%BE%E5%BF%9C%EF%BD%9C%E6%B7%B7%E5%9C%A8%E5%BD%A2%E5%BC%8F%EF%BC%BD",
+    "tags": [
+      "noimg",
+      "理科",
+      "4年"
+    ],
+    "updated": "2025-10-30T07:27:11.305Z"
   },
   {
     "type": "marker",
@@ -115,6 +127,6 @@
       "理科",
       "4年"
     ],
-    "updated": "2025-10-30T07:25:30.428Z"
+    "updated": "2025-10-30T07:27:11.304Z"
   }
 ]
