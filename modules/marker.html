@@ -94,21 +94,114 @@ function initImageAndMasks(data){
 }
 
 function initCards(data){
- const area=document.getElementById('cardsArea');
- (data.cards||[]).forEach(cd=>{
-   const c=document.createElement('div');
-   c.className='qcard';c.dataset.qid=cd.id;
-   const t=document.createElement('p');t.className='qtitle';t.textContent=cd.title;c.appendChild(t);
-   const b=document.createElement('div');b.className='qbody';
-   if(cd.body) cd.body.forEach(p=>{if(p.t)b.appendChild(document.createTextNode(p.t));if(p.m){const s=document.createElement('span');s.className='mask inline';s.dataset.id=p.m.id;s.dataset.answer=p.m.answer;attachMaskBehavior(s);b.appendChild(s);}});
-   if(cd.items) cd.items.forEach(it=>{const line=document.createElement('div');line.textContent=it.text+' ';const s=document.createElement('span');s.className='mask inline';s.dataset.id=it.mask.id;s.dataset.answer=it.mask.answer;attachMaskBehavior(s);line.appendChild(s);b.appendChild(line);});
-   c.appendChild(b);
-   const act=document.createElement('div');act.className='qactions';act.innerHTML=`<button data-level="ok">✅</button><button data-level="warn">△</button><button data-level="ng">❌</button><button data-reset>リセット</button>`;
-   act.querySelectorAll('button[data-level]').forEach(btn=>btn.onclick=()=>{c.dataset.level=btn.dataset.level;localStorage.setItem('marker-card:'+cd.id,btn.dataset.level);});
-   act.querySelector('button[data-reset]').onclick=()=>{c.removeAttribute('data-level');localStorage.removeItem('marker-card:'+cd.id);c.querySelectorAll('.mask.inline').forEach(e=>clearMask(e));};
-   c.appendChild(act);
-   area.appendChild(c);
- });
+  const area = document.getElementById('cardsArea');
+
+  (data.cards || []).forEach(cd => {
+    // カード本体
+    const c = document.createElement('div');
+    c.className = 'qcard';
+    c.dataset.qid = cd.id;
+
+    // タイトル
+    const t = document.createElement('p');
+    t.className = 'qtitle';
+    t.textContent = cd.title || '';
+    c.appendChild(t);
+
+    // 本文エリア
+    const b = document.createElement('div');
+    b.className = 'qbody';
+
+    // パターン1: body[]（q1〜q4など 文章中に複数マスク）
+    if (cd.body) {
+      cd.body.forEach(p => {
+        if (p.t) {
+          b.appendChild(document.createTextNode(p.t));
+        }
+        if (p.m) {
+          const s = document.createElement('span');
+          s.className = 'mask inline';
+          s.dataset.id = p.m.id;
+          s.dataset.answer = p.m.answer;
+          attachMaskBehavior(s);
+
+          // 初期表示は「隠す」状態にする（全角スペース）
+          // restoreMask() の結果でrevealed済みなら後から上書きされる
+          if (!s.classList.contains('revealed')) {
+            s.textContent = '　';
+          }
+
+          b.appendChild(s);
+        }
+      });
+    }
+
+    // パターン2: items[]（q5みたいな○×リスト）
+    if (cd.items) {
+      cd.items.forEach(it => {
+        const line = document.createElement('div');
+
+        // 本文テキスト
+        line.appendChild(document.createTextNode(it.text + ' '));
+
+        // ○×などの答えマスク
+        const s = document.createElement('span');
+        s.className = 'mask inline';
+        s.dataset.id = it.mask.id;
+        s.dataset.answer = it.mask.answer;
+        attachMaskBehavior(s);
+
+        if (!s.classList.contains('revealed')) {
+          s.textContent = '　';
+        }
+
+        line.appendChild(s);
+        b.appendChild(line);
+      });
+    }
+
+    c.appendChild(b);
+
+    // 復習ボタン群（✅/△/❌/リセット）
+    const act = document.createElement('div');
+    act.className = 'qactions';
+    act.innerHTML = `
+      <button data-level="ok">✅</button>
+      <button data-level="warn">△</button>
+      <button data-level="ng">❌</button>
+      <button data-reset>リセット</button>
+    `;
+
+    // ✅/△/❌クリック時 → カード全体に data-level を付けて保存
+    act.querySelectorAll('button[data-level]').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const lvl = btn.dataset.level;
+        c.dataset.level = lvl;
+        localStorage.setItem('marker-card:' + cd.id, lvl);
+      });
+    });
+
+    // リセットクリック時 → レベル消す＋このカード中のマスクをリセット
+    act.querySelector('button[data-reset]').addEventListener('click', () => {
+      c.removeAttribute('data-level');
+      localStorage.removeItem('marker-card:' + cd.id);
+
+      c.querySelectorAll('.mask.inline').forEach(el => {
+        clearMask(el);
+      });
+    });
+
+    c.appendChild(act);
+
+    // カード全体の保存済みレベルを復元
+    const saved = localStorage.getItem('marker-card:' + cd.id);
+    if (saved) {
+      c.dataset.level = saved;
+    }
+
+    // DOMへ追加
+    area.appendChild(c);
+  });
 }
 
 function attachMaskBehavior(el){
@@ -176,3 +269,4 @@ function enableDevMode(){
 </script>
 </body>
 </html>
+
