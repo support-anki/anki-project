@@ -1,65 +1,5 @@
 [
   {
-    "type": "img",
-    "title": "日本の主な川・湖（番号→名称）",
-    "data": "/anki-project/assets/data/geo/mapdata/geo-rivers-lakes.json",
-    "path": "/anki-project/modules/img.html?data=/anki-project/assets/data/geo/mapdata/geo-rivers-lakes.json&title=%E6%97%A5%E6%9C%AC%E3%81%AE%E4%B8%BB%E3%81%AA%E5%B7%9D%E3%83%BB%E6%B9%96%EF%BC%88%E7%95%AA%E5%8F%B7%E2%86%92%E5%90%8D%E7%A7%B0%EF%BC%89",
-    "tags": [
-      "img",
-      "地理",
-      "4年"
-    ],
-    "updated": "2025-10-30T11:00:25.602Z"
-  },
-  {
-    "type": "img",
-    "title": "都道府県を覚えよう",
-    "data": "/anki-project/assets/data/geo/mapdata/japan-todofuken.json",
-    "path": "/anki-project/modules/img.html?data=/anki-project/assets/data/geo/mapdata/japan-todofuken.json&title=%E9%83%BD%E9%81%93%E5%BA%9C%E7%9C%8C%E3%82%92%E8%A6%9A%E3%81%88%E3%82%88%E3%81%86",
-    "tags": [
-      "img",
-      "地理",
-      "4年"
-    ],
-    "updated": "2025-10-30T11:00:25.602Z"
-  },
-  {
-    "type": "noimg",
-    "title": "小4社会 第7回 九州地方（図なし）",
-    "data": "/anki-project/assets/data/geo/noimg/ge7-kyushu.json",
-    "path": "/anki-project/modules/noimg.html?data=/anki-project/assets/data/geo/noimg/ge7-kyushu.json&title=%E5%B0%8F4%E7%A4%BE%E4%BC%9A%20%E7%AC%AC7%E5%9B%9E%20%E4%B9%9D%E5%B7%9E%E5%9C%B0%E6%96%B9%EF%BC%88%E5%9B%B3%E3%81%AA%E3%81%97%EF%BC%89",
-    "tags": [
-      "noimg",
-      "地理",
-      "4年"
-    ],
-    "updated": "2025-10-30T11:00:25.602Z"
-  },
-  {
-    "type": "noimg",
-    "title": "小4社会 第8回 気候と各地のくらし（図なし・復習付き）",
-    "data": "/anki-project/assets/data/geo/noimg/ge8-kikou.json",
-    "path": "/anki-project/modules/noimg.html?data=/anki-project/assets/data/geo/noimg/ge8-kikou.json&title=%E5%B0%8F4%E7%A4%BE%E4%BC%9A%20%E7%AC%AC8%E5%9B%9E%20%E6%B0%97%E5%80%99%E3%81%A8%E5%90%84%E5%9C%B0%E3%81%AE%E3%81%8F%E3%82%89%E3%81%97%EF%BC%88%E5%9B%B3%E3%81%AA%E3%81%97%E3%83%BB%E5%BE%A9%E7%BF%92%E4%BB%98%E3%81%8D%EF%BC%89",
-    "tags": [
-      "noimg",
-      "地理",
-      "4年"
-    ],
-    "updated": "2025-10-30T11:00:25.602Z"
-  },
-  {
-    "type": "noimg",
-    "title": "小4社会（下）第9回 山と川がうみだす地形 — 穴埋め・選択（noimg）",
-    "data": "/anki-project/assets/data/geo/noimg/shou4-ge-09-yama-kawa.json",
-    "path": "/anki-project/modules/noimg.html?data=/anki-project/assets/data/geo/noimg/shou4-ge-09-yama-kawa.json&title=%E5%B0%8F4%E7%A4%BE%E4%BC%9A%EF%BC%88%E4%B8%8B%EF%BC%89%E7%AC%AC9%E5%9B%9E%20%E5%B1%B1%E3%81%A8%E5%B7%9D%E3%81%8C%E3%81%86%E3%81%BF%E3%81%A0%E3%81%99%E5%9C%B0%E5%BD%A2%20%E2%80%94%20%E7%A9%B4%E5%9F%8B%E3%82%81%E3%83%BB%E9%81%B8%E6%8A%9E%EF%BC%88noimg%EF%BC%89",
-    "tags": [
-      "noimg",
-      "地理",
-      "4年"
-    ],
-    "updated": "2025-10-30T11:00:25.602Z"
-  },
-  {
     "type": "html",
     "title": "九州地方 地図学習",
     "path": "/anki-project/modules/geo/geo-kyushu.html",
@@ -68,7 +8,7 @@
       "地理",
       "4年"
     ],
-    "updated": "2025-10-30T11:00:25.602Z"
+    "updated": "2025-10-30T11:04:43.532Z"
   },
   {
     "type": "html",
@@ -79,7 +19,7 @@
       "地理",
       "4年"
     ],
-    "updated": "2025-10-30T11:00:25.602Z"
+    "updated": "2025-10-30T11:04:43.532Z"
   },
   {
     "type": "img",
@@ -91,7 +31,7 @@
       "地理",
       "4年"
     ],
-    "updated": "2025-10-30T11:00:25.601Z"
+    "updated": "2025-10-30T11:04:43.531Z"
   },
   {
     "type": "img",
@@ -103,7 +43,7 @@
       "地理",
       "4年"
     ],
-    "updated": "2025-10-30T11:00:25.601Z"
+    "updated": "2025-10-30T11:04:43.531Z"
   },
   {
     "type": "img",
@@ -115,7 +55,7 @@
       "地理",
       "4年"
     ],
-    "updated": "2025-10-30T11:00:25.601Z"
+    "updated": "2025-10-30T11:04:43.531Z"
   },
   {
     "type": "img",
@@ -127,6 +67,66 @@
       "地理",
       "4年"
     ],
-    "updated": "2025-10-30T11:00:25.601Z"
+    "updated": "2025-10-30T11:04:43.531Z"
+  },
+  {
+    "type": "img",
+    "title": "日本の主な川・湖（番号→名称）",
+    "data": "/anki-project/assets/data/geo/mapdata/geo-rivers-lakes.json",
+    "path": "/anki-project/modules/img.html?data=/anki-project/assets/data/geo/mapdata/geo-rivers-lakes.json&title=%E6%97%A5%E6%9C%AC%E3%81%AE%E4%B8%BB%E3%81%AA%E5%B7%9D%E3%83%BB%E6%B9%96%EF%BC%88%E7%95%AA%E5%8F%B7%E2%86%92%E5%90%8D%E7%A7%B0%EF%BC%89",
+    "tags": [
+      "img",
+      "地理",
+      "4年"
+    ],
+    "updated": "2025-10-30T11:04:43.531Z"
+  },
+  {
+    "type": "img",
+    "title": "都道府県を覚えよう",
+    "data": "/anki-project/assets/data/geo/mapdata/japan-todofuken.json",
+    "path": "/anki-project/modules/img.html?data=/anki-project/assets/data/geo/mapdata/japan-todofuken.json&title=%E9%83%BD%E9%81%93%E5%BA%9C%E7%9C%8C%E3%82%92%E8%A6%9A%E3%81%88%E3%82%88%E3%81%86",
+    "tags": [
+      "img",
+      "地理",
+      "4年"
+    ],
+    "updated": "2025-10-30T11:04:43.531Z"
+  },
+  {
+    "type": "noimg",
+    "title": "小4社会 第7回 九州地方（図なし）",
+    "data": "/anki-project/assets/data/geo/noimg/ge7-kyushu.json",
+    "path": "/anki-project/modules/noimg.html?data=/anki-project/assets/data/geo/noimg/ge7-kyushu.json&title=%E5%B0%8F4%E7%A4%BE%E4%BC%9A%20%E7%AC%AC7%E5%9B%9E%20%E4%B9%9D%E5%B7%9E%E5%9C%B0%E6%96%B9%EF%BC%88%E5%9B%B3%E3%81%AA%E3%81%97%EF%BC%89",
+    "tags": [
+      "noimg",
+      "地理",
+      "4年"
+    ],
+    "updated": "2025-10-30T11:04:43.531Z"
+  },
+  {
+    "type": "noimg",
+    "title": "小4社会 第8回 気候と各地のくらし（図なし・復習付き）",
+    "data": "/anki-project/assets/data/geo/noimg/ge8-kikou.json",
+    "path": "/anki-project/modules/noimg.html?data=/anki-project/assets/data/geo/noimg/ge8-kikou.json&title=%E5%B0%8F4%E7%A4%BE%E4%BC%9A%20%E7%AC%AC8%E5%9B%9E%20%E6%B0%97%E5%80%99%E3%81%A8%E5%90%84%E5%9C%B0%E3%81%AE%E3%81%8F%E3%82%89%E3%81%97%EF%BC%88%E5%9B%B3%E3%81%AA%E3%81%97%E3%83%BB%E5%BE%A9%E7%BF%92%E4%BB%98%E3%81%8D%EF%BC%89",
+    "tags": [
+      "noimg",
+      "地理",
+      "4年"
+    ],
+    "updated": "2025-10-30T11:04:43.531Z"
+  },
+  {
+    "type": "noimg",
+    "title": "小4社会（下）第9回 山と川がうみだす地形 — 穴埋め・選択（noimg）",
+    "data": "/anki-project/assets/data/geo/noimg/shou4-ge-09-yama-kawa.json",
+    "path": "/anki-project/modules/noimg.html?data=/anki-project/assets/data/geo/noimg/shou4-ge-09-yama-kawa.json&title=%E5%B0%8F4%E7%A4%BE%E4%BC%9A%EF%BC%88%E4%B8%8B%EF%BC%89%E7%AC%AC9%E5%9B%9E%20%E5%B1%B1%E3%81%A8%E5%B7%9D%E3%81%8C%E3%81%86%E3%81%BF%E3%81%A0%E3%81%99%E5%9C%B0%E5%BD%A2%20%E2%80%94%20%E7%A9%B4%E5%9F%8B%E3%82%81%E3%83%BB%E9%81%B8%E6%8A%9E%EF%BC%88noimg%EF%BC%89",
+    "tags": [
+      "noimg",
+      "地理",
+      "4年"
+    ],
+    "updated": "2025-10-30T11:04:43.531Z"
   }
 ]
