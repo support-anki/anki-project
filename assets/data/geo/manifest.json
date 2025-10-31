@@ -13,17 +13,6 @@
   },
   {
     "type": "html",
-    "title": "九州地方 地図学習",
-    "path": "/anki-project/modules/geo/geo-kyushu.html",
-    "tags": [
-      "html",
-      "地理",
-      "4年"
-    ],
-    "updated": "2025-10-30T12:40:33.222Z"
-  },
-  {
-    "type": "html",
     "title": "🌏 地理教材 一覧",
     "path": "/anki-project/modules/geo/index.html",
     "tags": [
