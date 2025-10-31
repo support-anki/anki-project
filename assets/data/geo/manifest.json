@@ -1,41 +1,5 @@
 [
   {
-    "type": "img",
-    "title": "地図記号を覚えよう（番号→地図記号名）",
-    "data": "/anki-project/assets/data/geo/mapdata/geo-map-symbols.json",
-    "path": "/anki-project/modules/img.html?data=/anki-project/assets/data/geo/mapdata/geo-map-symbols.json&title=%E5%9C%B0%E5%9B%B3%E8%A8%98%E5%8F%B7%E3%82%92%E8%A6%9A%E3%81%88%E3%82%88%E3%81%86%EF%BC%88%E7%95%AA%E5%8F%B7%E2%86%92%E5%9C%B0%E5%9B%B3%E8%A8%98%E5%8F%B7%E5%90%8D%EF%BC%89",
-    "tags": [
-      "img",
-      "地理",
-      "4年"
-    ],
-    "updated": "2025-10-31T03:36:36.351Z"
-  },
-  {
-    "type": "img",
-    "title": "日本の主な川・湖（番号→名称）",
-    "data": "/anki-project/assets/data/geo/mapdata/geo-rivers-lakes.json",
-    "path": "/anki-project/modules/img.html?data=/anki-project/assets/data/geo/mapdata/geo-rivers-lakes.json&title=%E6%97%A5%E6%9C%AC%E3%81%AE%E4%B8%BB%E3%81%AA%E5%B7%9D%E3%83%BB%E6%B9%96%EF%BC%88%E7%95%AA%E5%8F%B7%E2%86%92%E5%90%8D%E7%A7%B0%EF%BC%89",
-    "tags": [
-      "img",
-      "地理",
-      "4年"
-    ],
-    "updated": "2025-10-31T03:36:36.351Z"
-  },
-  {
-    "type": "img",
-    "title": "都道府県を覚えよう",
-    "data": "/anki-project/assets/data/geo/mapdata/japan-todofuken.json",
-    "path": "/anki-project/modules/img.html?data=/anki-project/assets/data/geo/mapdata/japan-todofuken.json&title=%E9%83%BD%E9%81%93%E5%BA%9C%E7%9C%8C%E3%82%92%E8%A6%9A%E3%81%88%E3%82%88%E3%81%86",
-    "tags": [
-      "img",
-      "地理",
-      "4年"
-    ],
-    "updated": "2025-10-31T03:36:36.351Z"
-  },
-  {
     "type": "noimg",
     "title": "小4社会 第7回 九州地方（図なし）",
     "data": "/anki-project/assets/data/geo/noimg/ge7-kyushu.json",
@@ -45,7 +9,7 @@
       "地理",
       "4年"
     ],
-    "updated": "2025-10-31T03:36:36.351Z"
+    "updated": "2025-10-31T05:01:45.771Z"
   },
   {
     "type": "noimg",
@@ -57,7 +21,7 @@
       "地理",
       "4年"
     ],
-    "updated": "2025-10-31T03:36:36.351Z"
+    "updated": "2025-10-31T05:01:45.771Z"
   },
   {
     "type": "noimg",
@@ -69,7 +33,7 @@
       "地理",
       "4年"
     ],
-    "updated": "2025-10-31T03:36:36.351Z"
+    "updated": "2025-10-31T05:01:45.771Z"
   },
   {
     "type": "html",
@@ -80,7 +44,7 @@
       "地理",
       "4年"
     ],
-    "updated": "2025-10-31T03:36:36.351Z"
+    "updated": "2025-10-31T05:01:45.771Z"
   },
   {
     "type": "html",
@@ -91,7 +55,19 @@
       "地理",
       "4年"
     ],
-    "updated": "2025-10-31T03:36:36.351Z"
+    "updated": "2025-10-31T05:01:45.771Z"
+  },
+  {
+    "type": "marker",
+    "title": "４年社会（教科書版）",
+    "data": "/anki-project/assets/data/geo/marker/geo4-all.json",
+    "path": "/anki-project/modules/marker.html?data=/anki-project/assets/data/geo/marker/geo4-all.json&title=%EF%BC%94%E5%B9%B4%E7%A4%BE%E4%BC%9A%EF%BC%88%E6%95%99%E7%A7%91%E6%9B%B8%E7%89%88%EF%BC%89",
+    "tags": [
+      "marker",
+      "地理",
+      "4年"
+    ],
+    "updated": "2025-10-31T05:01:45.770Z"
   },
   {
     "type": "img",
@@ -103,7 +79,7 @@
       "地理",
       "4年"
     ],
-    "updated": "2025-10-31T03:36:36.350Z"
+    "updated": "2025-10-31T05:01:45.770Z"
   },
   {
     "type": "img",
@@ -115,7 +91,7 @@
       "地理",
       "4年"
     ],
-    "updated": "2025-10-31T03:36:36.350Z"
+    "updated": "2025-10-31T05:01:45.770Z"
   },
   {
     "type": "img",
@@ -127,6 +103,42 @@
       "地理",
       "4年"
     ],
-    "updated": "2025-10-31T03:36:36.350Z"
+    "updated": "2025-10-31T05:01:45.770Z"
+  },
+  {
+    "type": "img",
+    "title": "地図記号を覚えよう（番号→地図記号名）",
+    "data": "/anki-project/assets/data/geo/mapdata/geo-map-symbols.json",
+    "path": "/anki-project/modules/img.html?data=/anki-project/assets/data/geo/mapdata/geo-map-symbols.json&title=%E5%9C%B0%E5%9B%B3%E8%A8%98%E5%8F%B7%E3%82%92%E8%A6%9A%E3%81%88%E3%82%88%E3%81%86%EF%BC%88%E7%95%AA%E5%8F%B7%E2%86%92%E5%9C%B0%E5%9B%B3%E8%A8%98%E5%8F%B7%E5%90%8D%EF%BC%89",
+    "tags": [
+      "img",
+      "地理",
+      "4年"
+    ],
+    "updated": "2025-10-31T05:01:45.770Z"
+  },
+  {
+    "type": "img",
+    "title": "日本の主な川・湖（番号→名称）",
+    "data": "/anki-project/assets/data/geo/mapdata/geo-rivers-lakes.json",
+    "path": "/anki-project/modules/img.html?data=/anki-project/assets/data/geo/mapdata/geo-rivers-lakes.json&title=%E6%97%A5%E6%9C%AC%E3%81%AE%E4%B8%BB%E3%81%AA%E5%B7%9D%E3%83%BB%E6%B9%96%EF%BC%88%E7%95%AA%E5%8F%B7%E2%86%92%E5%90%8D%E7%A7%B0%EF%BC%89",
+    "tags": [
+      "img",
+      "地理",
+      "4年"
+    ],
+    "updated": "2025-10-31T05:01:45.770Z"
+  },
+  {
+    "type": "img",
+    "title": "都道府県を覚えよう",
+    "data": "/anki-project/assets/data/geo/mapdata/japan-todofuken.json",
+    "path": "/anki-project/modules/img.html?data=/anki-project/assets/data/geo/mapdata/japan-todofuken.json&title=%E9%83%BD%E9%81%93%E5%BA%9C%E7%9C%8C%E3%82%92%E8%A6%9A%E3%81%88%E3%82%88%E3%81%86",
+    "tags": [
+      "img",
+      "地理",
+      "4年"
+    ],
+    "updated": "2025-10-31T05:01:45.770Z"
   }
 ]
