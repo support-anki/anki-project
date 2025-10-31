@@ -1,6 +1,18 @@
 [
   {
     "type": "img",
+    "title": "地図記号を覚えよう（番号→地図記号名）",
+    "data": "/anki-project/assets/data/geo/mapdata/geo-map-symbols.json",
+    "path": "/anki-project/modules/img.html?data=/anki-project/assets/data/geo/mapdata/geo-map-symbols.json&title=%E5%9C%B0%E5%9B%B3%E8%A8%98%E5%8F%B7%E3%82%92%E8%A6%9A%E3%81%88%E3%82%88%E3%81%86%EF%BC%88%E7%95%AA%E5%8F%B7%E2%86%92%E5%9C%B0%E5%9B%B3%E8%A8%98%E5%8F%B7%E5%90%8D%EF%BC%89",
+    "tags": [
+      "img",
+      "地理",
+      "4年"
+    ],
+    "updated": "2025-10-31T03:36:36.351Z"
+  },
+  {
+    "type": "img",
     "title": "日本の主な川・湖（番号→名称）",
     "data": "/anki-project/assets/data/geo/mapdata/geo-rivers-lakes.json",
     "path": "/anki-project/modules/img.html?data=/anki-project/assets/data/geo/mapdata/geo-rivers-lakes.json&title=%E6%97%A5%E6%9C%AC%E3%81%AE%E4%B8%BB%E3%81%AA%E5%B7%9D%E3%83%BB%E6%B9%96%EF%BC%88%E7%95%AA%E5%8F%B7%E2%86%92%E5%90%8D%E7%A7%B0%EF%BC%89",
@@ -9,7 +21,7 @@
       "地理",
       "4年"
     ],
-    "updated": "2025-10-31T03:05:16.257Z"
+    "updated": "2025-10-31T03:36:36.351Z"
   },
   {
     "type": "img",
@@ -21,7 +33,7 @@
       "地理",
       "4年"
     ],
-    "updated": "2025-10-31T03:05:16.257Z"
+    "updated": "2025-10-31T03:36:36.351Z"
   },
   {
     "type": "noimg",
@@ -33,7 +45,7 @@
       "地理",
       "4年"
     ],
-    "updated": "2025-10-31T03:05:16.257Z"
+    "updated": "2025-10-31T03:36:36.351Z"
   },
   {
     "type": "noimg",
@@ -45,7 +57,7 @@
       "地理",
       "4年"
     ],
-    "updated": "2025-10-31T03:05:16.257Z"
+    "updated": "2025-10-31T03:36:36.351Z"
   },
   {
     "type": "noimg",
@@ -57,7 +69,7 @@
       "地理",
       "4年"
     ],
-    "updated": "2025-10-31T03:05:16.257Z"
+    "updated": "2025-10-31T03:36:36.351Z"
   },
   {
     "type": "html",
@@ -68,7 +80,7 @@
       "地理",
       "4年"
     ],
-    "updated": "2025-10-31T03:05:16.257Z"
+    "updated": "2025-10-31T03:36:36.351Z"
   },
   {
     "type": "html",
@@ -79,7 +91,7 @@
       "地理",
       "4年"
     ],
-    "updated": "2025-10-31T03:05:16.257Z"
+    "updated": "2025-10-31T03:36:36.351Z"
   },
   {
     "type": "img",
@@ -91,7 +103,7 @@
       "地理",
       "4年"
     ],
-    "updated": "2025-10-31T03:05:16.256Z"
+    "updated": "2025-10-31T03:36:36.350Z"
   },
   {
     "type": "img",
@@ -103,7 +115,7 @@
       "地理",
       "4年"
     ],
-    "updated": "2025-10-31T03:05:16.256Z"
+    "updated": "2025-10-31T03:36:36.350Z"
   },
   {
     "type": "img",
@@ -115,18 +127,6 @@
       "地理",
       "4年"
     ],
-    "updated": "2025-10-31T03:05:16.256Z"
-  },
-  {
-    "type": "img",
-    "title": "地図記号を覚えよう（番号→地図記号名）",
-    "data": "/anki-project/assets/data/geo/mapdata/geo-map-symbols.json",
-    "path": "/anki-project/modules/img.html?data=/anki-project/assets/data/geo/mapdata/geo-map-symbols.json&title=%E5%9C%B0%E5%9B%B3%E8%A8%98%E5%8F%B7%E3%82%92%E8%A6%9A%E3%81%88%E3%82%88%E3%81%86%EF%BC%88%E7%95%AA%E5%8F%B7%E2%86%92%E5%9C%B0%E5%9B%B3%E8%A8%98%E5%8F%B7%E5%90%8D%EF%BC%89",
-    "tags": [
-      "img",
-      "地理",
-      "4年"
-    ],
-    "updated": "2025-10-31T03:05:16.256Z"
+    "updated": "2025-10-31T03:36:36.350Z"
   }
 ]
