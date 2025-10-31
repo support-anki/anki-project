@@ -14,7 +14,7 @@
     {
       "id": "003",
       "q": "東の空を調べたいときは、その道具に書かれているどの方位の文字を下にして持ちますか。",
-      "img": "/anki-project/assets/img/sci/star_chart_usage.png",
+      "img": "/anki-project/assets/img/sci/star_chart_usage.webp",
       "answers": ["東"]
     },
     {
@@ -91,7 +91,7 @@
     {
       "id": "016",
       "q": "月の形の変わり方を正しい順にならべましょう（ア→イ→ウ→エ→オ のように書きましょう）。",
-      "img": "/anki-project/assets/img/sci/moon_phases_sequence.png",
+      "img": "/anki-project/assets/img/sci/moon_phases_sequence.webp",
       "answers": ["ア→エ→イ→ウ→オ", "ア エ イ ウ オ"]
     },
     {
